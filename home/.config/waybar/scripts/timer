@@ -1,0 +1,74 @@
+#!/usr/bin/env bash
+
+PID_FILE="/tmp/waybar_timer_pid"
+STATE_FILE="/tmp/waybar_timer_state"
+
+case "$1" in
+    "start")
+        DURATION=${2:-1500}  # Default 25 minutes
+
+        # Kill existing timer
+        if [ -f "$PID_FILE" ]; then
+            kill "$(cat "$PID_FILE")" 2>/dev/null
+            rm -f "$PID_FILE"
+        fi
+
+        # Start countdown in background
+        (
+            time_left=$DURATION
+            while [ "$time_left" -gt 0 ]; do
+                minutes=$((time_left / 60))
+                secs=$((time_left % 60))
+                printf "%02d:%02d" "$minutes" "$secs" > "$STATE_FILE"
+                sleep 1
+                time_left=$((time_left - 1))
+            done
+            echo "Done" > "$STATE_FILE"
+            notify-send "Timer" "Time's up!" --urgency=normal
+        ) &
+        echo $! > "$PID_FILE"
+        ;;
+    "stop")
+        if [ -f "$PID_FILE" ]; then
+            kill "$(cat "$PID_FILE")" 2>/dev/null
+            rm -f "$PID_FILE"
+        fi
+        echo "No Timer" > "$STATE_FILE"
+        ;;
+    "menu")
+        # Show rofi menu to select duration
+        choice=$(echo -e "5 minutes\n10 minutes\n15 minutes\n25 minutes (Pomodoro)\n30 minutes\n45 minutes\n60 minutes" | \
+            rofi -dmenu -p "Timer" -theme ~/.config/rofi/themes/menu.rasi)
+
+        case "$choice" in
+            "5 minutes")
+                "$0" start 300
+                ;;
+            "10 minutes")
+                "$0" start 600
+                ;;
+            "15 minutes")
+                "$0" start 900
+                ;;
+            "25 minutes (Pomodoro)")
+                "$0" start 1500
+                ;;
+            "30 minutes")
+                "$0" start 1800
+                ;;
+            "45 minutes")
+                "$0" start 2700
+                ;;
+            "60 minutes")
+                "$0" start 3600
+                ;;
+        esac
+        ;;
+    "status")
+        if [ -f "$STATE_FILE" ]; then
+            cat "$STATE_FILE"
+        else
+            echo "No Timer"
+        fi
+        ;;
+esac

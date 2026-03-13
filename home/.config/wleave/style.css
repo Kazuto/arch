@@ -1,0 +1,71 @@
+/* Catppuccin Mocha theme for wleave */
+
+window {
+  background-color: rgba(30, 30, 46, 0.9); /* Base with transparency */
+}
+
+button {
+  box-shadow: unset;
+  text-shadow: none;
+  border: 2px solid transparent;
+
+  --view-bg-color: #313244;
+  background: var(--view-bg-color);
+  color: var(--view-fg-color);
+
+  border-radius: 10px;
+
+  transition:
+    box-shadow 0.2s ease-in-out,
+    background-color 0.2s ease-in-out,
+    border-color 0.2s ease-in-out;
+}
+
+button label.action-name {
+  font-size: 24px;
+}
+
+button label.keybind {
+  font-size: 20px;
+  font-family: monospace;
+}
+
+button:hover label.keybind,
+button:focus label.keybind {
+  opacity: 1;
+}
+
+button:hover {
+  --view-bg-color: #45475a; /* Surface1 */
+}
+
+button:focus {
+  --view-bg-color: #45475a; /* Surface1 */
+  outline: none;
+  border-color: var(--view-fg-color);
+}
+
+/* Catppuccin Mocha colors */
+button#Shutdown {
+  --view-fg-color: #f38ba8; /* Red */
+}
+
+button#Hibernate {
+  --view-fg-color: #89dceb; /* Sky */
+}
+
+button#Reboot {
+  --view-fg-color: #a6e3a1; /* Green */
+}
+
+button#Lock {
+  --view-fg-color: #f9e2af; /* Yellow */
+}
+
+button#Logout {
+  --view-fg-color: #fab387; /* Peach */
+}
+
+button#Suspend {
+  --view-fg-color: #b4befe; /* Lavender */
+}

@@ -1,0 +1,40 @@
+{
+  "buttons": [
+    {
+      "label": "Lock",
+      "action": "swaylock",
+      "text": "Lock",
+      "keybind": "l",
+      "icon": "/home/kazuto/.config/wleave/icons/lock.svg"
+    },
+    {
+      "label": "Logout",
+      "action": "hyprctl dispatch exit 0",
+      "text": "Logout",
+      "keybind": "e",
+      "icon": "/home/kazuto/.config/wleave/icons/logout.svg"
+    },
+    {
+      "label": "Reboot",
+      "action": "systemctl reboot",
+      "text": "Reboot",
+      "keybind": "r",
+      "icon": "/home/kazuto/.config/wleave/icons/reboot.svg"
+    },
+    {
+      "label": "Shutdown",
+      "action": "systemctl poweroff",
+      "text": "Shutdown",
+      "keybind": "s",
+      "icon": "/home/kazuto/.config/wleave/icons/shutdown.svg"
+    }
+  ],
+  "layout": {
+    "margin": 20,
+    "spacing": 20
+  },
+  "button-aspect-ratio": "1/1",
+  "css": "/home/kazuto/.config/wleave/style.css",
+  "show-keybinds": true,
+  "no-version-info": true
+}

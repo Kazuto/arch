@@ -1,0 +1,2 @@
+# Unbind Ctrl+Enter (reserved for Neovim/Supermaven)
+keybind = ctrl+enter=unbind

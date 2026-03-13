@@ -1,0 +1,10 @@
+# Logs
+*.log
+
+# Temporary files
+*.tmp
+*.swp
+*~
+
+# Cache
+home/.cache/

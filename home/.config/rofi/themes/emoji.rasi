@@ -1,0 +1,41 @@
+configuration {
+  display-emoji: "󰞅";
+
+  modi: "emoji";
+}
+
+@import "shared/colors.rasi"
+@import "shared/fonts.rasi"
+@import "shared/base.rasi"
+
+listview {
+    columns: 16;
+
+    flow: horizontal;
+
+    cursor: default;
+}
+
+element {
+    border-radius: 5px;
+
+    padding: 6px 0;
+
+    width: 16px;
+    height: 16px;
+
+    background-color: transparent;
+    text-color: @foreground;
+
+    cursor: pointer;
+}
+
+element selected {
+    background-color: white / 5%;
+}
+
+
+element-text {
+    background-color: transparent;
+    text-color: transparent;
+}

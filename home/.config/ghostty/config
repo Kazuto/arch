@@ -1,0 +1,39 @@
+cursor-style = block
+
+font-size = 16
+font-family = "JetBrainsMono NFM Regular"
+
+scrollback-limit = 1000
+
+theme = catppuccin-mocha
+
+window-padding-x = 10
+window-padding-y = 10,0
+window-padding-color = extend
+
+confirm-close-surface = false
+
+# Keybinds
+keybind = ctrl+g>r=reload_config
+
+# Creating splits
+keybind = ctrl+g>h=new_split:left
+keybind = ctrl+g>j=new_split:down
+keybind = ctrl+g>k=new_split:up
+keybind = ctrl+g>l=new_split:right
+
+keybind = ctrl+g>f=toggle_split_zoom
+keybind = ctrl+g>x=close_surface
+
+# Resizing splits
+keybind = ctrl+g>shift+h=resize_split:left,10
+keybind = ctrl+g>shift+j=resize_split:down,10
+keybind = ctrl+g>shift+k=resize_split:up,10
+keybind = ctrl+g>shift+l=resize_split:right,10
+keybind = ctrl+g>shift+e=equalize_splits
+
+# Navigating splits
+keybind = ctrl+h=goto_split:left
+keybind = ctrl+j=goto_split:bottom
+keybind = ctrl+k=goto_split:top
+keybind = ctrl+l=goto_split:right

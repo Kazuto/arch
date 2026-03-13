@@ -1,0 +1,36 @@
+#!/bin/bash
+# ZSH Custom Functions
+
+# Create directory and move to it
+function to() {
+  mkdir -p "$1"
+  cd "$1" || true
+}
+
+# Tmuxifier shortcuts
+function tls() {
+  tmuxifier load-session "$1"
+}
+
+function tms() {
+  tmuxifier new-session "$1"
+}
+
+# Nix rebuild shortcut
+function nix:update() {
+  echo "Rebuilding flake ./#$(hostname)"
+  sudo nixos-rebuild switch --flake "$HOME/.nix/#$(hostname)"
+}
+
+# Docker shortcuts
+function dcu() {
+  local -a env_args=()
+  [ -n "$1" ] && env_args=(--env-file "$1")
+  docker compose "${env_args[@]}" up -d --force-recreate --remove-orphans
+}
+
+function dcupdate() {
+  local -a env_args=()
+  [ -n "$1" ] && env_args=(--env-file "$1")
+  docker compose "${env_args[@]}" up -d --force-recreate --pull always
+}

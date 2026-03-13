@@ -1,0 +1,49 @@
+#!/usr/bin/env bash
+
+# Get notifications with details
+notifications=$(gh api /notifications --jq '.[] | "\(.repository.full_name): \(.subject.title)|\(.subject.type)|\(.subject.url)"' 2>/dev/null)
+
+if [ -z "$notifications" ]; then
+    notify-send "GitHub" "No notifications" --urgency=low
+    exit 0
+fi
+
+# Format for rofi display (show repo and title, hide URL for now)
+menu_items=""
+urls=()
+
+while IFS='|' read -r display type url; do
+    # Extract issue/PR number from URL
+    number=$(echo "$url" | grep -oP '[0-9]+$')
+    repo=$(echo "$display" | cut -d':' -f1)
+    title=$(echo "$display" | cut -d':' -f2-)
+
+    # Determine icon based on type
+    icon=""
+    case "$type" in
+        "PullRequest") icon="" ;;
+        "Issue") icon="" ;;
+        "Commit") icon="" ;;
+        *) icon="" ;;
+    esac
+
+    # Build the HTML URL
+    if [ "$type" = "PullRequest" ]; then
+        html_url="https://github.com/$repo/pull/$number"
+    elif [ "$type" = "Issue" ]; then
+        html_url="https://github.com/$repo/issues/$number"
+    else
+        html_url="https://github.com/$repo"
+    fi
+
+    menu_items+="$icon $display\n"
+    urls+=("$html_url")
+done <<< "$notifications"
+
+# Show rofi menu
+choice=$(echo -e "${menu_items}" | rofi -dmenu -p "GitHub Notifications" -theme ~/.config/rofi/themes/menu.rasi -format i)
+
+# Open selected notification
+if [ -n "$choice" ]; then
+    xdg-open "${urls[$choice]}"
+fi

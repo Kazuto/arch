@@ -1,0 +1,77 @@
+#!/usr/bin/env bash
+
+# Logitech device serials (update these with your device serials)
+# You can get these by running: solaar show
+# Format: "serial:display_name:icon_type"
+DEVICES=(
+    "ED9B3216:keyboard:keyboard"
+    "B2CF7061:mouse:mouse"
+)
+
+get_battery() {
+    serial=$1
+    device_name=$2
+    device_type=$3
+
+    # Try to get battery info from solaar by serial
+    battery_info=$(timeout 8 solaar show "$serial" 2>/dev/null | grep "Battery:" | head -1)
+
+    if [ -z "$battery_info" ]; then
+        return
+    fi
+
+    # Extract percentage: "Battery: 50%, BatteryStatus.DISCHARGING"
+    percentage=$(echo "$battery_info" | grep -o '[0-9]\+%' | head -1 | tr -d '%')
+    charging=$(echo "$battery_info" | grep -q "RECHARGING" && echo "true" || echo "false")
+
+    if [ -n "$percentage" ]; then
+        echo "$device_name:$device_type:$percentage:$charging"
+    fi
+}
+
+output=""
+for device in "${DEVICES[@]}"; do
+    IFS=':' read -r serial name type <<< "$device"
+    result=$(get_battery "$serial" "$name" "$type")
+    if [ -n "$result" ]; then
+        IFS=':' read -r dev_name dev_type pct chrg <<< "$result"
+
+        # Choose icon based on battery level
+        if [ "$pct" -ge 90 ]; then
+            icon="󰁹"
+            class="full"
+        elif [ "$pct" -ge 60 ]; then
+            icon="󰂀"
+            class="high"
+        elif [ "$pct" -ge 30 ]; then
+            icon="󰁾"
+            class="medium"
+        elif [ "$pct" -ge 10 ]; then
+            icon="󰁻"
+            class="low"
+        else
+            icon="󰁺"
+            class="critical"
+        fi
+
+        if [ "$chrg" = "true" ]; then
+            icon="󰂄"
+            class="charging"
+        fi
+
+        if [ -n "$output" ]; then
+            output="$output | "
+        fi
+
+        device_icon="󰌌"  # keyboard
+        [ "$dev_type" = "mouse" ] && device_icon="󰍽"
+
+        output="$output$device_icon $pct%"
+    fi
+done
+
+if [ -z "$output" ]; then
+    echo "{\"text\":\"\",\"tooltip\":\"No Logitech devices found\",\"class\":\"disconnected\"}"
+else
+    echo "{\"text\":\"$output\",\"tooltip\":\"Logitech devices\",\"class\":\"connected\"}"
+fi
