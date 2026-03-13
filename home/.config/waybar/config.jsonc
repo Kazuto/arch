@@ -1,0 +1,62 @@
+[
+  {
+    "layer": "top",
+    "output": "DP-1",
+    "position": "top",
+    "mod": "dock",
+    "exclusive": true,
+    "passthrough": false,
+    "gtk-layer-shell": true,
+    "height": 42,
+    "margin-top": 4,
+    "margin-left": 10,
+    "margin-right": 10,
+    "modules-left": [
+      "custom/menu",
+      "hyprland/workspaces",
+      "hyprland/window"
+    ],
+    "modules-center": [
+      "custom/spotify"
+    ],
+    "modules-right": [
+      "custom/github",
+      "custom/timer",
+      "cpu",
+      "memory",
+      "network",
+      "pulseaudio",
+      "bluetooth",
+      "custom/logitech",
+      "clock",
+    ],
+    "include": [
+      "$HOME/.config/waybar/modules.jsonc"
+    ]
+  },
+  {
+    "layer": "top",
+    "output": "DP-2",
+    "position": "top",
+    "mod": "dock",
+    "exclusive": true,
+    "passthrough": false,
+    "gtk-layer-shell": true,
+    "height": 42,
+    "margin-top": 4,
+    "margin-left": 10,
+    "margin-right": 10,
+    "modules-left": [
+      "hyprland/workspaces"
+    ],
+    "modules-right": [
+      "cpu",
+      "memory",
+      "network",
+      "pulseaudio"
+    ],
+    "include": [
+      "$HOME/.config/waybar/modules.jsonc"
+    ]
+  }
+]

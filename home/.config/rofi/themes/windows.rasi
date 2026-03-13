@@ -1,0 +1,53 @@
+configuration {
+  display-window: "󱂬";
+  window-format: "{t}";
+  modi: "window";
+
+  window-thumbnail: true;
+
+  show-icons: true;
+  icon-theme: "Papirus";
+}
+
+@import "shared/colors.rasi"
+@import "shared/fonts.rasi"
+@import "shared/base.rasi"
+
+listview {
+    columns: 8;
+
+    flow: horizontal;
+
+    cursor: default;
+
+    fixed-columns: true;
+}
+
+element {
+    padding: 5px;
+    border-radius: 5px;
+
+    background-color: transparent;
+    text-color: @foreground;
+
+    orientation: vertical;
+
+    cursor: pointer;
+}
+
+element selected {
+    background-color: white / 5%;
+    text-color: @primary;
+}
+
+element-icon {
+    size: 144px;
+}
+
+element-text {
+    vertical-align: 0.5;
+    horizontal-align: 0.5;
+
+    background-color: transparent;
+    text-color: inherit;
+}

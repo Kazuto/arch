@@ -1,0 +1,141 @@
+# Starship Configuration
+# Based on modules/home/cli/zsh/default.nix
+
+# Disable newline before prompt
+add_newline = false
+
+# Simple format: os, directory, git, newline, prompt
+format = """$os$directory$git_branch$git_status$line_break$character"""
+
+# Right prompt: status, duration, jobs, versions
+right_format = """$status$cmd_duration$jobs$python$nodejs$php$ruby$golang$rust"""
+
+# OS icon
+[os]
+disabled = false
+format = "[$symbol ]($style)"
+style = "bold red"
+
+[os.symbols]
+Windows = ""
+Ubuntu = "󰕈"
+Macos = "󰀵"
+Manjaro = ""
+Linux = "󰌽"
+Arch = "󰣇"
+NixOS = "󱄅"
+
+# Directory
+[directory]
+format = "[$path]($style) "
+style = "bold peach"
+truncation_length = 3
+truncate_to_repo = true
+
+# Git branch
+[git_branch]
+format = "on [$symbol$branch]($style) "
+style = "bold mauve"
+symbol = " "
+
+# Git status
+[git_status]
+format = "([$all_status$ahead_behind]($style) )"
+style = "bold yellow"
+modified = "!${count}"
+untracked = "?${count}"
+deleted = "✘${count}"
+renamed = "»${count}"
+staged = "+${count}"
+stashed = "\\$${count}"
+
+# Status
+[status]
+disabled = false
+format = "[$symbol$status ]($style)"
+style = "bold red"
+symbol = "✘ "
+
+# Command duration
+[cmd_duration]
+min_time = 2000
+format = "[$duration ]($style)"
+style = "bold yellow"
+
+# Background jobs
+[jobs]
+format = "[$symbol$number ]($style)"
+symbol = "✦ "
+style = "bold blue"
+
+# Character (prompt symbol)
+[character]
+success_symbol = "[❯](bold green)"
+error_symbol = "[❯](bold red)"
+
+# Language versions
+[python]
+format = "[${symbol}${version} ]($style)"
+style = "yellow"
+symbol = " "
+
+[nodejs]
+format = "[${symbol}${version} ]($style)"
+style = "green"
+symbol = " "
+
+[php]
+format = "[${symbol}${version} ]($style)"
+style = "blue"
+symbol = " "
+
+[ruby]
+format = "[${symbol}${version} ]($style)"
+style = "red"
+symbol = " "
+
+[golang]
+format = "[${symbol}${version} ]($style)"
+style = "sapphire"
+symbol = " "
+
+[rust]
+format = "[${symbol}${version} ]($style)"
+style = "peach"
+symbol = " "
+
+[docker_context]
+format = "[${symbol}${version} ]($style)"
+style = "blue"
+symbol = " "
+
+# Catppuccin Mocha palette
+palette = "catppuccin_mocha"
+
+[palettes.catppuccin_mocha]
+rosewater = "#f5e0dc"
+flamingo = "#f2cdcd"
+pink = "#f5c2e7"
+mauve = "#cba6f7"
+red = "#f38ba8"
+maroon = "#eba0ac"
+peach = "#fab387"
+yellow = "#f9e2af"
+green = "#a6e3a1"
+teal = "#94e2d5"
+sky = "#89dceb"
+sapphire = "#74c7ec"
+blue = "#89b4fa"
+lavender = "#b4befe"
+text = "#cdd6f4"
+subtext1 = "#bac2de"
+subtext0 = "#a6adc8"
+overlay2 = "#9399b2"
+overlay1 = "#7f849c"
+overlay0 = "#6c7086"
+surface2 = "#585b70"
+surface1 = "#45475a"
+surface0 = "#313244"
+base = "#1e1e2e"
+mantle = "#181825"
+crust = "#11111b"

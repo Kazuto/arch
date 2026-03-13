@@ -1,0 +1,14 @@
+#!/usr/bin/env bash
+
+# Get GitHub notifications count
+count=$(gh api /notifications --jq 'length' 2>/dev/null)
+
+if [ -z "$count" ] || [ "$count" = "null" ]; then
+    count=0
+fi
+
+if [ "$count" -gt 0 ]; then
+    echo "{\"text\":\"$count\",\"tooltip\":\"$count notifications\",\"class\":\"notifications\"}"
+else
+    echo "{\"text\":\"0\",\"tooltip\":\"No notifications\",\"class\":\"no-notifications\"}"
+fi

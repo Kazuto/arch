@@ -1,0 +1,47 @@
+#!/bin/bash
+# ZSH Tool Initializations
+
+# Zoxide (smart cd)
+command -v zoxide &>/dev/null && eval "$(zoxide init zsh --cmd cd)"
+
+# Tmuxifier
+export PATH="$HOME/.tmuxifier/bin:$PATH"
+export TMUXIFIER_LAYOUT_PATH="$HOME/.config/tmuxifier/layouts"
+command -v tmuxifier &>/dev/null && eval "$(tmuxifier init -)"
+
+# Lazy load pyenv to avoid startup hang
+if command -v pyenv &>/dev/null; then
+  export PYENV_ROOT="$HOME/.pyenv"
+  export PATH="$PYENV_ROOT/bin:$PATH"
+  pyenv() {
+    unset -f pyenv
+    eval "$(command pyenv init --path)"
+    eval "$(command pyenv init -)"
+    pyenv "$@"
+  }
+fi
+
+# Lazy load NVM to avoid startup hang
+if [ -s "$NVM_DIR/nvm.sh" ]; then
+  nvm() {
+    unset -f nvm node npm
+    \. "$NVM_DIR/nvm.sh"
+    nvm "$@"
+  }
+  node() {
+    unset -f nvm node npm
+    \. "$NVM_DIR/nvm.sh"
+    node "$@"
+  }
+  npm() {
+    unset -f nvm node npm
+    \. "$NVM_DIR/nvm.sh"
+    npm "$@"
+  }
+fi
+
+# Load zsh functions
+autoload -U add-zsh-hook
+
+# Starship prompt (must be at the end)
+eval "$(starship init zsh)"

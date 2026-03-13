@@ -1,0 +1,49 @@
+#!/bin/bash
+# ZSH Aliases
+
+# ======== File operations ======== #
+alias rm="trash-put"
+alias cat="bat --paging=never"
+alias ls="eza --icons"
+alias l="ls -lah"
+
+# ======== Auth ======== #
+alias token="pwgen -s 40 1 | xclip -sel clip && echo 'Copied to clipboard.'"
+alias password="pwgen -s 24 1 | xclip -sel clip && echo 'Copied to clipboard.'"
+alias uuid="uuidgen | tr '[:upper:]' '[:lower:]' | tr -d '\n' | xclip -sel clip && echo 'Copied to clipboard.'"
+
+# ======== Git ======== #
+alias lg="lazygit"
+alias nah="git stash && git stash drop"
+
+# ======== Laravel ======== #
+alias art="php artisan"
+
+# ======== Editors ======== #
+alias vim="nvim"
+
+# ======== Terminal ======== #
+alias c="clear"
+alias s="source ~/.zshrc"
+
+# ======== Config shortcuts ======== #
+alias config="cd ${XDG_CONFIG_HOME:-$HOME/.config} && nvim"
+alias nixconf="cd $HOME/.nix && nvim"
+
+# ======== Linux-specific clipboard ======== #
+alias pbcopy="xclip -sel clip"
+alias pbpaste="xclip -sel clip -o"
+
+# ======== NPM Auto-switch Node version ======== #
+preexec() {
+  if [[ "$1" =~ ^(npm|yarn|bun)(\s|$) ]] && [ -f .nvmrc ]; then
+    local nvmrc_node_version
+    nvmrc_node_version=$(nvm version "$(cat .nvmrc)")
+
+    if [ "$nvmrc_node_version" = "N/A" ]; then
+      nvm install
+    elif [ "$nvmrc_node_version" != "$(nvm version)" ]; then
+      nvm use
+    fi
+  fi
+}

@@ -1,0 +1,44 @@
+configuration {
+  display-drun: "";
+  drun-display-format: "{icon} {name}";
+  modi: "drun";
+
+  show-icons: true;
+  icon-theme: "Papirus";
+}
+
+@import "shared/colors.rasi"
+@import "shared/fonts.rasi"
+@import "shared/base.rasi"
+
+listview {
+    columns: 1;
+
+    cursor: default;
+}
+
+element {
+    padding: 5px;
+    border-radius: 5px;
+
+    background-color: transparent;
+    text-color: @foreground;
+
+    cursor: pointer;
+}
+
+element selected {
+    background-color: white / 5%;
+    text-color: @primary;
+}
+
+element-icon {
+    size: 36px;
+}
+
+element-text {
+    vertical-align: 0.5;
+
+    background-color: transparent;
+    text-color: inherit;
+}

@@ -1,0 +1,126 @@
+[global]
+    # === GENERAL === #
+
+    # Define the title of the windows spawned by dunst
+    title = Dunst
+
+    # Define the class of the windows spawned by dunst
+    class = Dunst
+
+    # Which monitor should the notifications be displayed on
+    monitor = 0
+
+    # Display notification on focused monitor; (mouse, keyboard, none)
+    follow = mouse
+
+    # Maximum number of notification; (0 = no limit)
+    notification_limit = 5
+
+    # Show how many messages are currently hidden (because of notification_limit).
+    indicate_hidden = true
+
+    # Sort messages by urgency.
+    sort = yes
+
+    # Defines how markup in notifications is handled.
+    markup = full
+
+    # Defines how the text should be aligned within the notification.
+    alignment = left
+
+    # Defines how the text and icon should be aligned vertically within the notification.; (top, center, bottom)
+    vertical_alignment = center
+  
+    # Show age of message if message is older than this time. (-1 to disable)
+    show_age_threshold = 60
+
+    # Ignore newlines '\n' in notifications.
+    ignore_newline = false
+
+    # Specifies whether to wrap the text if the lines get longer than the maximum notification width.
+    word_wrap = true
+
+    # Stack together notifications with the same content
+    stack_duplicates = true
+
+    # Hide the count of stacked notifications with the same content
+    hide_duplicate_count = false
+
+    # Display indicators for URLs (U) and actions (A).
+    show_indicators = yes
+
+    icon_path = /usr/share/icons/Papirus-Dark/16x16/status/:/usr/share/icons/Papirus-Dark/16x16/devices/:/usr/share/icons/Papirus-Dark/16x16/actions/:/usr/share/icons/Papirus-Dark/16x16/animations/:/usr/share/icons/Papirus-Dark/16x16/apps/:/usr/share/icons/Papirus-Dark/16x16/categories/:/usr/share/icons/Papirus-Dark/16x16/emblems/:/usr/share/icons/Papirus-Dark/16x16/emotes/:/usr/share/icons/Papirus-Dark/16x16/devices/mimetypes:/usr/share/icons/Papirus-Dark/16x16/panel/:/usr/share/icons/Papirus-Dark/16x16/places/
+
+    # === GEOMETRY === #
+
+    # Width in px; (0, 300) = dynamic, 300 = constant
+    width = 300
+
+    # Maximum height of a single notification, excluding the frame
+    height = 300
+
+    # Position the notification in the top right corner
+    origin = top-right
+
+    # Offset from the origin
+    offset = 10x10
+
+    # Scale factor; (0 = auto-detected)
+    scale = 0
+
+    # === HISTORY === #
+
+    # Should a notification popped up from history be sticky or timeout
+    # as if it would normally do.
+    sticky_history = yes
+
+    # Maximum amount of notifications kept in history
+    history_length = 20
+    
+    # === THEME === #
+
+    font = JetBrainsMono Nerd Font 10
+    background = "#1E1E2E"
+
+    # Rounded corners; (0 = disabled)
+    corner_radius = 10
+
+    # Defines width in pixels of frame around the notification window; (0 = disabled)
+    frame_width = 2
+    frame_color = "#89b4fa"
+
+    #The height in pixels of the separator between notifications. This setting will be ignored if gap_size is greater than 0.
+    separator_height = 0
+    separator_color = frame
+
+    # Size of gap to display between notifications.
+    gap_size = 2
+
+    # The distance in pixels from the content to the separator/border of the window in the vertical axis
+    padding = 8
+
+    # The distance in pixels from the content to the border of the window in the horizontal axis
+    horizontal_padding = 8
+
+    # The distance in pixels from the text to the icon (or vice versa) in the horizontal axis.
+    text_icon_padding = 8
+
+    min_icon_size = 0
+    max_icon_size = 64
+
+    # === MOUSE === #
+    mouse_left_click = close_current
+    mouse_middle_click = do_action, close_current
+    mouse_right_click = close_all
+
+[urgency_low]
+    background = "#1E1E2E"
+    foreground = "#CDD6F4"
+
+[urgency_normal]
+    background = "#1E1E2E"
+  foreground = "#CDD6F4"
+
+[urgency_critical]
+    background = "#1E1E2E"
+    foreground = "#CDD6F4"
