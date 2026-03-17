@@ -12,7 +12,7 @@
 # Usage: ./install-hyprland-arch.sh
 #
 
-set -e # Exit on error
+set -e          # Exit on error
 set -o pipefail # Catch errors in pipes
 
 # Colors for output
@@ -127,13 +127,13 @@ install_packages() {
   local CORE_PACKAGES=(
     cmake
     cpio
-    ghostty                 # Terminal emulator
+    ghostty # Terminal emulator
     hyprland-protocols
     jq
     mpv
     ninja
     nss
-    qt5-graphicaleffects    # SDDM theme dependencies
+    qt5-graphicaleffects # SDDM theme dependencies
     qt5-quickcontrols2
     qt5-svg
     usbutils
@@ -145,8 +145,8 @@ install_packages() {
 
   # CLI tools (from modules/home/cli/)
   local CLI_PACKAGES=(
-    base-devel              # Build tools
-    bat                     # Better cat
+    base-devel # Build tools
+    bat        # Better cat
     btop
     bun
     eza                     # Better ls
@@ -202,23 +202,23 @@ install_packages() {
   local ADDON_PACKAGES=(
     blueman
     brightnessctl
-    gvfs                   # Virtual filesystem
-    nautilus               # GNOME file manager
+    gvfs     # Virtual filesystem
+    nautilus # GNOME file manager
     pamixer
-    polkit-gnome           # We use GNOME agent, profile has KDE agent
-    rofi                   # Profile has wofi, we want rofi
-    rofimoji               # Emoji picker for rofi
-    sushi                  # File previewer
-    swww                   # Wallpaper daemon
-    thunar                 # XFCE file manager
+    polkit-gnome # We use GNOME agent, profile has KDE agent
+    rofi         # Profile has wofi, we want rofi
+    rofimoji     # Emoji picker for rofi
+    sushi        # File previewer
+    swww         # Wallpaper daemon
+    thunar       # XFCE file manager
     thunar-archive-plugin
     thunar-volman
-    tumbler                # Thumbnail support
+    tumbler # Thumbnail support
     wmctrl
     wtype                  # Wayland typing tool (for rofimoji)
     xdg-desktop-portal-gtk # GTK portal
     xdotool
-    ydotool                # Alternative typing tool
+    ydotool # Alternative typing tool
   )
 
   # GTK theming
@@ -231,8 +231,10 @@ install_packages() {
 
   # Fonts
   local FONT_PACKAGES=(
-    noto-fonts              # Base fonts
+    noto-fonts              # Base fonts (Latin, Cyrillic, Greek, etc.)
+    noto-fonts-cjk          # Chinese, Japanese, Korean fonts
     noto-fonts-emoji        # Emoji support
+    noto-fonts-extra        # Arabic, Hebrew, Thai, Devanagari, and other scripts
     otf-font-awesome        # Font Awesome icons
     ttf-jetbrains-mono-nerd # Nerd Font with icons
     ttf-nerd-fonts-symbols  # Additional Nerd Font symbols
@@ -249,20 +251,20 @@ install_packages() {
 
   # AMD GPU/CPU performance & monitoring + Gaming peripherals
   local AMD_PACKAGES=(
-    amdgpu_top         # GPU monitoring tool
-    corectrl           # GPU/CPU control GUI
-    gamemode           # Gaming performance optimization
-    lib32-gamemode     # 32-bit gamemode support
-    lib32-mesa         # 32-bit Mesa drivers
+    amdgpu_top          # GPU monitoring tool
+    corectrl            # GPU/CPU control GUI
+    gamemode            # Gaming performance optimization
+    gamescope           # Gaming microcompositor (fixes mouse/fullscreen issues)
+    lib32-gamemode      # 32-bit gamemode support
+    lib32-mesa          # 32-bit Mesa drivers
     lib32-vulkan-radeon # 32-bit Vulkan support
-    libva-mesa-driver  # Hardware video acceleration
-    mangohud           # Gaming overlay
-    mesa-vdpau         # VDPAU video acceleration
-    nvtop              # GPU monitoring TUI
-    powertop           # Power consumption analysis
+    libva-mesa-driver   # Hardware video acceleration
+    mangohud            # Gaming overlay
+    nvtop               # GPU monitoring TUI
+    powertop            # Power consumption analysis
 
     # Controller support
-    linuxconsole       # Joystick utilities (includes jstest)
+    linuxconsole # Joystick utilities (includes jstest)
   )
 
   # Combine all packages (no login manager - SDDM already installed by Arch)
@@ -357,25 +359,29 @@ install_packages() {
     avizo
     catppuccin-cursors-mocha
     catppuccin-gtk-theme-mocha
-    grimblast-git     # Screenshot utility wrapper
+    grimblast-git      # Screenshot utility wrapper
     gtk-engine-murrine # GTK2 murrine engine
     hyprpicker
     keyd
     libinput-gestures # Touchpad gestures
     solaar
-    wleave-git        # Modern logout menu (GTK4)
+    wleave-git # Modern logout menu (GTK4)
 
     # Applications (AUR)
     bitwarden # Password manager
     obsidian  # Note-taking
     spotify   # Music streaming
 
+    # Gaming (AUR)
+    atlauncher-bin
+
     # Development tools (from modules/home/development/tools/)
-    bruno-bin # API client
-    gh-ost    # MySQL schema migration
-    jira-cli  # Jira CLI tool
-    tableplus # Database GUI (if available)
-    tmuxifier # Tmux session manager
+    bruno-bin    # API client
+    gh-ost       # MySQL schema migration
+    jira-cli     # Jira CLI tool
+    tableplus    # Database GUI (if available)
+    tmuxifier    # Tmux session manager
+    opencode-bin # AI coding assistant
 
     # System performance (AUR)
     auto-cpufreq # Automatic CPU frequency scaling
