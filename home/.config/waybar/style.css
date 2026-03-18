@@ -145,7 +145,13 @@ tooltip {
   color: #cba6f7;
 }
 
-#pulseaudio.muted {
+/* Volume module when muted */
+#pulseaudio.volume.muted {
+  color: #7f849c;
+}
+
+/* Microphone module when muted */
+#pulseaudio.microphone.source-muted {
   color: #7f849c;
 }
 

@@ -25,10 +25,11 @@
       "cpu",
       "memory",
       "network",
-      "pulseaudio",
+      "pulseaudio#volume",
+      "pulseaudio#microphone",
       "bluetooth",
       "custom/logitech",
-      "clock",
+      "clock"
     ],
     "include": [
       "$HOME/.config/waybar/modules.jsonc"
@@ -52,8 +53,7 @@
     "modules-right": [
       "cpu",
       "memory",
-      "network",
-      "pulseaudio"
+      "network"
     ],
     "include": [
       "$HOME/.config/waybar/modules.jsonc"
