@@ -69,8 +69,28 @@
     "sort-by-number": true
   },
   "hyprland/window": {
-    "format": "{}",
-    "max-length": 36
+    "format": "{class}",
+    "max-length": 36,
+    "icon": true,
+    "icon-size": 16,
+    "rewrite": {
+      "com.mitchellh.ghostty": "Ghostty",
+      "firefox": "Firefox",
+      "discord": "Discord",
+      "Spotify": "Spotify",
+      "org.kde.dolphin": "Dolphin",
+      "thunar": "Thunar",
+      "kitty": "Kitty",
+      "obsidian": "Obsidian",
+      "code": "VS Code",
+      "teams-for-linux": "Microsoft Teams",
+      "org.mozilla.Thunderbird": "Thunderbird",
+      "com-atlauncher-App": "ATLauncher",
+      "steam": "Steam",
+      "com.libretro.RetroArch": "RetroArch",
+      "(.*) — Firefox": "Firefox",
+      "(.*) — Firefox Developer Edition": "Firefox Dev"
+    }
   },
   "tray": {
     "icon-size": 13,
@@ -167,6 +187,14 @@
     "return-type": "json",
     "interval": 120,
     "exec": "$HOME/.config/waybar/scripts/logitech",
+    "tooltip": true
+  },
+  "custom/ollama": {
+    "format": "{}",
+    "return-type": "json",
+    "interval": 30,
+    "exec": "$HOME/.config/waybar/scripts/ollama",
+    "on-click": "systemctl is-active --quiet ollama && sudo systemctl stop ollama || sudo systemctl start ollama",
     "tooltip": true
   }
 }

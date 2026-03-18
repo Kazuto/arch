@@ -1,0 +1,21 @@
+#!/usr/bin/env bash
+
+# Check if ollama service is running
+if systemctl is-active --quiet ollama; then
+    # Check if any models are loaded
+    loaded=$(curl -s http://localhost:11434/api/tags 2>/dev/null | jq -r '.models | length' 2>/dev/null)
+
+    if [ -z "$loaded" ] || [ "$loaded" = "null" ]; then
+        # Service running but can't get model info
+        echo "{\"text\":\"󱙺\",\"tooltip\":\"Ollama: Running\",\"class\":\"running\"}"
+    elif [ "$loaded" -gt 0 ]; then
+        # Service running with models available
+        echo "{\"text\":\"󱙺\",\"tooltip\":\"Ollama: Running\\n$loaded models available\",\"class\":\"running\"}"
+    else
+        # Service running but no models
+        echo "{\"text\":\"󱙺\",\"tooltip\":\"Ollama: Running\\nNo models installed\",\"class\":\"running\"}"
+    fi
+else
+    # Service not running
+    echo "{\"text\":\"󱙻\",\"tooltip\":\"Ollama: Stopped\",\"class\":\"stopped\"}"
+fi

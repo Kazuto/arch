@@ -12,7 +12,6 @@
     "margin-left": 10,
     "margin-right": 10,
     "modules-left": [
-      "custom/menu",
       "hyprland/workspaces",
       "hyprland/window"
     ],
@@ -22,13 +21,12 @@
     "modules-right": [
       "custom/github",
       "custom/timer",
+      "custom/ollama",
       "cpu",
       "memory",
       "network",
       "pulseaudio#volume",
       "pulseaudio#microphone",
-      "bluetooth",
-      "custom/logitech",
       "clock"
     ],
     "include": [

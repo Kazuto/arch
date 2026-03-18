@@ -1,7 +1,7 @@
 * {
   border: none;
   border-radius: 0;
-  font-family: "JetBrainsMono Nerd Font", monospace;
+  font-family: "FiraCode";
   font-weight: 500;
   font-size: 13px;
   min-height: 0;
@@ -32,20 +32,15 @@ tooltip {
 #network,
 #custom-github,
 #custom-timer,
-#custom-logitech {
-  background: #1e1e2e;
-  border-radius: 10px;
-  padding: 0px 10px;
-  margin: 8px 5px 0px 5px;
-}
-
+#custom-logitech,
+#custom-ollama,
 #custom-menu,
 #custom-power,
 #custom-spotify,
 #custom-updates {
   background: #1e1e2e;
   border-radius: 10px;
-  padding: 0px 10px;
+  padding: 0px 12px;
   margin: 8px 5px 0px 5px;
 }
 
@@ -83,14 +78,11 @@ tooltip {
 }
 
 #window {
-  color: #cdd6f4;
   font-weight: 500;
 }
 
 #clock {
   color: #89b4fa;
-  font-weight: 500;
-  padding-left: 10px;
   padding-right: 10px;
 }
 
@@ -177,4 +169,14 @@ tooltip {
 
 #custom-logitech.critical {
   color: #f38ba8;
+}
+
+#custom-ollama {
+  color: #a6e3a1;
+  padding-left: 12px;
+  padding-right: 16px;
+}
+
+#custom-ollama.stopped {
+  color: #7f849c;
 }

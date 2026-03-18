@@ -45,5 +45,5 @@ choice=$(echo -e "${menu_items}" | rofi -dmenu -p "GitHub Notifications" -theme 
 
 # Open selected notification
 if [ -n "$choice" ]; then
-    xdg-open "${urls[$choice]}"
+    firefox "${urls[$choice]}"
 fi
