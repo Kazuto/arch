@@ -2,35 +2,15 @@
 -- https://github.com/nvim-treesitter/nvim-treesitter
 return {
   "nvim-treesitter/nvim-treesitter",
+  branch = "master", -- Use stable version compatible with Neovim 0.11
   event = { "BufReadPre", "BufNewFile" },
   build = ":TSUpdate",
   dependencies = {
     "JoosepAlviste/nvim-ts-context-commentstring",
     "nvim-treesitter/nvim-treesitter-textobjects",
   },
-  config = function(_, opts)
-    vim.filetype.add({
-      pattern = {
-        [".*%.blade%.php"] = "blade",
-      },
-    })
-
-    local treesitter = require("nvim-treesitter")
-    local parser_config = require("nvim-treesitter.parsers").get_parser_configs()
-
-    -- Configure blade parser
-    parser_config.blade = {
-      install_info = {
-        url = "https://github.com/EmranMR/tree-sitter-blade",
-        files = { "src/parser.c" },
-        branch = "main",
-      },
-      filetype = "blade",
-    }
-
-    vim.g.skip_ts_context_commentstring_module = true
-
-    treesitter.setup({
+  config = function()
+    require("nvim-treesitter.configs").setup({
       highlight = {
         enable = true,
         additional_vim_regex_highlighting = false, -- Disable for better performance
@@ -54,7 +34,6 @@ return {
       -- A list of parser names, or "all" (the five listed parsers should always be installed)
       ensure_installed = {
         "bash",
-        "blade",
         "css",
         "dockerfile",
         "go",
@@ -94,21 +73,6 @@ return {
       -- Automatically install missing parsers when entering buffer
       -- Recommendation: set to false if you don"t have `tree-sitter` CLI installed locally
       auto_install = true,
-    })
-
-    -- Register blade parser
-    vim.treesitter.language.register("blade", "blade")
-
-    -- Ensure Treesitter highlighting works for all filetypes
-    vim.api.nvim_create_autocmd("FileType", {
-      callback = function(args)
-        local buf = args.buf
-        -- Check if treesitter parser is available for this filetype
-        local ft = vim.bo[buf].filetype
-        if ft and ft ~= "" then
-          pcall(vim.treesitter.start, buf, ft)
-        end
-      end,
     })
   end,
 }
