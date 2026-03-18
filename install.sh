@@ -238,6 +238,9 @@ install_packages() {
     otf-font-awesome        # Font Awesome icons
     ttf-jetbrains-mono-nerd # Nerd Font with icons
     ttf-nerd-fonts-symbols  # Additional Nerd Font symbols
+    ttf-firacode-nerd
+    ttf-fira-code
+    ttf-fira-mono
   )
 
   # Essential applications (from modules/home/apps/)
@@ -517,6 +520,22 @@ configure_services() {
       log_success "auto-cpufreq service installed"
     else
       log_info "auto-cpufreq already enabled"
+    fi
+  fi
+
+  # Enable and start ollama service if installed
+  if command -v ollama &>/dev/null; then
+    if ! systemctl is-enabled ollama &>/dev/null; then
+      sudo systemctl enable ollama 2>&1 | tee -a "$INSTALL_LOG"
+      log_success "ollama service enabled"
+    else
+      log_info "ollama already enabled"
+    fi
+    if ! systemctl is-active ollama &>/dev/null; then
+      sudo systemctl start ollama 2>&1 | tee -a "$INSTALL_LOG"
+      log_success "ollama service started"
+    else
+      log_info "ollama already running"
     fi
   fi
 
