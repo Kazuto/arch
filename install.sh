@@ -495,13 +495,13 @@ configure_services() {
     log_info "SDDM already enabled"
   fi
 
-  # Start libinput-gestures (no systemd service, runs in background)
+  # Enable and start libinput-gestures user service
   if command -v libinput-gestures &>/dev/null; then
-    # Kill any existing instance
+    # Stop any background instances
     pkill -u "$USER" libinput-gestures 2>/dev/null || true
-    # Start in background
-    libinput-gestures &
-    log_success "Started libinput-gestures"
+    # Enable and start systemd user service
+    systemctl --user enable --now libinput-gestures
+    log_success "Enabled libinput-gestures user service"
   else
     log_warning "libinput-gestures not installed"
   fi
