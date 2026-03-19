@@ -1,6 +1,6 @@
 cursor-style = block
 
-font-size = 16
+font-size = 13
 font-family = "JetBrainsMono NFM Regular"
 
 scrollback-limit = 1000
