@@ -76,6 +76,8 @@
     "rewrite": {
       "com.mitchellh.ghostty": "Ghostty",
       "firefox": "Firefox",
+      "firefox-work": "Firefox (Work)",
+      "firefox-personal": "Firefox (Personal)",
       "discord": "Discord",
       "Spotify": "Spotify",
       "org.kde.dolphin": "Dolphin",
