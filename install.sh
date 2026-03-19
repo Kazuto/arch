@@ -168,6 +168,7 @@ install_packages() {
     tree                    # Directory tree
     wget                    # Downloader
     xclip                   # Clipboard
+    yazi                    # Terminal file manager
     zoxide                  # Smart cd
     zsh                     # Shell
     zsh-autosuggestions     # ZSH plugin
