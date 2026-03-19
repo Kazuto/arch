@@ -1,0 +1,10 @@
+os:
+  editCommand: "nvim"
+  editCommandTemplate: '{{editor}} --server /tmp/nvim-server.pipe --remote-tab "$(pwd)/{{filename}}"'
+keybinding:
+  universal:
+    togglePanel: '}'
+    nextBlock-alt2: ""
+    prevBlock-alt2: ""
+    nextTab: '<tab>'
+    prevTab: '<backtab>'
