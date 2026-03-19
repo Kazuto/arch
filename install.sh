@@ -176,18 +176,20 @@ install_packages() {
 
   # Development languages (from modules/home/development/languages/)
   local DEV_PACKAGES=(
-    docker      # Container platform
-    ghostscript # PostScript interpreter
-    go          # Go language
-    lua         # Lua language
-    nodejs      # Node.js
-    npm         # Node package manager
-    php         # PHP
-    pyenv       # Python version manager
-    python      # Python 3
-    python-pip  # Python package manager
-    rust        # Rust language
-    sqlite      # Database
+    docker         # Container platform
+    docker-buildx  # Docker buildx
+    docker-compose # Docker compose
+    ghostscript    # PostScript interpreter
+    go             # Go language
+    lua            # Lua language
+    nodejs         # Node.js
+    npm            # Node package manager
+    php            # PHP
+    pyenv          # Python version manager
+    python         # Python 3
+    python-pip     # Python package manager
+    rust           # Rust language
+    sqlite         # Database
   )
 
   # Waybar and dependencies
