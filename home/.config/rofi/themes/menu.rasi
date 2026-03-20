@@ -29,8 +29,10 @@ mainbox {
   children: [ "listview" ];
   spacing: 0px;
   padding: 10px;
-  background-color: @background;
+  border: 2px solid;
   border-radius: 10px;
+  border-color: @primary;
+  background-color: @background;
 }
 
 listview {

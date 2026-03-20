@@ -1,6 +1,4 @@
 configuration {
-  display-emoji: "󰞅";
-
   modi: "emoji";
 }
 
@@ -10,19 +8,14 @@ configuration {
 
 listview {
     columns: 16;
-
     flow: horizontal;
 
     cursor: default;
 }
 
 element {
-    border-radius: 5px;
-
-    padding: 6px 0;
-
-    width: 16px;
-    height: 16px;
+    padding: 0px;
+    border-radius: 4px;
 
     background-color: transparent;
     text-color: @foreground;
@@ -34,8 +27,9 @@ element selected {
     background-color: white / 5%;
 }
 
-
 element-text {
+    padding: 8px 10px;
+    font: "Cascadia Code 18";
     background-color: transparent;
     text-color: transparent;
 }

@@ -1,0 +1,3 @@
+prompt ""
+max-recent 10
+selector-args -theme ~/.config/rofi/themes/emoji.rasi
