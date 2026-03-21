@@ -14,6 +14,9 @@ if [ -z "$IMAGE" ]; then
     exit 1
 fi
 
+# Get image format extension
+IMG_EXT="${IMAGE##*.}"
+
 # Get monitor info
 MONITORS=($(hyprctl monitors -j | jq -r '.[].name'))
 MON1="${MONITORS[0]}"  # Primary (DP-1: 3440x1440)
@@ -39,14 +42,14 @@ if [ "$IMG_WIDTH" -ge "$THRESHOLD" ]; then
     # 3440/(3440+1920) = 64%
     SPLIT_X=$((IMG_WIDTH * 3440 / TOTAL_WIDTH))
 
-    # Split image
-    convert "$IMAGE" -crop "${SPLIT_X}x${IMG_HEIGHT}+0+0" +repage "$TEMP_DIR/left.png"
-    convert "$IMAGE" -crop "$((IMG_WIDTH-SPLIT_X))x${IMG_HEIGHT}+${SPLIT_X}+0" +repage "$TEMP_DIR/right.png"
+    # Split image (preserve format)
+    convert "$IMAGE" -crop "${SPLIT_X}x${IMG_HEIGHT}+0+0" +repage "$TEMP_DIR/left.${IMG_EXT}"
+    convert "$IMAGE" -crop "$((IMG_WIDTH-SPLIT_X))x${IMG_HEIGHT}+${SPLIT_X}+0" +repage "$TEMP_DIR/right.${IMG_EXT}"
 
     # Apply to monitors with transition
-    swww img "$TEMP_DIR/left.png" --outputs "$MON1" --resize crop \
+    swww img "$TEMP_DIR/left.${IMG_EXT}" --outputs "$MON1" --resize crop \
         --transition-type grow --transition-duration 0.5 --transition-fps 60 --transition-pos top-right &
-    swww img "$TEMP_DIR/right.png" --outputs "$MON2" --resize crop \
+    swww img "$TEMP_DIR/right.${IMG_EXT}" --outputs "$MON2" --resize crop \
         --transition-type grow --transition-duration 0.5 --transition-fps 60 --transition-pos top-right &
     wait
 
