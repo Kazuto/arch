@@ -1,9 +1,3 @@
 #!/usr/bin/env bash
 
-THEME="$HOME/.config/rofi/themes/drun.rasi"
-
-if [[ ! $(pidof rofi) ]]; then
-	rofi -show drun -theme "${THEME}" --prompt 'Search...'
-else
-	pkill rofi
-fi
+ghostty -e bash -c "fastfetch; cat"
