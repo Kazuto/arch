@@ -250,6 +250,7 @@ install_packages() {
   local APP_PACKAGES=(
     discord        # Chat
     firefox        # Web browser
+    obs-studio     # Streaming/recording
     retroarch      # Emulation frontend
     signal-desktop # Secure messaging
     steam          # Gaming platform (requires multilib)
@@ -374,9 +375,10 @@ install_packages() {
     wleave-git # Modern logout menu (GTK4)
 
     # Applications (AUR)
-    bitwarden # Password manager
-    obsidian  # Note-taking
-    spotify   # Music streaming
+    bitwarden      # Password manager
+    obsidian       # Note-taking
+    spotify        # Music streaming
+    spicetify-cli  # Spotify customization tool
 
     # Gaming (AUR)
     atlauncher-bin
