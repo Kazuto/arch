@@ -1,0 +1,49 @@
+#!/usr/bin/env bash
+
+# Get default sink
+default_sink=$(pactl get-default-sink)
+
+# Get list of audio sinks (output devices)
+sinks=$(pactl list short sinks)
+
+if [ -z "$sinks" ]; then
+    notify-send "Audio" "No output devices found" --urgency=low
+    exit 0
+fi
+
+# Parse sinks into arrays
+declare -a sink_names
+declare -a sink_descriptions
+declare -a menu_items
+
+while IFS=$'\t' read -r idx name driver state; do
+    # Get human-readable description
+    description=$(pactl list sinks | grep -A 20 "Name: $name" | grep "Description:" | sed 's/.*Description: //')
+
+    # Check if this is the default sink
+    if [ "$name" = "$default_sink" ]; then
+        is_default="✓ "
+    else
+        is_default="  "
+    fi
+
+    sink_names+=("$name")
+    sink_descriptions+=("$description")
+    menu_items+=("${is_default}${description}")
+done <<< "$sinks"
+
+# Build menu string
+menu_string=""
+for item in "${menu_items[@]}"; do
+    menu_string+="$item\n"
+done
+
+# Show rofi menu
+choice=$(echo -e "${menu_string}" | rofi -dmenu -p "Audio Output" -theme ~/.config/rofi/themes/menu.rasi -format i)
+
+# Switch to selected device
+if [ -n "$choice" ]; then
+    selected_name="${sink_names[$choice]}"
+    pactl set-default-sink "$selected_name"
+    notify-send "Audio" "Switched to ${sink_descriptions[$choice]}" --urgency=low
+fi
