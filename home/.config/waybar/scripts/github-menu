@@ -21,10 +21,10 @@ while IFS='|' read -r display type url; do
     # Determine icon based on type
     icon=""
     case "$type" in
-        "PullRequest") icon="" ;;
-        "Issue") icon="" ;;
-        "Commit") icon="" ;;
-        *) icon="" ;;
+    "PullRequest") icon="" ;;
+    "Issue") icon="" ;;
+    "Commit") icon="" ;;
+    *) icon="" ;;
     esac
 
     # Build the HTML URL
@@ -38,12 +38,12 @@ while IFS='|' read -r display type url; do
 
     menu_items+="$icon $display\n"
     urls+=("$html_url")
-done <<< "$notifications"
+done <<<"$notifications"
 
 # Show rofi menu
 choice=$(echo -e "${menu_items}" | rofi -dmenu -p "GitHub Notifications" -theme ~/.config/rofi/themes/menu.rasi -format i)
 
 # Open selected notification
 if [ -n "$choice" ]; then
-    firefox "${urls[$choice]}"
+    xdg-open "${urls[$choice]}"
 fi
