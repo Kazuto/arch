@@ -149,6 +149,7 @@ install_packages() {
     bat        # Better cat
     btop
     bun
+    yarn
     eza                     # Better ls
     fastfetch               # System info
     fd                      # Fast find
@@ -191,6 +192,26 @@ install_packages() {
     python-pip     # Python package manager
     rust           # Rust language
     sqlite         # Database
+
+    # Code formatters (pacman)
+    python-black # Python formatter
+    python-isort # Python import sorter
+    shfmt        # Shell script formatter
+    stylua       # Lua formatter
+
+    # LSP servers (pacman)
+    bash-language-server         # Bash LSP
+    gopls                        # Go LSP
+    lua-language-server          # Lua LSP
+    typescript-language-server   # TypeScript/JavaScript LSP
+    vscode-langservers-extracted # CSS, HTML, JSON LSP
+    yaml-language-server         # YAML LSP
+
+    # Linters (pacman)
+    shellcheck # Shell script linter
+
+    # Debug adapters (pacman)
+    delve # Go debugger
   )
 
   # Waybar and dependencies
@@ -390,6 +411,25 @@ install_packages() {
     tableplus    # Database GUI (if available)
     tmuxifier    # Tmux session manager
     opencode-bin # AI coding assistant
+
+    # Code formatters (AUR)
+    blade-formatter # Laravel Blade template formatter
+    gofumpt         # Go formatter (stricter than gofmt)
+    oxfmt           # Fast JavaScript/TypeScript formatter from oxc project
+    php-cs-fixer    # PHP coding standards fixer
+    prettierd       # Prettier daemon (faster formatting)
+    laravel-pint    # Laravel PHP code style fixer
+
+    # LSP servers (AUR)
+    emmet-ls                    # Emmet LSP
+    intelephense                # PHP LSP
+    phpactor                    # PHP LSP (alternative)
+    tailwindcss-language-server # Tailwind CSS LSP
+    vue-language-server         # Vue LSP
+
+    # Linters (AUR)
+    eslint_d # Fast ESLint daemon
+    oxlint   # Fast JavaScript/TypeScript linter from oxc project
 
     # System performance (AUR)
     auto-cpufreq # Automatic CPU frequency scaling

@@ -45,13 +45,9 @@ return {
     "WhoIsSethDaniel/mason-tool-installer.nvim",
     opts = {
       ensure_installed = {
-        "prettierd",
-        -- "stylua", -- Installed via Nix
-        "eslint_d",
-        "php-cs-fixer",
-        "php-debug-adapter",
-        -- "shellcheck", -- Installed via Nix
-        "shfmt",
+        -- All formatters, linters, and LSPs now installed system-wide via install.sh
+        -- Only keep tools that aren't available in pacman/AUR
+        "php-debug-adapter", -- PHP debugger (not in repos)
       },
     },
     dependencies = {

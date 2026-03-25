@@ -25,6 +25,7 @@ return {
 
       indent = {
         enable = true,
+        disable = { "blade" }, -- Disable for Blade files - use blade-formatter instead
       },
 
       autopairs = {
@@ -34,6 +35,7 @@ return {
       -- A list of parser names, or "all" (the five listed parsers should always be installed)
       ensure_installed = {
         "bash",
+        "blade",
         "css",
         "dockerfile",
         "go",
@@ -43,6 +45,7 @@ return {
         "markdown",
         "markdown_inline",
         "php",
+        "php_only",
         "python",
         "scss",
         "sql",

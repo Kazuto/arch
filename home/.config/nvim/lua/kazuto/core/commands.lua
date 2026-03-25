@@ -118,3 +118,15 @@ end
 
 -- Initialize performance monitoring utilities
 require("kazuto.utils.performance-commands")
+
+-- Disable auto-indent for Blade files to prevent TreeSitter/Vim from breaking indentation
+-- Rely solely on blade-formatter via conform.nvim
+vim.api.nvim_create_autocmd("FileType", {
+  pattern = "blade",
+  callback = function()
+    vim.opt_local.autoindent = false
+    vim.opt_local.smartindent = false
+    vim.opt_local.cindent = false
+    vim.opt_local.indentexpr = ""
+  end,
+})
