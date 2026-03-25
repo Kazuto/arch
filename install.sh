@@ -295,6 +295,20 @@ install_packages() {
     linuxconsole # Joystick utilities (includes jstest)
   )
 
+  # Virtualization (QEMU/KVM + libvirt)
+  local VIRT_PACKAGES=(
+    qemu-full    # Full QEMU system emulation
+    libvirt      # Virtualization API
+    virt-manager # GUI for managing VMs
+    virt-viewer  # VM console viewer
+    dnsmasq      # DNS/DHCP for VM networking
+    bridge-utils # Network bridge utilities
+    iptables-nft # Firewall for VM networking
+    edk2-ovmf    # UEFI firmware for VMs
+    swtpm        # TPM emulation (for Windows 11)
+    dmidecode    # Hardware info for VMs
+  )
+
   # Combine all packages (no login manager - SDDM already installed by Arch)
   local ALL_PACKAGES=(
     "${CORE_PACKAGES[@]}"
@@ -306,9 +320,10 @@ install_packages() {
     "${FONT_PACKAGES[@]}"
     "${APP_PACKAGES[@]}"
     "${AMD_PACKAGES[@]}"
+    "${VIRT_PACKAGES[@]}"
   )
 
-  log_info "Installing ${#ALL_PACKAGES[@]} packages via pacman (including AMD/gaming optimizations)..."
+  log_info "Installing ${#ALL_PACKAGES[@]} packages via pacman (including AMD/gaming/virtualization)..."
 
   # Debug: show packages to be installed
   echo "Packages to install:" >>"$INSTALL_LOG"
@@ -396,10 +411,11 @@ install_packages() {
     wleave-git # Modern logout menu (GTK4)
 
     # Applications (AUR)
-    bitwarden      # Password manager
-    obsidian       # Note-taking
-    spotify        # Music streaming
-    spicetify-cli  # Spotify customization tool
+    bitwarden     # Password manager
+    obsidian      # Note-taking
+    spotify       # Music streaming
+    spicetify-cli # Spotify customization tool
+    vencord       # Discord customization tool
 
     # Gaming (AUR)
     atlauncher-bin
@@ -584,13 +600,46 @@ configure_services() {
     fi
   fi
 
+  # Enable and start libvirt services if installed
+  if command -v virsh &>/dev/null; then
+    log_info "Configuring libvirt virtualization services..."
+
+    if ! systemctl is-enabled libvirtd &>/dev/null; then
+      sudo systemctl enable libvirtd 2>&1 | tee -a "$INSTALL_LOG"
+      log_success "libvirtd service enabled"
+    else
+      log_info "libvirtd already enabled"
+    fi
+
+    if ! systemctl is-active libvirtd &>/dev/null; then
+      sudo systemctl start libvirtd 2>&1 | tee -a "$INSTALL_LOG"
+      log_success "libvirtd service started"
+    else
+      log_info "libvirtd already running"
+    fi
+
+    # Enable virtlogd (logging daemon)
+    if ! systemctl is-enabled virtlogd &>/dev/null; then
+      sudo systemctl enable virtlogd 2>&1 | tee -a "$INSTALL_LOG"
+    fi
+
+    # Start default network
+    if ! sudo virsh net-list --all | grep -q "default.*active"; then
+      sudo virsh net-autostart default 2>&1 | tee -a "$INSTALL_LOG" || log_warning "Failed to autostart default network"
+      sudo virsh net-start default 2>&1 | tee -a "$INSTALL_LOG" || log_warning "Failed to start default network"
+      log_success "libvirt default network configured"
+    else
+      log_info "libvirt default network already active"
+    fi
+  fi
+
   log_success "Services configured"
 }
 
 configure_user_groups() {
   log_info "Adding user to required groups (idempotent)..."
 
-  local REQUIRED_GROUPS=(video input render uinput)
+  local REQUIRED_GROUPS=(video input render uinput libvirt)
   local ADDED=0
 
   for group in "${REQUIRED_GROUPS[@]}"; do
@@ -731,6 +780,11 @@ print_summary() {
   echo "  - ${BLUE}corectrl${NC} = GPU/CPU control GUI"
   echo "  - ${BLUE}auto-cpufreq --stats${NC} = CPU frequency info"
   echo ""
+  echo "Virtualization tools:"
+  echo "  - ${BLUE}virt-manager${NC} = VM management GUI"
+  echo "  - ${BLUE}virsh${NC} = CLI for managing VMs"
+  echo "  - Includes UEFI/TPM support for Windows 11 VMs"
+  echo ""
   echo "Installed components:"
   echo "  ✓ Hyprland (Wayland compositor)"
   echo "  ✓ Waybar (status bar)"
@@ -740,6 +794,7 @@ print_summary() {
   echo "  ✓ Catppuccin GTK theme"
   echo "  ✓ AMD GPU tools (amdgpu_top, nvtop, corectrl)"
   echo "  ✓ Gaming (Steam, GameMode, MangoHUD)"
+  echo "  ✓ Virtualization (QEMU/KVM, libvirt, virt-manager)"
   echo "  ✓ Development (Docker, Ollama, Node, Go, Rust, Python)"
   echo "  ✓ And many more..."
   echo ""
