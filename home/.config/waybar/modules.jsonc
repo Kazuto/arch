@@ -90,6 +90,7 @@
       "com-atlauncher-App": "ATLauncher",
       "steam": "Steam",
       "com.libretro.RetroArch": "RetroArch",
+      "vesktop": "Discord",
       "(.*) — Firefox": "Firefox",
       "(.*) — Firefox Developer Edition": "Firefox Dev"
     }
