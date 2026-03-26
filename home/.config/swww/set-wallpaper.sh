@@ -43,20 +43,20 @@ if [ "$IMG_WIDTH" -ge "$THRESHOLD" ]; then
     SPLIT_X=$((IMG_WIDTH * 3440 / TOTAL_WIDTH))
 
     # Split image (preserve format)
-    convert "$IMAGE" -crop "${SPLIT_X}x${IMG_HEIGHT}+0+0" +repage "$TEMP_DIR/left.${IMG_EXT}"
-    convert "$IMAGE" -crop "$((IMG_WIDTH-SPLIT_X))x${IMG_HEIGHT}+${SPLIT_X}+0" +repage "$TEMP_DIR/right.${IMG_EXT}"
+    magick convert "$IMAGE" -crop "${SPLIT_X}x${IMG_HEIGHT}+0+0" +repage "$TEMP_DIR/left.${IMG_EXT}"
+    magick convert "$IMAGE" -crop "$((IMG_WIDTH-SPLIT_X))x${IMG_HEIGHT}+${SPLIT_X}+0" +repage "$TEMP_DIR/right.${IMG_EXT}"
 
     # Apply to monitors with transition
-    swww img "$TEMP_DIR/left.${IMG_EXT}" --outputs "$MON1" --resize crop \
+    awww img "$TEMP_DIR/left.${IMG_EXT}" --outputs "$MON1" --resize crop \
         --transition-type grow --transition-duration 0.5 --transition-fps 60 --transition-pos top-right &
-    swww img "$TEMP_DIR/right.${IMG_EXT}" --outputs "$MON2" --resize crop \
+    awww img "$TEMP_DIR/right.${IMG_EXT}" --outputs "$MON2" --resize crop \
         --transition-type grow --transition-duration 0.5 --transition-fps 60 --transition-pos top-right &
     wait
 
     notify-send "Wallpaper Split" "Applied across both monitors\n${IMG_WIDTH}x${IMG_HEIGHT}"
 else
     # Normal mode: repeat on all monitors with transition
-    swww img "$IMAGE" --resize crop \
+    awww img "$IMAGE" --resize crop \
         --transition-type grow --transition-duration 0.5 --transition-fps 60 --transition-pos top-right
     notify-send "Wallpaper" "Applied to all monitors\n${IMG_WIDTH}x${IMG_HEIGHT}"
 fi
