@@ -1,0 +1,11 @@
+#!/bin/bash
+# Toggle QuickShell overlay visibility via IPC socket
+
+# Send toggle command to QuickShell via Unix socket
+echo "overlay-toggle" | socat - UNIX-CONNECT:/tmp/quickshell.sock 2>/dev/null
+
+# Fallback if socat isn't available
+if [ $? -ne 0 ]; then
+    # Try with netcat
+    echo "overlay-toggle" | nc -U /tmp/quickshell.sock 2>/dev/null
+fi

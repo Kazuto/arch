@@ -106,8 +106,9 @@
     "exec": "$HOME/.config/waybar/scripts/spotify",
     "exec-if": "pgrep spotify",
     "escape": true,
-    "on-click": "playerctl --player=spotify play-pause",
-    "on-click-right": "ghostty -e spotify",
+    "on-click": "echo 'spotify-toggle' | socat - UNIX-CONNECT:/tmp/quickshell.sock",
+    "on-click-middle": "playerctl --player=spotify play-pause",
+    "on-click-right": "ghostty -e spotify_player",
     "on-scroll-up": "playerctl --player=spotify next",
     "on-scroll-down": "playerctl --player=spotify previous"
   },

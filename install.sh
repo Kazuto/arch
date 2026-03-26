@@ -136,6 +136,7 @@ install_packages() {
     qt5-graphicaleffects # SDDM theme dependencies
     qt5-quickcontrols2
     qt5-svg
+    socat    # Socket communication (for QuickShell IPC)
     usbutils
     viewnior
     wl-clipboard
@@ -410,6 +411,7 @@ install_packages() {
     hyprpicker
     keyd
     libinput-gestures # Touchpad gestures
+    quickshell-git    # Qt/QML-based widget toolkit for overlays
     solaar
     wleave-git # Modern logout menu (GTK4)
 
