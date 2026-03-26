@@ -1,0 +1,5 @@
+#!/bin/bash
+# Launch Hyprland with uwsm session management
+
+# Start Hyprland via uwsm
+exec uwsm start -F hyprland.desktop
