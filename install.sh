@@ -16,11 +16,11 @@ set -e          # Exit on error
 set -o pipefail # Catch errors in pipes
 
 # Colors for output
-RED='\033[0;31m'
-GREEN='\033[0;32m'
-YELLOW='\033[1;33m'
-BLUE='\033[0;34m'
-NC='\033[0m' # No Color
+RED=$'\033[0;31m'
+GREEN=$'\033[0;32m'
+YELLOW=$'\033[1;33m'
+BLUE=$'\033[0;34m'
+NC=$'\033[0m' # No Color
 
 # Script configuration
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
@@ -200,12 +200,11 @@ install_packages() {
     stylua       # Lua formatter
 
     # LSP servers (pacman)
-    bash-language-server         # Bash LSP
-    gopls                        # Go LSP
-    lua-language-server          # Lua LSP
-    typescript-language-server   # TypeScript/JavaScript LSP
-    vscode-langservers-extracted # CSS, HTML, JSON LSP
-    yaml-language-server         # YAML LSP
+    bash-language-server       # Bash LSP
+    gopls                      # Go LSP
+    lua-language-server        # Lua LSP
+    typescript-language-server # TypeScript/JavaScript LSP
+    yaml-language-server       # YAML LSP
 
     # Linters (pacman)
     shellcheck # Shell script linter
@@ -302,8 +301,6 @@ install_packages() {
     virt-manager # GUI for managing VMs
     virt-viewer  # VM console viewer
     dnsmasq      # DNS/DHCP for VM networking
-    bridge-utils # Network bridge utilities
-    iptables-nft # Firewall for VM networking
     edk2-ovmf    # UEFI firmware for VMs
     swtpm        # TPM emulation (for Windows 11)
     dmidecode    # Hardware info for VMs
@@ -348,29 +345,35 @@ install_packages() {
   local INSTALLED_COUNT=0
   local SKIPPED_COUNT=0
 
+  # Disable exit-on-error for package installation (we handle errors explicitly)
+  set +e
+
   for pkg in "${ALL_PACKAGES[@]}"; do
     # Check if already installed
     if pacman -Q "$pkg" &>/dev/null; then
       SKIPPED_COUNT=$((SKIPPED_COUNT + 1))
-      log_info "[$INSTALLED_COUNT/${#ALL_PACKAGES[@]}] $pkg (already installed)"
       INSTALLED_COUNT=$((INSTALLED_COUNT + 1))
+      log_info "[$INSTALLED_COUNT/${#ALL_PACKAGES[@]}] $pkg (already installed)"
       continue
     fi
 
-    # Show spinner during installation
-    echo -ne "${BLUE}[⠋]${NC} [$INSTALLED_COUNT/${#ALL_PACKAGES[@]}] Installing: $pkg..."
-    sudo pacman -S --needed --noconfirm "$pkg" >>"$INSTALL_LOG" 2>&1 &
-    spinner $! "[$INSTALLED_COUNT/${#ALL_PACKAGES[@]}] Installing: $pkg..."
-    wait $!
+    # Install package
+    echo -ne "${BLUE}[⠋]${NC} [$((INSTALLED_COUNT + 1))/${#ALL_PACKAGES[@]}] Installing: $pkg..."
+    sudo pacman -S --needed --noconfirm "$pkg" >>"$INSTALL_LOG" 2>&1
+    local exit_code=$?
 
-    if [ $? -eq 0 ]; then
+    if [ $exit_code -eq 0 ]; then
       INSTALLED_COUNT=$((INSTALLED_COUNT + 1))
       log_success "[$INSTALLED_COUNT/${#ALL_PACKAGES[@]}] Installed: $pkg"
     else
+      INSTALLED_COUNT=$((INSTALLED_COUNT + 1))
       FAILED_PACKAGES+=("$pkg")
-      log_warning "[$INSTALLED_COUNT/${#ALL_PACKAGES[@]}] Failed: $pkg"
+      log_warning "[$INSTALLED_COUNT/${#ALL_PACKAGES[@]}] Failed: $pkg (exit code: $exit_code)"
     fi
   done
+
+  # Re-enable exit-on-error
+  set -e
 
   # Summary
   echo "" | tee -a "$INSTALL_LOG"
@@ -437,11 +440,12 @@ install_packages() {
     laravel-pint    # Laravel PHP code style fixer
 
     # LSP servers (AUR)
-    emmet-ls                    # Emmet LSP
-    intelephense                # PHP LSP
-    phpactor                    # PHP LSP (alternative)
-    tailwindcss-language-server # Tailwind CSS LSP
-    vue-language-server         # Vue LSP
+    emmet-ls                     # Emmet LSP
+    intelephense                 # PHP LSP
+    phpactor                     # PHP LSP (alternative)
+    tailwindcss-language-server  # Tailwind CSS LSP
+    vscode-langservers-extracted # CSS, HTML, JSON LSP
+    vue-language-server          # Vue LSP
 
     # Linters (AUR)
     eslint_d # Fast ESLint daemon
@@ -450,37 +454,45 @@ install_packages() {
     # System performance (AUR)
     auto-cpufreq # Automatic CPU frequency scaling
 
+    # Virtualization (AUR)
+    bridge-utils # Network bridge utilities for VMs
+
     # Controller support (AUR)
     jstest-gtk-git # Joystick testing GUI
     xpadneo-dkms   # Xbox/GameSir controller driver (Bluetooth)
-    # Note: claude, opencode might not be in AUR
   )
 
   # Install AUR packages individually
   local AUR_FAILED=()
   local AUR_INSTALLED=0
 
+  # Disable exit-on-error for AUR installation (we handle errors explicitly)
+  set +e
+
   for pkg in "${AUR_PACKAGES[@]}"; do
     if pacman -Q "$pkg" &>/dev/null; then
-      log_info "[$AUR_INSTALLED/${#AUR_PACKAGES[@]}] $pkg (already installed)"
       AUR_INSTALLED=$((AUR_INSTALLED + 1))
+      log_info "[$AUR_INSTALLED/${#AUR_PACKAGES[@]}] $pkg (already installed)"
       continue
     fi
 
-    # Show spinner for AUR builds (can take several minutes)
-    echo -ne "${BLUE}[⠋]${NC} [$AUR_INSTALLED/${#AUR_PACKAGES[@]}] Building (AUR): $pkg..."
-    yay -S --needed --noconfirm "$pkg" >>"$INSTALL_LOG" 2>&1 &
-    spinner $! "[$AUR_INSTALLED/${#AUR_PACKAGES[@]}] Building (AUR): $pkg (this may take a few minutes)..."
-    wait $!
+    # Install AUR package (may take several minutes)
+    log_info "[$((AUR_INSTALLED + 1))/${#AUR_PACKAGES[@]}] Building (AUR): $pkg (this may take a few minutes)..."
+    yay -S --needed --noconfirm "$pkg" >>"$INSTALL_LOG" 2>&1
+    local aur_exit_code=$?
 
-    if [ $? -eq 0 ]; then
+    if [ $aur_exit_code -eq 0 ]; then
       AUR_INSTALLED=$((AUR_INSTALLED + 1))
       log_success "[$AUR_INSTALLED/${#AUR_PACKAGES[@]}] Installed (AUR): $pkg"
     else
+      AUR_INSTALLED=$((AUR_INSTALLED + 1))
       AUR_FAILED+=("$pkg")
-      log_warning "[$AUR_INSTALLED/${#AUR_PACKAGES[@]}] Failed (AUR): $pkg"
+      log_warning "[$AUR_INSTALLED/${#AUR_PACKAGES[@]}] Failed (AUR): $pkg (exit code: $aur_exit_code)"
     fi
   done
+
+  # Re-enable exit-on-error
+  set -e
 
   # AUR Summary
   echo "" | tee -a "$INSTALL_LOG"
@@ -685,6 +697,22 @@ configure_environment() {
   fi
 }
 
+configure_uwsm() {
+  log_info "Configuring uwsm (Universal Wayland Session Manager)..."
+
+  # Create session data directory (configs are stowed from repo)
+  mkdir -p ~/.local/state/uwsm/sessions
+
+  # Make hyprland-uwsm launcher executable if it exists
+  if [[ -f ~/.local/bin/hyprland-uwsm ]]; then
+    chmod +x ~/.local/bin/hyprland-uwsm
+    log_success "uwsm launcher configured"
+  fi
+
+  log_success "uwsm configured for session save/restore"
+  log_info "Session data will be saved to: ~/.local/state/uwsm/sessions"
+}
+
 setup_gtk_theme() {
   log_info "Setting up GTK theme..."
 
@@ -785,8 +813,14 @@ print_summary() {
   echo "  - ${BLUE}virsh${NC} = CLI for managing VMs"
   echo "  - Includes UEFI/TPM support for Windows 11 VMs"
   echo ""
+  echo "Session management (uwsm):"
+  echo "  - ${BLUE}Automatic${NC} = Sessions save every 5 minutes and on exit"
+  echo "  - ${BLUE}Automatic restore${NC} = Windows/workspaces restore on login"
+  echo "  - Launch via SDDM or run ${BLUE}hyprland-uwsm${NC} manually"
+  echo ""
   echo "Installed components:"
   echo "  ✓ Hyprland (Wayland compositor)"
+  echo "  ✓ uwsm (session manager with save/restore)"
   echo "  ✓ Waybar (status bar)"
   echo "  ✓ Rofi + rofimoji (launcher & emoji picker)"
   echo "  ✓ Dunst (notifications)"
@@ -820,6 +854,7 @@ main() {
   configure_user_groups
   configure_environment
   setup_gtk_theme
+  configure_uwsm
   install_hyprland_plugins
 
   print_summary
