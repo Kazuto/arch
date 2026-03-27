@@ -32,7 +32,8 @@ Rectangle {
             Modules.SystemStats {},
             Modules.Bluetooth {},
             Modules.Audio {},
-            Modules.Clock {}
+            Modules.Clock {},
+            Modules.Notifications {}
         ]
     }
 
@@ -52,6 +53,12 @@ Rectangle {
     Overlays.AudioOverlay {
         id: audioOverlay
         visible: AppState.audioOverlayVisible
+    }
+
+    // Notifications overlay
+    Overlays.NotificationsOverlay {
+        id: notificationsOverlay
+        visible: AppState.notificationsOverlayVisible
     }
 
     // IPC Socket Server
