@@ -15,6 +15,7 @@ Singleton {
     property bool timerOverlayVisible: false
     property bool ollamaOverlayVisible: false
     property bool calendarOverlayVisible: false
+    property bool menuOverlayVisible: false
 
     function closeAllOverlays() {
         spotifyOverlayVisible = false
@@ -27,6 +28,7 @@ Singleton {
         timerOverlayVisible = false
         ollamaOverlayVisible = false
         calendarOverlayVisible = false
+        menuOverlayVisible = false
     }
 
     function toggleSpotifyOverlay() {
@@ -104,5 +106,12 @@ Singleton {
             closeAllOverlays()
         }
         calendarOverlayVisible = !calendarOverlayVisible
+    }
+
+    function toggleMenuOverlay() {
+        if (!menuOverlayVisible) {
+            closeAllOverlays()
+        }
+        menuOverlayVisible = !menuOverlayVisible
     }
 }

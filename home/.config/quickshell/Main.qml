@@ -96,6 +96,12 @@ Rectangle {
         visible: AppState.calendarOverlayVisible
     }
 
+    // Menu overlay
+    Overlays.MenuOverlay {
+        id: menuOverlay
+        visible: AppState.menuOverlayVisible
+    }
+
     // IPC Socket Server
     SocketServer {
         id: ipcSocket

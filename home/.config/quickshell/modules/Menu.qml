@@ -25,6 +25,6 @@ Rectangle {
         anchors.fill: parent
         hoverEnabled: true
         cursorShape: Qt.PointingHandCursor
-        onClicked: console.log("Menu clicked - TODO: Launch menu")
+        onClicked: AppState.toggleMenuOverlay()
     }
 }
