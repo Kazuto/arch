@@ -1,5 +1,6 @@
 import QtQuick
 import "root:/"
+import "root:/singletons"
 
 Rectangle {
     implicitWidth: bluetoothText.implicitWidth + Config.moduleHorizontalPadding
@@ -7,15 +8,19 @@ Rectangle {
     color: bluetoothMouseArea.containsMouse ? Config.moduleHoverBackground : Config.moduleBackground
     radius: Config.moduleRadius
 
-    Behavior on color {
-        ColorAnimation { duration: Config.animationDuration }
-    }
-
     Text {
         id: bluetoothText
         anchors.centerIn: parent
-        text: Icon.bluetooth + " " + "on"  // TODO: Get from blueman-manager
-        color: Theme.blue
+        text: {
+            if (!BluetoothData.powered) {
+                return Icon.bluetooth + " Off"
+            } else if (BluetoothData.connectedDevice) {
+                return Icon.bluetooth + " " + BluetoothData.connectedDevice
+            } else {
+                return Icon.bluetooth + " On"
+            }
+        }
+        color: BluetoothData.powered ? Theme.sky : Theme.overlay0
         font.pixelSize: Config.moduleFontSize
         font.family: Config.moduleFontFamily
     }
@@ -25,6 +30,8 @@ Rectangle {
         anchors.fill: parent
         hoverEnabled: true
         cursorShape: Qt.PointingHandCursor
-        onClicked: console.log("Bluetooth clicked - TODO: Open blueman-manager")
+        onClicked: {
+            AppState.toggleBluetoothOverlay()
+        }
     }
 }

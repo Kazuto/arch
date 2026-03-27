@@ -1,1 +1,2 @@
 singleton SystemStatsData 1.0 SystemStatsData.qml
+singleton BluetoothData 1.0 BluetoothData.qml

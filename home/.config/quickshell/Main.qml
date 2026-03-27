@@ -42,6 +42,12 @@ Rectangle {
         visible: AppState.spotifyOverlayVisible
     }
 
+    // Bluetooth overlay
+    Overlays.BluetoothOverlay {
+        id: bluetoothOverlay
+        visible: AppState.bluetoothOverlayVisible
+    }
+
     // IPC Socket Server
     SocketServer {
         id: ipcSocket
