@@ -2,3 +2,4 @@ singleton SystemStatsData 1.0 SystemStatsData.qml
 singleton BluetoothData 1.0 BluetoothData.qml
 singleton AudioData 1.0 AudioData.qml
 singleton NotificationData 1.0 NotificationData.qml
+singleton GitHubData 1.0 GitHubData.qml

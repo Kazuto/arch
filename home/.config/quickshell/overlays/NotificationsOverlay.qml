@@ -63,12 +63,12 @@ PanelWindow {
             spacing: 15
 
             // Header
-            Row {
+            Item {
                 width: parent.width
                 height: 30
-                spacing: 10
 
                 Text {
+                    anchors.left: parent.left
                     anchors.verticalCenter: parent.verticalCenter
                     text: "Notifications"
                     color: Theme.text
@@ -77,11 +77,13 @@ PanelWindow {
                     font.family: Config.moduleFontFamily
                 }
 
-                Item { width: parent.width - 240 }
-
-                // Pause button
-                Rectangle {
+                Row {
+                    anchors.right: parent.right
                     anchors.verticalCenter: parent.verticalCenter
+                    spacing: 10
+
+                    // Pause button
+                    Rectangle {
                     width: 70
                     height: 30
                     color: pauseMouseArea.containsMouse ? Theme.surface1 : Theme.surface0
@@ -117,28 +119,28 @@ PanelWindow {
                     }
                 }
 
-                // Clear all button
-                Rectangle {
-                    anchors.verticalCenter: parent.verticalCenter
-                    width: 80
-                    height: 30
-                    color: clearMouseArea.containsMouse ? Theme.surface1 : Theme.surface0
-                    radius: 15
+                    // Clear all button
+                    Rectangle {
+                        width: 80
+                        height: 30
+                        color: clearMouseArea.containsMouse ? Theme.surface1 : Theme.surface0
+                        radius: 15
 
-                    Text {
-                        anchors.centerIn: parent
-                        text: "Clear All"
-                        color: Theme.text
-                        font.pixelSize: 12
-                        font.family: Config.moduleFontFamily
-                    }
+                        Text {
+                            anchors.centerIn: parent
+                            text: "Clear All"
+                            color: Theme.text
+                            font.pixelSize: 12
+                            font.family: Config.moduleFontFamily
+                        }
 
-                    MouseArea {
-                        id: clearMouseArea
-                        anchors.fill: parent
-                        hoverEnabled: true
-                        cursorShape: Qt.PointingHandCursor
-                        onClicked: NotificationData.clearAll()
+                        MouseArea {
+                            id: clearMouseArea
+                            anchors.fill: parent
+                            hoverEnabled: true
+                            cursorShape: Qt.PointingHandCursor
+                            onClicked: NotificationData.clearAll()
+                        }
                     }
                 }
             }

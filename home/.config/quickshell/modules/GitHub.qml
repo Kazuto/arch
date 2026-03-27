@@ -1,5 +1,6 @@
 import QtQuick
 import "root:/"
+import "root:/singletons"
 
 Rectangle {
     implicitWidth: githubText.implicitWidth + Config.moduleHorizontalPadding
@@ -14,8 +15,8 @@ Rectangle {
     Text {
         id: githubText
         anchors.centerIn: parent
-        text: Icon.github + " " + "0"  // TODO: Get from GitHub API
-        color: Theme.mauve
+        text: Icon.github + " " + GitHubData.notificationCount
+        color: GitHubData.notificationCount > 0 ? Theme.red : Theme.text
         font.pixelSize: Config.moduleFontSize
         font.family: Config.moduleFontFamily
     }
@@ -25,6 +26,6 @@ Rectangle {
         anchors.fill: parent
         hoverEnabled: true
         cursorShape: Qt.PointingHandCursor
-        onClicked: console.log("GitHub clicked - TODO: Show notifications")
+        onClicked: AppState.toggleGitHubOverlay()
     }
 }

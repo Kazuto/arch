@@ -72,6 +72,12 @@ Rectangle {
         visible: AppState.systemStatsOverlayVisible
     }
 
+    // GitHub overlay
+    Overlays.GitHubOverlay {
+        id: githubOverlay
+        visible: AppState.githubOverlayVisible
+    }
+
     // IPC Socket Server
     SocketServer {
         id: ipcSocket
