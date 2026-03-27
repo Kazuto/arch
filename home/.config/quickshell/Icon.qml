@@ -8,6 +8,8 @@ Singleton {
     property string emptyWorkspace: ""
     property string back: ""
     property string forward: ""
+    property string downArrow: ""
+    property string upArrow: ""
 
     // System Icons
     property string arch: "󰣇"
@@ -26,7 +28,7 @@ Singleton {
     property string microphoneMuted: "󰍭"
     property string calendar: ""
     property string clock: ""
-    property string settings: ""
+    property string settings: "󰔡"
 
     // Application Icons
     property string firefox: ""

@@ -66,6 +66,12 @@ Rectangle {
         visible: AppState.controlCenterOverlayVisible
     }
 
+    // System Stats overlay
+    Overlays.SystemStatsOverlay {
+        id: systemStatsOverlay
+        visible: AppState.systemStatsOverlayVisible
+    }
+
     // IPC Socket Server
     SocketServer {
         id: ipcSocket

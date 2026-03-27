@@ -26,12 +26,7 @@ Row {
             anchors.fill: parent
             hoverEnabled: true
             cursorShape: Qt.PointingHandCursor
-            onClicked: {
-                var proc = Qt.createQmlObject(
-                    'import Quickshell.Io; Process { command: ["ghostty", "-e", "btop"]; running: true }',
-                    parent
-                )
-            }
+            onClicked: AppState.toggleSystemStatsOverlay()
         }
     }
 
@@ -56,12 +51,7 @@ Row {
             anchors.fill: parent
             hoverEnabled: true
             cursorShape: Qt.PointingHandCursor
-            onClicked: {
-                var proc = Qt.createQmlObject(
-                    'import Quickshell.Io; Process { command: ["ghostty", "-e", "btop"]; running: true }',
-                    parent
-                )
-            }
+            onClicked: AppState.toggleSystemStatsOverlay()
         }
     }
 
@@ -75,7 +65,7 @@ Row {
         Text {
             id: netText
             anchors.centerIn: parent
-            text: Icon.network + " " + SystemStatsData.networkSpeed
+            text: Icon.downArrow + " " + SystemStatsData.networkSpeedDown + "  " + Icon.upArrow + " " + SystemStatsData.networkSpeedUp
             color: Theme.sky
             font.pixelSize: Config.moduleFontSize
             font.family: Config.moduleFontFamily
@@ -86,12 +76,7 @@ Row {
             anchors.fill: parent
             hoverEnabled: true
             cursorShape: Qt.PointingHandCursor
-            onClicked: {
-                var proc = Qt.createQmlObject(
-                    'import Quickshell.Io; Process { command: ["ghostty", "-e", "btop"]; running: true }',
-                    parent
-                )
-            }
+            onClicked: AppState.toggleSystemStatsOverlay()
         }
     }
 }
