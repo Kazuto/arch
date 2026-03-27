@@ -19,19 +19,13 @@ Singleton {
     }
 
     function setOutputVolume(volume) {
-        var proc = Qt.createComponent("", {
-            command: ["pamixer", "--set-volume", volume.toString()],
-            running: true
-        })
-        updateTimer.start()
+        commandProcess.command = ["pamixer", "--set-volume", Math.round(volume).toString()]
+        commandProcess.running = true
     }
 
     function setInputVolume(volume) {
-        var proc = Qt.createComponent("", {
-            command: ["pamixer", "--default-source", "--set-volume", volume.toString()],
-            running: true
-        })
-        updateTimer.start()
+        commandProcess.command = ["pamixer", "--default-source", "--set-volume", Math.round(volume).toString()]
+        commandProcess.running = true
     }
 
     function toggleOutputMute() {

@@ -8,6 +8,8 @@ Singleton {
     property bool bluetoothOverlayVisible: false
     property bool audioOverlayVisible: false
     property bool notificationsOverlayVisible: false
+    property bool controlCenterOverlayVisible: false
+    property string controlCenterView: "main"  // main, bluetooth, audio
 
     function toggleSpotifyOverlay() {
         spotifyOverlayVisible = !spotifyOverlayVisible
@@ -23,5 +25,16 @@ Singleton {
 
     function toggleNotificationsOverlay() {
         notificationsOverlayVisible = !notificationsOverlayVisible
+    }
+
+    function toggleControlCenterOverlay() {
+        controlCenterOverlayVisible = !controlCenterOverlayVisible
+        if (controlCenterOverlayVisible) {
+            controlCenterView = "main"
+        }
+    }
+
+    function setControlCenterView(view) {
+        controlCenterView = view
     }
 }

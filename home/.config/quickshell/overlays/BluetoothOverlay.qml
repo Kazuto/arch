@@ -27,12 +27,36 @@ PanelWindow {
         z: -1
     }
 
+    // Arrow pointer
+    Canvas {
+        anchors {
+            top: parent.top
+            right: parent.right
+            topMargin: Config.barHeight + 6
+            rightMargin: 330  // Align with Bluetooth module position
+        }
+        width: 20
+        height: 10
+
+        onPaint: {
+            var ctx = getContext("2d")
+            ctx.reset()
+            ctx.fillStyle = Theme.surface0
+            ctx.beginPath()
+            ctx.moveTo(10, 0)
+            ctx.lineTo(0, 10)
+            ctx.lineTo(20, 10)
+            ctx.closePath()
+            ctx.fill()
+        }
+    }
+
     Rectangle {
         anchors {
             top: parent.top
             right: parent.right
-            topMargin: Config.barHeight + Config.barMarginTop + 10
-            rightMargin: Config.barMarginSide
+            topMargin: Config.barHeight + 12
+            rightMargin: 155  // Position overlay near Bluetooth module
         }
         width: 350
         height: contentColumn.implicitHeight + 40

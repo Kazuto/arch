@@ -30,8 +30,7 @@ Rectangle {
             Modules.Timer {},
             Modules.Ollama {},
             Modules.SystemStats {},
-            Modules.Bluetooth {},
-            Modules.Audio {},
+            Modules.ControlCenter {},
             Modules.Clock {},
             Modules.Notifications {}
         ]
@@ -59,6 +58,12 @@ Rectangle {
     Overlays.NotificationsOverlay {
         id: notificationsOverlay
         visible: AppState.notificationsOverlayVisible
+    }
+
+    // Control Center overlay
+    Overlays.ControlCenterOverlay {
+        id: controlCenterOverlay
+        visible: AppState.controlCenterOverlayVisible
     }
 
     // IPC Socket Server

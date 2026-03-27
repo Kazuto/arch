@@ -33,12 +33,36 @@ PanelWindow {
         z: -1
     }
 
+    // Arrow pointer
+    Canvas {
+        anchors {
+            top: parent.top
+            right: parent.right
+            topMargin: Config.barHeight + 6
+            rightMargin: 220  // Align with Notifications module position
+        }
+        width: 20
+        height: 10
+
+        onPaint: {
+            var ctx = getContext("2d")
+            ctx.reset()
+            ctx.fillStyle = Theme.surface0
+            ctx.beginPath()
+            ctx.moveTo(10, 0)
+            ctx.lineTo(0, 10)
+            ctx.lineTo(20, 10)
+            ctx.closePath()
+            ctx.fill()
+        }
+    }
+
     Rectangle {
         anchors {
             top: parent.top
             right: parent.right
-            topMargin: Config.barHeight + Config.barMarginTop + 10
-            rightMargin: Config.barMarginSide
+            topMargin: Config.barHeight + 12
+            rightMargin: 20  // Position overlay near Notifications module (rightmost)
         }
         width: 400
         height: Math.min(700, parent.height - Config.barHeight - Config.barMarginTop - 40)

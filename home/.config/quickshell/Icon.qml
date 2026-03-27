@@ -6,10 +6,14 @@ import Quickshell
 Singleton {
     // Base Icons
     property string emptyWorkspace: ""
+    property string back: ""
+    property string forward: ""
 
     // System Icons
     property string arch: "󰣇"
     property string power: ""
+    property string logout: ""
+    property string login: ""
     property string refresh: ""
     property string lock: ""
     property string cpu: "󰻠"
@@ -22,6 +26,7 @@ Singleton {
     property string microphoneMuted: "󰍭"
     property string calendar: ""
     property string clock: ""
+    property string settings: ""
 
     // Application Icons
     property string firefox: ""
