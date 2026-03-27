@@ -84,6 +84,12 @@ Rectangle {
         visible: AppState.timerOverlayVisible
     }
 
+    // Ollama overlay
+    Overlays.OllamaOverlay {
+        id: ollamaOverlay
+        visible: AppState.ollamaOverlayVisible
+    }
+
     // IPC Socket Server
     SocketServer {
         id: ipcSocket

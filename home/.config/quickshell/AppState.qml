@@ -13,6 +13,7 @@ Singleton {
     property bool systemStatsOverlayVisible: false
     property bool githubOverlayVisible: false
     property bool timerOverlayVisible: false
+    property bool ollamaOverlayVisible: false
 
     function toggleSpotifyOverlay() {
         spotifyOverlayVisible = !spotifyOverlayVisible
@@ -51,5 +52,9 @@ Singleton {
 
     function toggleTimerOverlay() {
         timerOverlayVisible = !timerOverlayVisible
+    }
+
+    function toggleOllamaOverlay() {
+        ollamaOverlayVisible = !ollamaOverlayVisible
     }
 }

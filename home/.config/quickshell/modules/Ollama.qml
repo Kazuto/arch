@@ -1,5 +1,6 @@
 import QtQuick
 import "root:/"
+import "root:/singletons"
 
 Rectangle {
     implicitWidth: ollamaText.implicitWidth + Config.moduleHorizontalPadding
@@ -14,11 +15,10 @@ Rectangle {
     Text {
         id: ollamaText
         anchors.centerIn: parent
-        text: Icon.ollama  // TODO: Get from ollama script
-        color: Theme.green
+        text: Icon.ollama
+        color: OllamaData.isRunning ? Theme.green : Theme.overlay0
         font.pixelSize: Config.moduleFontSize
         font.family: Config.moduleFontFamily
-        opacity: 1  // Dimmed when inactive
     }
 
     MouseArea {
@@ -26,6 +26,6 @@ Rectangle {
         anchors.fill: parent
         hoverEnabled: true
         cursorShape: Qt.PointingHandCursor
-        onClicked: console.log("Ollama clicked - TODO: Toggle service")
+        onClicked: AppState.toggleOllamaOverlay()
     }
 }
