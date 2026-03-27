@@ -90,6 +90,12 @@ Rectangle {
         visible: AppState.ollamaOverlayVisible
     }
 
+    // Calendar overlay
+    Overlays.CalendarOverlay {
+        id: calendarOverlay
+        visible: AppState.calendarOverlayVisible
+    }
+
     // IPC Socket Server
     SocketServer {
         id: ipcSocket

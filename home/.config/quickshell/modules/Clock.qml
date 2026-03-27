@@ -32,6 +32,6 @@ Rectangle {
         anchors.fill: parent
         hoverEnabled: true
         cursorShape: Qt.PointingHandCursor
-        onClicked: console.log("Clock clicked - TODO: Show calendar")
+        onClicked: AppState.toggleCalendarOverlay()
     }
 }
