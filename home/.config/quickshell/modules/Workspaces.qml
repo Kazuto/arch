@@ -1,4 +1,6 @@
 import QtQuick
+import Quickshell
+import Quickshell.Hyprland
 import "root:/"
 
 Rectangle {
@@ -29,8 +31,29 @@ Rectangle {
             delegate: Item {
                 property int workspaceNum: modelData.num
                 property string workspaceIcon: modelData.icon
-                property bool isActive: modelData.num === 1  // TODO: Get from Hyprland
-                property bool hasWindows: modelData.num <= 3  // TODO: Get from Hyprland
+                property bool isActive: false
+                property bool hasWindows: false
+
+                Binding on isActive {
+                    value: {
+                        if (!Hyprland.focusedWorkspace) return false
+                        return Hyprland.focusedWorkspace.id === workspaceNum
+                    }
+                    when: Hyprland.focusedWorkspace !== undefined
+                }
+
+                Binding on hasWindows {
+                    value: {
+                        for (var i in Hyprland.workspaces.values) {
+                            var ws = Hyprland.workspaces.values[i]
+                            if (ws.id === workspaceNum) {
+                                return ws.windows && ws.windows.length > 0
+                            }
+                        }
+                        return false
+                    }
+                    when: Hyprland.workspaces !== undefined
+                }
 
                 width: Config.workspaceSize
                 height: Config.workspaceSize
@@ -40,7 +63,9 @@ Rectangle {
                     anchors.fill: parent
                     hoverEnabled: true
                     cursorShape: Qt.PointingHandCursor
-                    onClicked: console.log("Switch to workspace", workspaceNum)
+                    onClicked: {
+                        Hyprland.dispatch("workspace", workspaceNum.toString())
+                    }
                 }
 
                 Text {
