@@ -2,6 +2,7 @@ import QtQuick
 import Quickshell
 import Quickshell.Wayland
 import "root:/"
+import "root:/components"
 
 PanelWindow {
     id: calendarOverlay
@@ -62,38 +63,23 @@ PanelWindow {
                 height: 35
 
                 // Previous month button
-                Rectangle {
+                GhostButton {
                     anchors.left: parent.left
                     anchors.verticalCenter: parent.verticalCenter
                     width: 32
                     height: 32
                     radius: 16
-                    color: prevMouseArea.containsMouse ? Theme.surface1 : Theme.surface0
-                    border.color: Theme.surface2
-                    border.width: 1
-
-                    Text {
-                        anchors.centerIn: parent
-                        text: "‹"
-                        color: Theme.text
-                        font.pixelSize: 20
-                        font.family: Config.moduleFontFamily
-                    }
-
-                    MouseArea {
-                        id: prevMouseArea
-                        anchors.fill: parent
-                        hoverEnabled: true
-                        cursorShape: Qt.PointingHandCursor
-                        onClicked: {
-                            displayMonth--
-                            if (displayMonth < 0) {
-                                displayMonth = 11
-                                displayYear--
-                            }
-                            calendarGrid.model = 0
-                            calendarGrid.model = 42
+                    icon: "‹"
+                    iconSize: 20
+                    text: ""
+                    onClicked: {
+                        displayMonth--
+                        if (displayMonth < 0) {
+                            displayMonth = 11
+                            displayYear--
                         }
+                        calendarGrid.model = 0
+                        calendarGrid.model = 42
                     }
                 }
 
@@ -108,38 +94,23 @@ PanelWindow {
                 }
 
                 // Next month button
-                Rectangle {
+                GhostButton {
                     anchors.right: parent.right
                     anchors.verticalCenter: parent.verticalCenter
                     width: 32
                     height: 32
                     radius: 16
-                    color: nextMouseArea.containsMouse ? Theme.surface1 : Theme.surface0
-                    border.color: Theme.surface2
-                    border.width: 1
-
-                    Text {
-                        anchors.centerIn: parent
-                        text: "›"
-                        color: Theme.text
-                        font.pixelSize: 20
-                        font.family: Config.moduleFontFamily
-                    }
-
-                    MouseArea {
-                        id: nextMouseArea
-                        anchors.fill: parent
-                        hoverEnabled: true
-                        cursorShape: Qt.PointingHandCursor
-                        onClicked: {
-                            displayMonth++
-                            if (displayMonth > 11) {
-                                displayMonth = 0
-                                displayYear++
-                            }
-                            calendarGrid.model = 0
-                            calendarGrid.model = 42
+                    icon: "›"
+                    iconSize: 20
+                    text: ""
+                    onClicked: {
+                        displayMonth++
+                        if (displayMonth > 11) {
+                            displayMonth = 0
+                            displayYear++
                         }
+                        calendarGrid.model = 0
+                        calendarGrid.model = 42
                     }
                 }
             }

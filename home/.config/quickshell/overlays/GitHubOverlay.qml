@@ -4,6 +4,7 @@ import Quickshell
 import Quickshell.Wayland
 import "root:/"
 import "root:/singletons"
+import "root:/components"
 
 PanelWindow {
     id: githubOverlay
@@ -76,31 +77,16 @@ PanelWindow {
                 }
 
                 // Refresh button
-                Rectangle {
+                GhostButton {
                     anchors.right: parent.right
                     anchors.verticalCenter: parent.verticalCenter
                     width: 32
                     height: 32
                     radius: 16
-                    color: refreshMouseArea.containsMouse ? Theme.surface1 : Theme.surface0
-                    border.color: Theme.surface2
-                    border.width: 1
-
-                    Text {
-                        anchors.centerIn: parent
-                        text: Icon.refresh
-                        color: Theme.text
-                        font.pixelSize: 16
-                        font.family: Config.moduleFontFamily
-                    }
-
-                    MouseArea {
-                        id: refreshMouseArea
-                        anchors.fill: parent
-                        hoverEnabled: true
-                        cursorShape: Qt.PointingHandCursor
-                        onClicked: GitHubData.refresh()
-                    }
+                    icon: Icon.refresh
+                    iconSize: 16
+                    text: ""
+                    onClicked: GitHubData.refresh()
                 }
             }
 

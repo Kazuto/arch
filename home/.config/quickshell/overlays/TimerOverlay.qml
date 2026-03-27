@@ -3,6 +3,7 @@ import Quickshell
 import Quickshell.Wayland
 import "root:/"
 import "root:/singletons"
+import "root:/components"
 
 PanelWindow {
     id: timerOverlay
@@ -247,30 +248,12 @@ PanelWindow {
                 Repeater {
                     model: [1, 5, 10, 15, 25, 30]
 
-                    Rectangle {
+                    GhostButton {
                         width: 95
                         height: 40
-                        radius: 8
-                        color: presetMouseArea.containsMouse ? Theme.surface1 : Theme.surface0
-                        border.color: Theme.surface2
-                        border.width: 1
-
-                        Text {
-                            anchors.centerIn: parent
-                            text: modelData + " min"
-                            color: Theme.text
-                            font.pixelSize: 14
-                            font.family: Config.moduleFontFamily
-                        }
-
-                        MouseArea {
-                            id: presetMouseArea
-                            anchors.fill: parent
-                            hoverEnabled: true
-                            cursorShape: Qt.PointingHandCursor
-                            onClicked: {
-                                TimerData.start(modelData)
-                            }
+                        text: modelData + " min"
+                        onClicked: {
+                            TimerData.start(modelData)
                         }
                     }
                 }

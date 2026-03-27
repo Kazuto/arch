@@ -4,6 +4,7 @@ import Quickshell
 import Quickshell.Wayland
 import "root:/"
 import "root:/singletons"
+import "root:/components"
 
 PanelWindow {
     id: ollamaOverlay
@@ -150,30 +151,14 @@ PanelWindow {
                 Item { width: parent.width - 200 }
 
                 // Refresh button
-                Rectangle {
+                GhostButton {
                     width: 28
                     height: 28
                     radius: 14
-                    color: refreshMouseArea.containsMouse ? Theme.surface1 : Theme.surface0
-                    border.color: Theme.surface2
-                    border.width: 1
-                    anchors.verticalCenter: parent.verticalCenter
-
-                    Text {
-                        anchors.centerIn: parent
-                        text: Icon.refresh
-                        color: Theme.text
-                        font.pixelSize: 14
-                        font.family: Config.moduleFontFamily
-                    }
-
-                    MouseArea {
-                        id: refreshMouseArea
-                        anchors.fill: parent
-                        hoverEnabled: true
-                        cursorShape: Qt.PointingHandCursor
-                        onClicked: OllamaData.refresh()
-                    }
+                    icon: Icon.refresh
+                    iconSize: 14
+                    text: ""
+                    onClicked: OllamaData.refresh()
                 }
             }
 

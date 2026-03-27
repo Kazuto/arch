@@ -3,6 +3,7 @@ import Quickshell
 import Quickshell.Wayland
 import "root:/"
 import "root:/singletons"
+import "root:/components"
 
 PanelWindow {
     id: menuOverlay
@@ -41,7 +42,7 @@ PanelWindow {
             leftMargin: 20
         }
         width: 320
-        height: 450
+        height: 370
         color: Config.alpha(Theme.base, 0.95)
         radius: Config.overlayRadius
         border.color: Theme.surface0
@@ -180,173 +181,55 @@ PanelWindow {
 
             Column {
                 width: parent.width
-                spacing: 8
 
-                // Lock
-                Rectangle {
+                Row {
                     width: parent.width
-                    height: 45
-                    radius: 8
-                    color: lockMouseArea.containsMouse ? Theme.surface1 : Theme.surface0
-                    border.color: Theme.surface2
-                    border.width: 1
 
-                    Row {
-                        anchors.centerIn: parent
-                        spacing: 10
-
-                        Text {
-                            text: Icon.lock
-                            color: Theme.text
-                            font.pixelSize: 16
-                            font.family: Config.moduleFontFamily
-                            anchors.verticalCenter: parent.verticalCenter
-                        }
-
-                        Text {
-                            text: "Lock"
-                            color: Theme.text
-                            font.pixelSize: 14
-                            font.family: Config.moduleFontFamily
-                            anchors.verticalCenter: parent.verticalCenter
-                        }
-                    }
-
-                    MouseArea {
-                        id: lockMouseArea
-                        anchors.fill: parent
-                        hoverEnabled: true
-                        cursorShape: Qt.PointingHandCursor
-                        onClicked: {
-                            Quickshell.Io.Process.exec("hyprlock")
-                            AppState.toggleMenuOverlay()
-                        }
+                 GhostButton {
+                        width: parent.width / 2
+                    text: "Lock"
+                    icon: Icon.lock
+                    onClicked: {
+                        Quickshell.Io.Process.exec("hyprlock")
+                        AppState.toggleMenuOverlay()
                     }
                 }
 
-                // Logout
-                Rectangle {
-                    width: parent.width
-                    height: 45
-                    radius: 8
-                    color: logoutMouseArea.containsMouse ? Theme.surface1 : Theme.surface0
-                    border.color: Theme.surface2
-                    border.width: 1
-
-                    Row {
-                        anchors.centerIn: parent
-                        spacing: 10
-
-                        Text {
-                            text: Icon.logout
-                            color: Theme.text
-                            font.pixelSize: 16
-                            font.family: Config.moduleFontFamily
-                            anchors.verticalCenter: parent.verticalCenter
-                        }
-
-                        Text {
-                            text: "Logout"
-                            color: Theme.text
-                            font.pixelSize: 14
-                            font.family: Config.moduleFontFamily
-                            anchors.verticalCenter: parent.verticalCenter
-                        }
+                GhostButton {
+                        width: parent.width / 2
+                    text: "Logout"
+                    icon: Icon.logout
+                    onClicked: {
+                        Quickshell.Io.Process.exec("hyprctl", "dispatch", "exit")
+                        AppState.toggleMenuOverlay()
                     }
+                } 
+                }
 
-                    MouseArea {
-                        id: logoutMouseArea
-                        anchors.fill: parent
-                        hoverEnabled: true
-                        cursorShape: Qt.PointingHandCursor
-                        onClicked: {
-                            Quickshell.Io.Process.exec("hyprctl", "dispatch", "exit")
-                            AppState.toggleMenuOverlay()
-                        }
+                Row {
+                    width: parent.width
+
+                  GhostButton {
+                        width: parent.width / 2
+                    text: "Reboot"
+                    icon: Icon.refresh
+                    iconColor: Theme.yellow
+                    onClicked: {
+                        Quickshell.Io.Process.exec("systemctl", "reboot")
                     }
                 }
 
-                // Reboot
-                Rectangle {
-                    width: parent.width
-                    height: 45
-                    radius: 8
-                    color: rebootMouseArea.containsMouse ? Theme.surface1 : Theme.surface0
-                    border.color: Theme.surface2
-                    border.width: 1
-
-                    Row {
-                        anchors.centerIn: parent
-                        spacing: 10
-
-                        Text {
-                            text: Icon.refresh
-                            color: Theme.yellow
-                            font.pixelSize: 16
-                            font.family: Config.moduleFontFamily
-                            anchors.verticalCenter: parent.verticalCenter
-                        }
-
-                        Text {
-                            text: "Reboot"
-                            color: Theme.text
-                            font.pixelSize: 14
-                            font.family: Config.moduleFontFamily
-                            anchors.verticalCenter: parent.verticalCenter
-                        }
+                GhostButton {
+                        width: parent.width / 2
+                    text: "Shutdown"
+                    icon: Icon.power
+                    iconColor: Theme.red
+                    onClicked: {
+                        Quickshell.Io.Process.exec("systemctl", "poweroff")
                     }
-
-                    MouseArea {
-                        id: rebootMouseArea
-                        anchors.fill: parent
-                        hoverEnabled: true
-                        cursorShape: Qt.PointingHandCursor
-                        onClicked: {
-                            Quickshell.Io.Process.exec("systemctl", "reboot")
-                        }
-                    }
+                } 
                 }
 
-                // Shutdown
-                Rectangle {
-                    width: parent.width
-                    height: 45
-                    radius: 8
-                    color: shutdownMouseArea.containsMouse ? Theme.surface1 : Theme.surface0
-                    border.color: Theme.surface2
-                    border.width: 1
-
-                    Row {
-                        anchors.centerIn: parent
-                        spacing: 10
-
-                        Text {
-                            text: Icon.power
-                            color: Theme.red
-                            font.pixelSize: 16
-                            font.family: Config.moduleFontFamily
-                            anchors.verticalCenter: parent.verticalCenter
-                        }
-
-                        Text {
-                            text: "Shutdown"
-                            color: Theme.text
-                            font.pixelSize: 14
-                            font.family: Config.moduleFontFamily
-                            anchors.verticalCenter: parent.verticalCenter
-                        }
-                    }
-
-                    MouseArea {
-                        id: shutdownMouseArea
-                        anchors.fill: parent
-                        hoverEnabled: true
-                        cursorShape: Qt.PointingHandCursor
-                        onClicked: {
-                            Quickshell.Io.Process.exec("systemctl", "poweroff")
-                        }
-                    }
-                }
             }
         }
     }

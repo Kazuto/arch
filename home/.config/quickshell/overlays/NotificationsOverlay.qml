@@ -3,6 +3,7 @@ import Quickshell
 import Quickshell.Wayland
 import "root:/"
 import "root:/singletons"
+import "root:/components"
 
 PanelWindow {
     id: notificationsOverlay
@@ -83,64 +84,25 @@ PanelWindow {
                     spacing: 10
 
                     // Pause button
-                    Rectangle {
-                    width: 70
-                    height: 30
-                    color: pauseMouseArea.containsMouse ? Theme.surface1 : Theme.surface0
-                    radius: 15
-
-                    Row {
-                        anchors.centerIn: parent
-                        spacing: 5
-
-                        Text {
-                            anchors.verticalCenter: parent.verticalCenter
-                            text: NotificationData.paused ? "󰂛" : "󰂚"
-                            color: NotificationData.paused ? Theme.overlay0 : Theme.yellow
-                            font.pixelSize: 16
-                            font.family: Config.moduleFontFamily
-                        }
-
-                        Text {
-                            anchors.verticalCenter: parent.verticalCenter
-                            text: NotificationData.paused ? "Off" : "On"
-                            color: Theme.text
-                            font.pixelSize: 12
-                            font.family: Config.moduleFontFamily
-                        }
-                    }
-
-                    MouseArea {
-                        id: pauseMouseArea
-                        anchors.fill: parent
-                        hoverEnabled: true
-                        cursorShape: Qt.PointingHandCursor
+                    GhostButton {
+                        width: 70
+                        height: 30
+                        radius: 15
+                        text: NotificationData.paused ? "Off" : "On"
+                        icon: NotificationData.paused ? "󰂛" : "󰂚"
+                        iconColor: NotificationData.paused ? Theme.overlay0 : Theme.yellow
+                        fontSize: 12
                         onClicked: NotificationData.togglePause()
                     }
-                }
 
                     // Clear all button
-                    Rectangle {
+                    GhostButton {
                         width: 80
                         height: 30
-                        color: clearMouseArea.containsMouse ? Theme.surface1 : Theme.surface0
                         radius: 15
-
-                        Text {
-                            anchors.centerIn: parent
-                            text: "Clear All"
-                            color: Theme.text
-                            font.pixelSize: 12
-                            font.family: Config.moduleFontFamily
-                        }
-
-                        MouseArea {
-                            id: clearMouseArea
-                            anchors.fill: parent
-                            hoverEnabled: true
-                            cursorShape: Qt.PointingHandCursor
-                            onClicked: NotificationData.clearAll()
-                        }
+                        text: "Clear All"
+                        fontSize: 12
+                        onClicked: NotificationData.clearAll()
                     }
                 }
             }
