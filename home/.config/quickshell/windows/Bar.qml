@@ -21,13 +21,14 @@ PanelWindow {
         top: Config.barMarginTop
         left: Config.barMarginSide
         right: Config.barMarginSide
+        bottom: 0
     }
 
     color: "transparent"
 
     WlrLayershell.layer: WlrLayer.Top
     WlrLayershell.keyboardFocus: WlrKeyboardFocus.None
-    WlrLayershell.exclusiveZone: height + margins.top
+    WlrLayershell.exclusiveZone: Config.barHeight
 
     Rectangle {
         anchors.fill: parent

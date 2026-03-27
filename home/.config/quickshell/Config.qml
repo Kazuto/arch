@@ -11,7 +11,7 @@ Singleton {
 
     // Bar settings
     readonly property int barHeight: 34
-    readonly property int barMarginTop: 4
+    readonly property int barMarginTop: 14
     readonly property int barMarginSide: 6
     readonly property int barRadius: 12
     readonly property int barBorderWidth: 1

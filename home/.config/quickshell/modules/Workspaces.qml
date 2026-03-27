@@ -58,16 +58,6 @@ Rectangle {
                 width: Config.workspaceSize
                 height: Config.workspaceSize
 
-                MouseArea {
-                    id: wsMouseArea
-                    anchors.fill: parent
-                    hoverEnabled: true
-                    cursorShape: Qt.PointingHandCursor
-                    onClicked: {
-                        Hyprland.dispatch("workspace", workspaceNum.toString())
-                    }
-                }
-
                 Text {
                     anchors.centerIn: parent
                     text: workspaceIcon
@@ -76,9 +66,21 @@ Rectangle {
                            (hasWindows ? Config.moduleText : Config.moduleTextMuted))
                     font.pixelSize: Config.workspaceIconSize
                     font.family: Config.moduleFontFamily
+                    z: 0
 
                     Behavior on color {
                         ColorAnimation { duration: Config.animationDuration }
+                    }
+                }
+
+                MouseArea {
+                    id: wsMouseArea
+                    anchors.fill: parent
+                    hoverEnabled: true
+                    cursorShape: Qt.PointingHandCursor
+                    z: 1
+                    onClicked: {
+                        Hyprland.dispatch("workspace " + workspaceNum)
                     }
                 }
             }
