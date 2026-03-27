@@ -1,5 +1,6 @@
 import QtQuick
 import "root:/"
+import "root:/singletons"
 
 Row {
     spacing: Config.moduleSpacing
@@ -14,8 +15,8 @@ Row {
         Text {
             id: cpuText
             anchors.centerIn: parent
-            text: Icon.cpu + " " + "15%"  // TODO: Get from /proc/stat
-            color: Theme.rosewater 
+            text: Icon.cpu + " " + SystemStatsData.cpuUsage + "%"
+            color: SystemStatsData.cpuUsage >= 80 ? Theme.red : Theme.sky
             font.pixelSize: Config.moduleFontSize
             font.family: Config.moduleFontFamily
         }
@@ -25,6 +26,12 @@ Row {
             anchors.fill: parent
             hoverEnabled: true
             cursorShape: Qt.PointingHandCursor
+            onClicked: {
+                var proc = Qt.createQmlObject(
+                    'import Quickshell.Io; Process { command: ["ghostty", "-e", "btop"]; running: true }',
+                    parent
+                )
+            }
         }
     }
 
@@ -38,8 +45,8 @@ Row {
         Text {
             id: memText
             anchors.centerIn: parent
-            text: Icon.memory + " " + "42%"  // TODO: Get from /proc/meminfo
-            color: Theme.rosewater 
+            text: Icon.memory + " " + SystemStatsData.memoryUsage + "%"
+            color: SystemStatsData.memoryUsage >= 80 ? Theme.red : Theme.sky
             font.pixelSize: Config.moduleFontSize
             font.family: Config.moduleFontFamily
         }
@@ -49,6 +56,12 @@ Row {
             anchors.fill: parent
             hoverEnabled: true
             cursorShape: Qt.PointingHandCursor
+            onClicked: {
+                var proc = Qt.createQmlObject(
+                    'import Quickshell.Io; Process { command: ["ghostty", "-e", "btop"]; running: true }',
+                    parent
+                )
+            }
         }
     }
 
@@ -62,8 +75,8 @@ Row {
         Text {
             id: netText
             anchors.centerIn: parent
-            text: Icon.network + " " + "125 Mb/s"  // TODO: Get from /sys/class/net
-            color: Theme.flamingo 
+            text: Icon.network + " " + SystemStatsData.networkSpeed
+            color: Theme.sky
             font.pixelSize: Config.moduleFontSize
             font.family: Config.moduleFontFamily
         }
@@ -73,6 +86,12 @@ Row {
             anchors.fill: parent
             hoverEnabled: true
             cursorShape: Qt.PointingHandCursor
+            onClicked: {
+                var proc = Qt.createQmlObject(
+                    'import Quickshell.Io; Process { command: ["ghostty", "-e", "btop"]; running: true }',
+                    parent
+                )
+            }
         }
     }
 }
