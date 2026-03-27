@@ -73,13 +73,47 @@ PanelWindow {
         }
     }
 
+    // Arrow pointer at the top (connects to Waybar)
+    Canvas {
+        id: arrow
+        anchors {
+            horizontalCenter: parent.horizontalCenter
+            top: parent.top
+            topMargin: spotifyOverlay.visible ? 6 : 0
+        }
+        width: 20
+        height: 10
+        opacity: spotifyOverlay.visible ? 1.0 : 0.0
+
+        onPaint: {
+            var ctx = getContext("2d")
+            ctx.reset()
+
+            // Draw triangle pointing up
+            ctx.fillStyle = "#fab387"  // Match border color
+            ctx.beginPath()
+            ctx.moveTo(10, 0)  // Top point
+            ctx.lineTo(0, 10)  // Bottom left
+            ctx.lineTo(20, 10) // Bottom right
+            ctx.closePath()
+            ctx.fill()
+        }
+
+        Behavior on anchors.topMargin {
+            NumberAnimation { duration: 250; easing.type: Easing.OutCubic }
+        }
+        Behavior on opacity {
+            NumberAnimation { duration: 250; easing.type: Easing.OutCubic }
+        }
+    }
+
     // Main container - positioned at top-center
     Rectangle {
         id: container
         anchors {
             top: parent.top
             horizontalCenter: parent.horizontalCenter
-            topMargin: spotifyOverlay.visible ? 55 : 20  // Slide down animation
+            topMargin: spotifyOverlay.visible ? 12 : 5  // Almost touching Waybar
         }
         width: 480
         height: 320
@@ -122,29 +156,34 @@ PanelWindow {
                 Layout.fillWidth: true
                 spacing: 15
 
-                // Square album art on the left
-                Rectangle {
+                // Square album art on the left (with rounded corners via clipping)
+                Item {
                     Layout.preferredWidth: 140
                     Layout.preferredHeight: 140
-                    radius: 10
-                    color: "#40000000"
 
-                    Image {
-                        id: albumArt
-                        anchors.centerIn: parent
-                        width: parent.width - 4
-                        height: parent.height - 4
-                        source: spotifyOverlay.artUrl.replace("file://", "")
-                        fillMode: Image.PreserveAspectCrop
-                        smooth: true
+                    Rectangle {
+                        id: artBackground
+                        anchors.fill: parent
+                        radius: 8
+                        color: "#40000000"
+                        clip: true
 
-                        Rectangle {
+                        Image {
+                            id: albumArt
                             anchors.fill: parent
-                            color: "transparent"
-                            radius: 8
-                            border.color: "#30FFFFFF"
-                            border.width: 1
+                            source: spotifyOverlay.artUrl.replace("file://", "")
+                            fillMode: Image.PreserveAspectCrop
+                            smooth: true
                         }
+                    }
+
+                    // Border overlay
+                    Rectangle {
+                        anchors.fill: parent
+                        color: "transparent"
+                        radius: 8
+                        border.color: "#30FFFFFF"
+                        border.width: 1
                     }
 
                     Text {
