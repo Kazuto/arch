@@ -27,41 +27,17 @@ PanelWindow {
         z: -1
     }
 
-    // Arrow pointer
-    Canvas {
-        anchors {
-            top: parent.top
-            right: parent.right
-            topMargin: Config.barHeight + 6
-            rightMargin: 200
-        }
-        width: 20
-        height: 10
-
-        onPaint: {
-            var ctx = getContext("2d")
-            ctx.reset()
-            ctx.fillStyle = Theme.surface0
-            ctx.beginPath()
-            ctx.moveTo(10, 0)
-            ctx.lineTo(0, 10)
-            ctx.lineTo(20, 10)
-            ctx.closePath()
-            ctx.fill()
-        }
-    }
-
     Rectangle {
         anchors {
             top: parent.top
             right: parent.right
-            topMargin: Config.barHeight + 12
+            topMargin: 12
             rightMargin: 20
         }
         width: 400
         height: 550
         color: Config.alpha(Theme.base, 0.95)
-        radius: Config.moduleRadius
+        radius: Config.overlayRadius
         border.color: Theme.surface0
         border.width: 1
 
@@ -409,10 +385,6 @@ PanelWindow {
                         function onNetworkHistoryUpChanged() {
                             networkCanvas.requestPaint()
                         }
-                    }
-
-                    Component.onCompleted: {
-                        console.log("Network canvas created, history length:", SystemStatsData.networkHistory.length)
                     }
                 }
             }

@@ -28,7 +28,9 @@ Singleton {
     property string microphoneMuted: "󰍭"
     property string calendar: ""
     property string clock: ""
-    property string settings: "󰔡"
+    property string settings: ""
+    property string sliders: ""
+    property string statistics: ""
 
     // Application Icons
     property string firefox: ""

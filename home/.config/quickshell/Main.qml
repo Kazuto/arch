@@ -30,9 +30,9 @@ Rectangle {
             Modules.Timer {},
             Modules.Ollama {},
             Modules.SystemStats {},
+            Modules.Notifications {},
             Modules.ControlCenter {},
             Modules.Clock {},
-            Modules.Notifications {}
         ]
     }
 

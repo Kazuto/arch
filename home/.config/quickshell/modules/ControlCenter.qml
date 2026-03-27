@@ -10,8 +10,8 @@ Rectangle {
     Text {
         id: controlCenterText
         anchors.centerIn: parent
-        text: Icon.settings  // Grid icon for control center
-        color: Theme.text
+        text: Icon.sliders  // Grid icon for control center
+        color: Theme.peach
         font.pixelSize: Config.moduleFontSize
         font.family: Config.moduleFontFamily
     }

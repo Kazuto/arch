@@ -29,6 +29,9 @@ Singleton {
     readonly property int moduleFontSize: 12
     readonly property string moduleFontFamily: "JetBrainsMono Nerd Font"
 
+    // Overlay settings
+    readonly property int overlayRadius: 10
+
     // Clock settings
     readonly property bool clock24Hour: false
     readonly property bool clockShowSeconds: false

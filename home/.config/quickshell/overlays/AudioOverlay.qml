@@ -34,41 +34,17 @@ PanelWindow {
         z: -1
     }
 
-    // Arrow pointer
-    Canvas {
-        anchors {
-            top: parent.top
-            right: parent.right
-            topMargin: Config.barHeight + 6
-            rightMargin: 250  // Align with Audio module position
-        }
-        width: 20
-        height: 10
-
-        onPaint: {
-            var ctx = getContext("2d")
-            ctx.reset()
-            ctx.fillStyle = Theme.surface0
-            ctx.beginPath()
-            ctx.moveTo(10, 0)
-            ctx.lineTo(0, 10)
-            ctx.lineTo(20, 10)
-            ctx.closePath()
-            ctx.fill()
-        }
-    }
-
     Rectangle {
         anchors {
             top: parent.top
             right: parent.right
-            topMargin: Config.barHeight + 12
+            topMargin: 12
             rightMargin: 50  // Position overlay near Audio module
         }
         width: 400
         height: contentColumn.implicitHeight + 40
         color: Config.alpha(Theme.base, 0.95)
-        radius: Config.moduleRadius
+        radius: Config.overlayRadius
         border.color: Theme.surface0
         border.width: 1
 

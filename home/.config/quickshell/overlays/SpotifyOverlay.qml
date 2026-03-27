@@ -118,12 +118,12 @@ PanelWindow {
         }
         width: 480
         height: 320
-        radius: 20
+        radius: Config.overlayRadius
         opacity: spotifyOverlay.visible ? 1.0 : 0.0  // Fade animation
 
-        color: Theme.mantle  // Fully opaque background
-        border.color: Theme.green  // Spotify green border
-        border.width: 2
+        color: Config.alpha(Theme.base, 0.95)
+        border.color: Config.alpha(Theme.green, 0.95)
+        border.width: 1
 
         // Subtle shadow effect
         layer.enabled: true
