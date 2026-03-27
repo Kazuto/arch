@@ -3,3 +3,4 @@ singleton BluetoothData 1.0 BluetoothData.qml
 singleton AudioData 1.0 AudioData.qml
 singleton NotificationData 1.0 NotificationData.qml
 singleton GitHubData 1.0 GitHubData.qml
+singleton TimerData 1.0 TimerData.qml

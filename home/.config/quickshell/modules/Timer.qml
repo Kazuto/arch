@@ -1,5 +1,6 @@
 import QtQuick
 import "root:/"
+import "root:/singletons"
 
 Rectangle {
     implicitWidth: timerText.implicitWidth + Config.moduleHorizontalPadding
@@ -14,8 +15,8 @@ Rectangle {
     Text {
         id: timerText
         anchors.centerIn: parent
-        text: Icon.clock + " " + "--:--"  // TODO: Get from timer script
-        color: Theme.yellow
+        text: Icon.clock + " " + TimerData.displayTime
+        color: TimerData.remainingSeconds < 0 ? Theme.red : (TimerData.running ? Theme.yellow : Theme.text)
         font.pixelSize: Config.moduleFontSize
         font.family: Config.moduleFontFamily
     }
@@ -25,6 +26,6 @@ Rectangle {
         anchors.fill: parent
         hoverEnabled: true
         cursorShape: Qt.PointingHandCursor
-        onClicked: console.log("Timer clicked - TODO: Show timer menu")
+        onClicked: AppState.toggleTimerOverlay()
     }
 }

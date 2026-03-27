@@ -12,6 +12,7 @@ Singleton {
     property string controlCenterView: "main"  // main, bluetooth, audio
     property bool systemStatsOverlayVisible: false
     property bool githubOverlayVisible: false
+    property bool timerOverlayVisible: false
 
     function toggleSpotifyOverlay() {
         spotifyOverlayVisible = !spotifyOverlayVisible
@@ -46,5 +47,9 @@ Singleton {
 
     function toggleGitHubOverlay() {
         githubOverlayVisible = !githubOverlayVisible
+    }
+
+    function toggleTimerOverlay() {
+        timerOverlayVisible = !timerOverlayVisible
     }
 }

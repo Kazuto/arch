@@ -78,6 +78,12 @@ Rectangle {
         visible: AppState.githubOverlayVisible
     }
 
+    // Timer overlay
+    Overlays.TimerOverlay {
+        id: timerOverlay
+        visible: AppState.timerOverlayVisible
+    }
+
     // IPC Socket Server
     SocketServer {
         id: ipcSocket
