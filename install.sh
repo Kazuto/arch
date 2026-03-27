@@ -699,20 +699,26 @@ configure_environment() {
   fi
 }
 
-configure_uwsm() {
-  log_info "Configuring uwsm (Universal Wayland Session Manager)..."
+configure_session_management() {
+  log_info "Configuring Hyprland session management..."
 
-  # Create session data directory (configs are stowed from repo)
-  mkdir -p ~/.local/state/uwsm/sessions
+  # Create session data directory
+  mkdir -p ~/.local/state
 
-  # Make hyprland-uwsm launcher executable if it exists
-  if [[ -f ~/.local/bin/hyprland-uwsm ]]; then
-    chmod +x ~/.local/bin/hyprland-uwsm
-    log_success "uwsm launcher configured"
+  # Make session scripts executable
+  chmod +x ~/.local/bin/hyprland-save-session 2>/dev/null || true
+  chmod +x ~/.local/bin/hyprland-restore-session 2>/dev/null || true
+
+  # Enable systemd service for auto-save on logout
+  if [[ -f ~/.config/systemd/user/hyprland-session-save.service ]]; then
+    systemctl --user daemon-reload
+    systemctl --user enable hyprland-session-save.service
+    log_success "Session save service enabled"
   fi
 
-  log_success "uwsm configured for session save/restore"
-  log_info "Session data will be saved to: ~/.local/state/uwsm/sessions"
+  log_success "Hyprland session management configured"
+  log_info "Sessions will auto-save on logout and restore on login"
+  log_info "Manual commands: hyprland-save-session, hyprland-restore-session"
 }
 
 setup_gtk_theme() {
@@ -856,7 +862,7 @@ main() {
   configure_user_groups
   configure_environment
   setup_gtk_theme
-  configure_uwsm
+  configure_session_management
   install_hyprland_plugins
 
   print_summary

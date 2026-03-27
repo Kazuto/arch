@@ -1,0 +1,12 @@
+[Unit]
+Description=Save Hyprland session on logout
+DefaultDependencies=no
+Before=shutdown.target reboot.target halt.target
+
+[Service]
+Type=oneshot
+ExecStart=/home/kazuto/.local/bin/hyprland-save-session
+RemainAfterExit=yes
+
+[Install]
+WantedBy=default.target

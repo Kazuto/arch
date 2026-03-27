@@ -1,0 +1,19 @@
+#!/bin/bash
+# Save current Hyprland session (windows, workspaces, positions)
+
+SESSION_FILE="$HOME/.local/state/hyprland-session.json"
+SESSION_DIR="$(dirname "$SESSION_FILE")"
+
+# Create session directory if it doesn't exist
+mkdir -p "$SESSION_DIR"
+
+# Get all clients with their details
+hyprctl clients -j > "$SESSION_FILE"
+
+# Log the save
+echo "[$(date)] Session saved to $SESSION_FILE" >> "$SESSION_DIR/hyprland-session.log"
+
+# Optional: Send notification
+if command -v notify-send &> /dev/null; then
+    notify-send "Hyprland Session" "Session saved successfully"
+fi

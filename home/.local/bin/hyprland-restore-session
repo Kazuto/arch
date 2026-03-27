@@ -1,0 +1,74 @@
+#!/bin/bash
+# Restore Hyprland session from saved state
+
+SESSION_FILE="$HOME/.local/state/hyprland-session.json"
+SESSION_DIR="$(dirname "$SESSION_FILE")"
+
+# Check if session file exists
+if [[ ! -f "$SESSION_FILE" ]]; then
+    echo "No session file found at $SESSION_FILE"
+    exit 0
+fi
+
+# Log restore start
+echo "[$(date)] Starting session restore..." >> "$SESSION_DIR/hyprland-session.log"
+
+# App launch mappings (class -> command)
+declare -A APP_COMMANDS=(
+    ["com.mitchellh.ghostty"]="ghostty"
+    ["tableplus"]="tableplus"
+    ["bruno"]="bruno"
+    ["vesktop"]="vesktop"
+    ["Spotify"]="spotify"
+    ["teams-for-linux"]="teams-for-linux"
+    ["discord"]="vesktop"
+    ["code"]="code"
+    ["obsidian"]="obsidian"
+)
+
+# Parse session file and restore apps
+jq -r '.[] | "\(.class)|\(.workspace.id)|\(.title)"' "$SESSION_FILE" | sort -u | while IFS='|' read -r class workspace title; do
+    # Skip empty classes
+    [[ -z "$class" ]] && continue
+
+    # Special handling for Firefox - detect Work vs Personal from title
+    if [[ "$class" == "firefox" ]]; then
+        if [[ "$title" =~ "Work" ]]; then
+            cmd="firefox --no-remote -P 'Work' --class 'firefox-work'"
+            class="firefox-work"  # Update class for duplicate check
+        elif [[ "$title" =~ "Personal" ]]; then
+            cmd="firefox --no-remote -P 'Personal' --class 'firefox-personal'"
+            class="firefox-personal"
+        else
+            cmd="firefox"  # Fallback to default profile
+        fi
+    else
+        # Get the command for this app class
+        cmd="${APP_COMMANDS[$class]}"
+
+        # If no mapping found, try lowercase class name as command
+        if [[ -z "$cmd" ]]; then
+            cmd="$(echo "$class" | tr '[:upper:]' '[:lower:]' | sed 's/com\.mitchellh\.//' | sed 's/org\.//')"
+        fi
+    fi
+
+    # Skip if already running (avoid duplicates)
+    if hyprctl clients -j | jq -e ".[] | select(.class == \"$class\")" > /dev/null 2>&1; then
+        echo "[$(date)] Skipping $class - already running" >> "$SESSION_DIR/hyprland-session.log"
+        continue
+    fi
+
+    # Launch app on the correct workspace
+    echo "[$(date)] Restoring $class on workspace $workspace" >> "$SESSION_DIR/hyprland-session.log"
+    hyprctl dispatch exec "[workspace $workspace silent] $cmd" &
+
+    # Small delay to avoid overwhelming the system
+    sleep 0.3
+done
+
+echo "[$(date)] Session restore completed" >> "$SESSION_DIR/hyprland-session.log"
+
+# Optional: Send notification
+if command -v notify-send &> /dev/null; then
+    notify-send "Hyprland Session" "Session restored successfully"
+fi
