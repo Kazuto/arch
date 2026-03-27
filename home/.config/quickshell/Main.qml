@@ -48,6 +48,12 @@ Rectangle {
         visible: AppState.bluetoothOverlayVisible
     }
 
+    // Audio overlay
+    Overlays.AudioOverlay {
+        id: audioOverlay
+        visible: AppState.audioOverlayVisible
+    }
+
     // IPC Socket Server
     SocketServer {
         id: ipcSocket

@@ -17,7 +17,9 @@ Singleton {
     property string network: "󰛳"
     property string bluetooth: ""
     property string volume: "󰕾"
+    property string volumeMuted: "󰝟"
     property string microphone: "󰍬"
+    property string microphoneMuted: "󰍭"
     property string calendar: ""
     property string clock: ""
 

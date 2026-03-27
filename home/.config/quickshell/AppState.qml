@@ -6,6 +6,7 @@ import Quickshell
 Singleton {
     property bool spotifyOverlayVisible: false
     property bool bluetoothOverlayVisible: false
+    property bool audioOverlayVisible: false
 
     function toggleSpotifyOverlay() {
         spotifyOverlayVisible = !spotifyOverlayVisible
@@ -13,5 +14,9 @@ Singleton {
 
     function toggleBluetoothOverlay() {
         bluetoothOverlayVisible = !bluetoothOverlayVisible
+    }
+
+    function toggleAudioOverlay() {
+        audioOverlayVisible = !audioOverlayVisible
     }
 }
