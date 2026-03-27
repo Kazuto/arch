@@ -16,23 +16,51 @@ Singleton {
     property bool ollamaOverlayVisible: false
     property bool calendarOverlayVisible: false
 
+    function closeAllOverlays() {
+        spotifyOverlayVisible = false
+        bluetoothOverlayVisible = false
+        audioOverlayVisible = false
+        notificationsOverlayVisible = false
+        controlCenterOverlayVisible = false
+        systemStatsOverlayVisible = false
+        githubOverlayVisible = false
+        timerOverlayVisible = false
+        ollamaOverlayVisible = false
+        calendarOverlayVisible = false
+    }
+
     function toggleSpotifyOverlay() {
+        if (!spotifyOverlayVisible) {
+            closeAllOverlays()
+        }
         spotifyOverlayVisible = !spotifyOverlayVisible
     }
 
     function toggleBluetoothOverlay() {
+        if (!bluetoothOverlayVisible) {
+            closeAllOverlays()
+        }
         bluetoothOverlayVisible = !bluetoothOverlayVisible
     }
 
     function toggleAudioOverlay() {
+        if (!audioOverlayVisible) {
+            closeAllOverlays()
+        }
         audioOverlayVisible = !audioOverlayVisible
     }
 
     function toggleNotificationsOverlay() {
+        if (!notificationsOverlayVisible) {
+            closeAllOverlays()
+        }
         notificationsOverlayVisible = !notificationsOverlayVisible
     }
 
     function toggleControlCenterOverlay() {
+        if (!controlCenterOverlayVisible) {
+            closeAllOverlays()
+        }
         controlCenterOverlayVisible = !controlCenterOverlayVisible
         if (controlCenterOverlayVisible) {
             controlCenterView = "main"
@@ -44,22 +72,37 @@ Singleton {
     }
 
     function toggleSystemStatsOverlay() {
+        if (!systemStatsOverlayVisible) {
+            closeAllOverlays()
+        }
         systemStatsOverlayVisible = !systemStatsOverlayVisible
     }
 
     function toggleGitHubOverlay() {
+        if (!githubOverlayVisible) {
+            closeAllOverlays()
+        }
         githubOverlayVisible = !githubOverlayVisible
     }
 
     function toggleTimerOverlay() {
+        if (!timerOverlayVisible) {
+            closeAllOverlays()
+        }
         timerOverlayVisible = !timerOverlayVisible
     }
 
     function toggleOllamaOverlay() {
+        if (!ollamaOverlayVisible) {
+            closeAllOverlays()
+        }
         ollamaOverlayVisible = !ollamaOverlayVisible
     }
 
     function toggleCalendarOverlay() {
+        if (!calendarOverlayVisible) {
+            closeAllOverlays()
+        }
         calendarOverlayVisible = !calendarOverlayVisible
     }
 }
