@@ -4,6 +4,7 @@ import QtQuick.Layouts
 import Quickshell
 import Quickshell.Wayland
 import Quickshell.Io
+import "root:/"
 
 PanelWindow {
     id: spotifyOverlay
@@ -90,7 +91,7 @@ PanelWindow {
             ctx.reset()
 
             // Draw triangle pointing up
-            ctx.fillStyle = "#fab387"  // Match border color
+            ctx.fillStyle = Theme.green  // Match border color
             ctx.beginPath()
             ctx.moveTo(10, 0)  // Top point
             ctx.lineTo(0, 10)  // Bottom left
@@ -120,8 +121,8 @@ PanelWindow {
         radius: 20
         opacity: spotifyOverlay.visible ? 1.0 : 0.0  // Fade animation
 
-        color: "#FF181825"  // Fully opaque background (Catppuccin Mocha base)
-        border.color: "#fab387"  // Fully opaque Catppuccin peach border
+        color: Theme.mantle  // Fully opaque background
+        border.color: Theme.green  // Spotify green border
         border.width: 2
 
         // Subtle shadow effect
@@ -257,7 +258,7 @@ PanelWindow {
                                parent.width * (spotifyOverlay.position / spotifyOverlay.length) : 0
                         height: parent.height
                         radius: parent.radius
-                        color: "#fab387"
+                        color: Theme.green
                     }
 
                     // Click to scrub
@@ -295,15 +296,16 @@ PanelWindow {
                     width: 60
                     height: 60
                     radius: 30
-                    color: "#40313244"
-                    border.color: "#60cdd6f4"
+                    color: Config.alpha(Theme.surface0, 0.25)
+                    border.color: Config.alpha(Theme.text, 0.4)
                     border.width: 1
 
                     Text {
                         anchors.centerIn: parent
-                        text: "⏮"
-                        font.pixelSize: 18
-                        color: "#cdd6f4"
+                        text: "󰒮"
+                        font.pixelSize: 24
+                        font.family: Config.moduleFontFamily
+                        color: Theme.text
                     }
 
                     MouseArea {
@@ -316,8 +318,8 @@ PanelWindow {
                                 spotifyOverlay
                             )
                         }
-                        onPressed: parent.color = "#80313244"
-                        onReleased: parent.color = "#40313244"
+                        onPressed: parent.color = Config.alpha(Theme.surface0, 0.5)
+                        onReleased: parent.color = Config.alpha(Theme.surface0, 0.25)
                     }
                 }
 
@@ -326,15 +328,16 @@ PanelWindow {
                     width: 60
                     height: 60
                     radius: 30
-                    color: "#fab387"
-                    border.color: "#fab387"
+                    color: Theme.green
+                    border.color: Theme.green
                     border.width: 2
 
                     Text {
                         anchors.centerIn: parent
-                        text: spotifyOverlay.status === "Playing" ? "⏸" : "▶"
+                        text: spotifyOverlay.status === "Playing" ? "󰏤" : "󰐊"
                         font.pixelSize: 24
-                        color: "#1e1e2e"
+                        font.family: Config.moduleFontFamily
+                        color: Theme.base
                     }
 
                     MouseArea {
@@ -346,8 +349,8 @@ PanelWindow {
                                 spotifyOverlay
                             )
                         }
-                        onPressed: parent.color = "#f9e2af"
-                        onReleased: parent.color = "#fab387"
+                        onPressed: parent.color = Qt.lighter(Theme.green, 1.2)
+                        onReleased: parent.color = Theme.green
                     }
                 }
 
@@ -356,29 +359,29 @@ PanelWindow {
                     width: 60
                     height: 60
                     radius: 30
-                    color: "#40313244"
-                    border.color: "#60cdd6f4"
+                    color: Config.alpha(Theme.surface0, 0.25)
+                    border.color: Config.alpha(Theme.text, 0.4)
                     border.width: 1
 
                     Text {
                         anchors.centerIn: parent
-                        text: "⏭"
-                        font.pixelSize: 18
-                        color: "#cdd6f4"
+                        text: "󰒭"
+                        font.pixelSize: 24
+                        font.family: Config.moduleFontFamily
+                        color: Theme.text
                     }
 
                     MouseArea {
                         anchors.fill: parent
                         cursorShape: Qt.PointingHandCursor
                         onClicked: {
-                            parent.color = "#60313244"
                             var proc = Qt.createQmlObject(
                                 'import Quickshell.Io; Process { command: ["playerctl", "--player=spotify", "next"]; running: true }',
                                 spotifyOverlay
                             )
                         }
-                        onPressed: parent.color = "#80313244"
-                        onReleased: parent.color = "#40313244"
+                        onPressed: parent.color = Config.alpha(Theme.surface0, 0.5)
+                        onReleased: parent.color = Config.alpha(Theme.surface0, 0.25)
                     }
                 }
             }
