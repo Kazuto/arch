@@ -1,5 +1,6 @@
 import QtQuick
 import Quickshell
+import Quickshell.Io
 import Quickshell.Wayland
 import "root:/"
 import "root:/singletons"
@@ -190,7 +191,7 @@ PanelWindow {
                     text: "Lock"
                     icon: Icon.lock
                     onClicked: {
-                        Quickshell.Io.Process.exec("hyprlock")
+                        Process.exec("hyprlock")
                         AppState.toggleMenuOverlay()
                     }
                 }
@@ -200,7 +201,7 @@ PanelWindow {
                     text: "Logout"
                     icon: Icon.logout
                     onClicked: {
-                        Quickshell.Io.Process.exec("hyprctl", "dispatch", "exit")
+                        Process.exec("hyprctl", "dispatch", "exit")
                         AppState.toggleMenuOverlay()
                     }
                 } 
@@ -215,7 +216,7 @@ PanelWindow {
                     icon: Icon.refresh
                     iconColor: Theme.yellow
                     onClicked: {
-                        Quickshell.Io.Process.exec("systemctl", "reboot")
+                        Process.exec("systemctl", "reboot")
                     }
                 }
 
@@ -225,7 +226,7 @@ PanelWindow {
                     icon: Icon.power
                     iconColor: Theme.red
                     onClicked: {
-                        Quickshell.Io.Process.exec("systemctl", "poweroff")
+                        Process.exec("systemctl", "poweroff")
                     }
                 } 
                 }

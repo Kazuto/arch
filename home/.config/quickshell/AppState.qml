@@ -16,6 +16,7 @@ Singleton {
     property bool ollamaOverlayVisible: false
     property bool calendarOverlayVisible: false
     property bool menuOverlayVisible: false
+    property bool screenRecorderOverlayVisible: false
 
     function closeAllOverlays() {
         spotifyOverlayVisible = false
@@ -29,6 +30,7 @@ Singleton {
         ollamaOverlayVisible = false
         calendarOverlayVisible = false
         menuOverlayVisible = false
+        screenRecorderOverlayVisible = false
     }
 
     function toggleSpotifyOverlay() {
@@ -113,5 +115,12 @@ Singleton {
             closeAllOverlays()
         }
         menuOverlayVisible = !menuOverlayVisible
+    }
+
+    function toggleScreenRecorderOverlay() {
+        if (!screenRecorderOverlayVisible) {
+            closeAllOverlays()
+        }
+        screenRecorderOverlayVisible = !screenRecorderOverlayVisible
     }
 }

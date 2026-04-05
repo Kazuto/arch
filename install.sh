@@ -245,6 +245,12 @@ install_packages() {
     ydotool # Alternative typing tool
   )
 
+  # Screen recording
+  local RECORDING_PACKAGES=(
+    ffmpeg      # Video encoding
+    wf-recorder # Wayland screen recorder (ffmpeg-based)
+  )
+
   # GTK theming
   local GTK_PACKAGES=(
     dconf-editor
@@ -314,6 +320,7 @@ install_packages() {
     "${DEV_PACKAGES[@]}"
     "${WAYBAR_PACKAGES[@]}"
     "${ADDON_PACKAGES[@]}"
+    "${RECORDING_PACKAGES[@]}"
     "${GTK_PACKAGES[@]}"
     "${FONT_PACKAGES[@]}"
     "${APP_PACKAGES[@]}"
@@ -406,8 +413,8 @@ install_packages() {
     avizo
     catppuccin-cursors-mocha
     catppuccin-gtk-theme-mocha
-    grimblast-git      # Screenshot utility wrapper
-    gtk-engine-murrine # GTK2 murrine engine
+    grimblast-git # Screenshot utility wrapper
+    gtk-engine-murrine          # GTK2 murrine engine
     hyprpicker
     keyd
     libinput-gestures # Touchpad gestures

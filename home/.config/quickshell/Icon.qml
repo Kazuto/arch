@@ -31,6 +31,8 @@ Singleton {
     property string settings: ""
     property string sliders: ""
     property string statistics: ""
+    property string record: "󰻃"
+    property string recordActive: "󰑊"
 
     // Application Icons
     property string firefox: ""

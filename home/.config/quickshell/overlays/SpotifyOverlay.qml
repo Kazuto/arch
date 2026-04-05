@@ -27,7 +27,7 @@ PanelWindow {
     // Click outside to close
     MouseArea {
         anchors.fill: parent
-        onClicked: spotifyOverlay.visible = false
+        onClicked: AppState.spotifyOverlayVisible = false
         z: -1
     }
 

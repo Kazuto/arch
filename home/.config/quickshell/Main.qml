@@ -29,6 +29,7 @@ Rectangle {
             Modules.GitHub {},
             Modules.Timer {},
             Modules.Ollama {},
+            Modules.ScreenRecorder {},
             Modules.SystemStats {},
             Modules.Notifications {},
             Modules.ControlCenter {},
@@ -102,6 +103,12 @@ Rectangle {
         visible: AppState.menuOverlayVisible
     }
 
+    // Screen Recorder overlay
+    Overlays.ScreenRecorderOverlay {
+        id: screenRecorderOverlay
+        visible: AppState.screenRecorderOverlayVisible
+    }
+
     // IPC Socket Server
     SocketServer {
         id: ipcSocket
@@ -114,11 +121,14 @@ Rectangle {
                     console.log("Received IPC command:", msg)
 
                     if (msg === "spotify-toggle") {
-                        spotifyOverlay.visible = !spotifyOverlay.visible
+                        AppState.toggleSpotifyOverlay()
                     } else if (msg === "spotify-show") {
-                        spotifyOverlay.visible = true
+                        if (!AppState.spotifyOverlayVisible) {
+                            AppState.closeAllOverlays()
+                        }
+                        AppState.spotifyOverlayVisible = true
                     } else if (msg === "spotify-hide") {
-                        spotifyOverlay.visible = false
+                        AppState.spotifyOverlayVisible = false
                     } else {
                         console.log("Unknown command:", msg)
                     }
