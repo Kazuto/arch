@@ -17,14 +17,15 @@ fi
 # Get image format extension
 IMG_EXT="${IMAGE##*.}"
 
-# Get monitor info
-MONITORS=($(hyprctl monitors -j | jq -r '.[].name'))
-MON1="${MONITORS[0]}"  # Primary (DP-1: 3440x1440)
-MON2="${MONITORS[1]}"  # Secondary (DP-2: 1920x1080)
+# Get monitor info sorted by X position (left to right)
+MONITORS=($(hyprctl monitors -j | jq -r 'sort_by(.x) | .[].name'))
+MON1="${MONITORS[0]}"  # HDMI-A-1 (1080x1920) - Left (rotated 90deg)
+MON2="${MONITORS[1]}"  # DP-1 (3440x1440) - Center
+MON3="${MONITORS[2]}"  # DP-2 (1080x1920) - Right (rotated -90deg)
 
-# Total monitor width = 3440 + 1920 = 5360
-TOTAL_WIDTH=5360
-THRESHOLD=$((TOTAL_WIDTH - 500))  # Trigger if image ≥ 4860px wide
+# Total monitor width = 1080 + 3440 + 1080 = 5600 (after rotation)
+TOTAL_WIDTH=5600
+THRESHOLD=$((TOTAL_WIDTH - 500))  # Trigger if image ≥ 5100px wide
 
 # Get image dimensions
 IMG_WIDTH=$(identify -format "%w" "$IMAGE")
@@ -32,28 +33,34 @@ IMG_HEIGHT=$(identify -format "%h" "$IMAGE")
 
 echo "Image: ${IMG_WIDTH}x${IMG_HEIGHT}"
 
-# Auto-detect: split if image is wide enough for dual monitors
+# Auto-detect: split if image is wide enough for triple monitors
 if [ "$IMG_WIDTH" -ge "$THRESHOLD" ]; then
     echo "Wide image detected! Splitting across monitors..."
 
     mkdir -p "$TEMP_DIR"
 
-    # Calculate split point based on monitor ratio
-    # 3440/(3440+1920) = 64%
-    SPLIT_X=$((IMG_WIDTH * 3440 / TOTAL_WIDTH))
+    # Calculate split points based on monitor ratios (after rotation)
+    # Left monitor (HDMI-A-1): 1080px = 19.3% of total (rotated portrait)
+    # Center monitor (DP-1): 3440px = 61.4% of total (landscape)
+    # Right monitor (DP-2): 1080px = 19.3% of total (rotated portrait)
+    SPLIT1_X=$((IMG_WIDTH * 1080 / TOTAL_WIDTH))
+    SPLIT2_X=$((IMG_WIDTH * 4520 / TOTAL_WIDTH))
 
-    # Split image (preserve format)
-    magick convert "$IMAGE" -crop "${SPLIT_X}x${IMG_HEIGHT}+0+0" +repage "$TEMP_DIR/left.${IMG_EXT}"
-    magick convert "$IMAGE" -crop "$((IMG_WIDTH-SPLIT_X))x${IMG_HEIGHT}+${SPLIT_X}+0" +repage "$TEMP_DIR/right.${IMG_EXT}"
+    # Split image into 3 parts and rotate side monitors (preserve format)
+    magick convert "$IMAGE" -crop "${SPLIT1_X}x${IMG_HEIGHT}+0+0" +repage -rotate 90 "$TEMP_DIR/left.${IMG_EXT}"
+    magick convert "$IMAGE" -crop "$((SPLIT2_X-SPLIT1_X))x${IMG_HEIGHT}+${SPLIT1_X}+0" +repage "$TEMP_DIR/center.${IMG_EXT}"
+    magick convert "$IMAGE" -crop "$((IMG_WIDTH-SPLIT2_X))x${IMG_HEIGHT}+${SPLIT2_X}+0" +repage -rotate -90 "$TEMP_DIR/right.${IMG_EXT}"
 
     # Apply to monitors with transition
     awww img "$TEMP_DIR/left.${IMG_EXT}" --outputs "$MON1" --resize crop \
         --transition-type grow --transition-duration 0.5 --transition-fps 60 --transition-pos top-right &
-    awww img "$TEMP_DIR/right.${IMG_EXT}" --outputs "$MON2" --resize crop \
+    awww img "$TEMP_DIR/center.${IMG_EXT}" --outputs "$MON2" --resize crop \
+        --transition-type grow --transition-duration 0.5 --transition-fps 60 --transition-pos top-right &
+    awww img "$TEMP_DIR/right.${IMG_EXT}" --outputs "$MON3" --resize crop \
         --transition-type grow --transition-duration 0.5 --transition-fps 60 --transition-pos top-right &
     wait
 
-    notify-send "Wallpaper Split" "Applied across both monitors\n${IMG_WIDTH}x${IMG_HEIGHT}"
+    notify-send "Wallpaper Split" "Applied across all three monitors\n${IMG_WIDTH}x${IMG_HEIGHT}"
 else
     # Normal mode: repeat on all monitors with transition
     awww img "$IMAGE" --resize crop \

@@ -11,7 +11,7 @@ Rectangle {
     anchors.fill: parent
     color: "transparent"
 
-    // Bar
+    // Bar (Primary Display)
     Windows.Bar {
         id: bar
 
@@ -35,6 +35,38 @@ Rectangle {
             Modules.ControlCenter {},
             Modules.Clock {},
         ]
+    }
+
+    // Bar (Secondary Display - Workspaces Only)
+    Windows.Bar {
+        id: barSecondary
+        screen: Quickshell.screens[1]
+
+        leftItems: [
+            Modules.Workspaces {
+                startWorkspace: 11
+                defaultIcon: Icon.emptyWorkspace
+            }
+        ]
+
+        centerItems: []
+        rightItems: []
+    }
+
+    // Bar (Third Display - Left Side - Workspaces Only)
+    Windows.Bar {
+        id: barTertiary
+        screen: Quickshell.screens[2]
+
+        leftItems: [
+            Modules.Workspaces {
+                startWorkspace: 21
+                defaultIcon: Icon.emptyWorkspace
+            }
+        ]
+
+        centerItems: []
+        rightItems: []
     }
 
     // Spotify overlay

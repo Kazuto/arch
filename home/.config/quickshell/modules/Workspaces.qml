@@ -4,6 +4,9 @@ import Quickshell.Hyprland
 import "root:/"
 
 Rectangle {
+    property int startWorkspace: 1  // Starting workspace number
+    property string defaultIcon: ""  // If set, use this icon for all workspaces
+
     implicitWidth: workspaceRow.implicitWidth + Config.moduleHorizontalPadding
     implicitHeight: Config.barHeight
     color: Config.moduleBackground
@@ -15,17 +18,28 @@ Rectangle {
         spacing: Config.workspaceSpacing
 
         Repeater {
-            model: [
-                {num: 1, icon: Icon.firefox},
-                {num: 2, icon: Icon.ghostty},
-                {num: 3, icon: Icon.database},
-                {num: 4, icon: Icon.code},
-                {num: 5, icon: Icon.firefox},
-                {num: 6, icon: Icon.thunderbird},
-                {num: 7, icon: Icon.emptyWorkspace},
-                {num: 8, icon: Icon.discord},
-                {num: 9, icon: Icon.steam},
-                {num: 10, icon: Icon.spotify}
+            model: defaultIcon !== "" ? [
+                {num: startWorkspace + 0, icon: defaultIcon},
+                {num: startWorkspace + 1, icon: defaultIcon},
+                {num: startWorkspace + 2, icon: defaultIcon},
+                {num: startWorkspace + 3, icon: defaultIcon},
+                {num: startWorkspace + 4, icon: defaultIcon},
+                {num: startWorkspace + 5, icon: defaultIcon},
+                {num: startWorkspace + 6, icon: defaultIcon},
+                {num: startWorkspace + 7, icon: defaultIcon},
+                {num: startWorkspace + 8, icon: defaultIcon},
+                {num: startWorkspace + 9, icon: defaultIcon}
+            ] : [
+                {num: startWorkspace + 0, icon: Icon.firefox},
+                {num: startWorkspace + 1, icon: Icon.ghostty},
+                {num: startWorkspace + 2, icon: Icon.database},
+                {num: startWorkspace + 3, icon: Icon.code},
+                {num: startWorkspace + 4, icon: Icon.firefox},
+                {num: startWorkspace + 5, icon: Icon.thunderbird},
+                {num: startWorkspace + 6, icon: Icon.emptyWorkspace},
+                {num: startWorkspace + 7, icon: Icon.discord},
+                {num: startWorkspace + 8, icon: Icon.steam},
+                {num: startWorkspace + 9, icon: Icon.spotify}
             ]
 
             delegate: Item {
