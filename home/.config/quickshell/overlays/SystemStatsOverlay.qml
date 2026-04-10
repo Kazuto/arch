@@ -35,7 +35,7 @@ PanelWindow {
             rightMargin: 20
         }
         width: 400
-        height: 550
+        height: 750
         color: Config.alpha(Theme.base, 0.95)
         radius: Config.overlayRadius
         border.color: Theme.surface0
@@ -81,14 +81,26 @@ PanelWindow {
                         font.family: Config.moduleFontFamily
                     }
 
-                    Text {
+                    Row {
                         anchors.right: parent.right
                         anchors.verticalCenter: parent.verticalCenter
-                        text: SystemStatsData.cpuUsage + "%"
-                        color: SystemStatsData.cpuUsage >= 80 ? Theme.red : Theme.sky
-                        font.pixelSize: 14
-                        font.bold: true
-                        font.family: Config.moduleFontFamily
+                        spacing: 12
+
+                        Text {
+                            text: SystemStatsData.cpuTemp + "°C"
+                            color: SystemStatsData.cpuTemp >= 80 ? Theme.red : SystemStatsData.cpuTemp >= 70 ? Theme.peach : Theme.sky
+                            font.pixelSize: 14
+                            font.bold: true
+                            font.family: Config.moduleFontFamily
+                        }
+
+                        Text {
+                            text: SystemStatsData.cpuUsage + "%"
+                            color: SystemStatsData.cpuUsage >= 80 ? Theme.red : Theme.sky
+                            font.pixelSize: 14
+                            font.bold: true
+                            font.family: Config.moduleFontFamily
+                        }
                     }
                 }
 
@@ -151,6 +163,112 @@ PanelWindow {
                         target: SystemStatsData
                         function onCpuHistoryChanged() {
                             cpuCanvas.requestPaint()
+                        }
+                    }
+                }
+            }
+
+            // GPU Section
+            Column {
+                width: parent.width
+                spacing: 10
+
+                Item {
+                    width: parent.width
+                    height: 20
+
+                    Text {
+                        anchors.left: parent.left
+                        anchors.verticalCenter: parent.verticalCenter
+                        text: "🎮 GPU"
+                        color: Theme.mauve
+                        font.pixelSize: 14
+                        font.bold: true
+                        font.family: Config.moduleFontFamily
+                    }
+
+                    Row {
+                        anchors.right: parent.right
+                        anchors.verticalCenter: parent.verticalCenter
+                        spacing: 12
+
+                        Text {
+                            text: SystemStatsData.gpuTemp + "°C"
+                            color: SystemStatsData.gpuTemp >= 85 ? Theme.red : SystemStatsData.gpuTemp >= 75 ? Theme.peach : Theme.mauve
+                            font.pixelSize: 14
+                            font.bold: true
+                            font.family: Config.moduleFontFamily
+                        }
+
+                        Text {
+                            text: SystemStatsData.gpuUsage + "%"
+                            color: SystemStatsData.gpuUsage >= 90 ? Theme.red : Theme.mauve
+                            font.pixelSize: 14
+                            font.bold: true
+                            font.family: Config.moduleFontFamily
+                        }
+                    }
+                }
+
+                Canvas {
+                    id: gpuCanvas
+                    width: parent.width
+                    height: 80
+
+                    onPaint: {
+                        var ctx = getContext("2d")
+                        ctx.clearRect(0, 0, width, height)
+
+                        if (SystemStatsData.gpuHistory.length < 2) return
+
+                        // Draw grid
+                        ctx.strokeStyle = Theme.surface1
+                        ctx.lineWidth = 1
+                        for (var i = 0; i <= 4; i++) {
+                            var y = (i / 4) * height
+                            ctx.beginPath()
+                            ctx.moveTo(0, y)
+                            ctx.lineTo(width, y)
+                            ctx.stroke()
+                        }
+
+                        // Draw area fill
+                        ctx.fillStyle = Config.alpha(Theme.mauve, 0.2)
+                        ctx.beginPath()
+                        ctx.moveTo(0, height)
+
+                        for (var j = 0; j < SystemStatsData.gpuHistory.length; j++) {
+                            var x = (j / (SystemStatsData.gpuHistory.length - 1)) * width
+                            var val = SystemStatsData.gpuHistory[j]
+                            var y = height - (val / 100) * height
+                            if (j === 0) ctx.lineTo(x, y)
+                            else ctx.lineTo(x, y)
+                        }
+
+                        ctx.lineTo(width, height)
+                        ctx.closePath()
+                        ctx.fill()
+
+                        // Draw line
+                        ctx.strokeStyle = Theme.mauve
+                        ctx.lineWidth = 2
+                        ctx.beginPath()
+
+                        for (var k = 0; k < SystemStatsData.gpuHistory.length; k++) {
+                            var x2 = (k / (SystemStatsData.gpuHistory.length - 1)) * width
+                            var val2 = SystemStatsData.gpuHistory[k]
+                            var y2 = height - (val2 / 100) * height
+                            if (k === 0) ctx.moveTo(x2, y2)
+                            else ctx.lineTo(x2, y2)
+                        }
+
+                        ctx.stroke()
+                    }
+
+                    Connections {
+                        target: SystemStatsData
+                        function onGpuHistoryChanged() {
+                            gpuCanvas.requestPaint()
                         }
                     }
                 }
@@ -384,6 +502,50 @@ PanelWindow {
                         }
                         function onNetworkHistoryUpChanged() {
                             networkCanvas.requestPaint()
+                        }
+                    }
+                }
+            }
+
+            // Temperatures Section
+            Column {
+                width: parent.width
+                spacing: 10
+
+                Text {
+                    text: "🌡 Storage Temperature"
+                    color: Theme.peach
+                    font.pixelSize: 14
+                    font.bold: true
+                    font.family: Config.moduleFontFamily
+                }
+
+                Column {
+                    width: parent.width
+                    spacing: 8
+
+                    // NVMe Temperature
+                    Item {
+                        width: parent.width
+                        height: 18
+
+                        Text {
+                            anchors.left: parent.left
+                            anchors.verticalCenter: parent.verticalCenter
+                            text: "NVMe SSD"
+                            color: Theme.subtext0
+                            font.pixelSize: 12
+                            font.family: Config.moduleFontFamily
+                        }
+
+                        Text {
+                            anchors.right: parent.right
+                            anchors.verticalCenter: parent.verticalCenter
+                            text: SystemStatsData.nvmeTemp + "°C"
+                            color: SystemStatsData.nvmeTemp >= 70 ? Theme.red : SystemStatsData.nvmeTemp >= 60 ? Theme.peach : Theme.green
+                            font.pixelSize: 12
+                            font.bold: true
+                            font.family: Config.moduleFontFamily
                         }
                     }
                 }

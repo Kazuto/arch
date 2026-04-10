@@ -6,10 +6,14 @@ import Quickshell.Io
 Singleton {
     property int cpuUsage: 0
     property int memoryUsage: 0
+    property int gpuUsage: 0
     property string networkSpeedDown: "0b/s"
     property string networkSpeedUp: "0b/s"
     property real networkBitsPerSecDown: 0
     property real networkBitsPerSecUp: 0
+    property int cpuTemp: 0
+    property int gpuTemp: 0
+    property int nvmeTemp: 0
 
     function formatSpeed(bits) {
         if (bits >= 1000000000) {
@@ -26,6 +30,7 @@ Singleton {
     // History arrays (last 60 samples)
     property var cpuHistory: []
     property var memoryHistory: []
+    property var gpuHistory: []
     property var networkHistoryDown: []
     property var networkHistoryUp: []
 
@@ -83,6 +88,44 @@ Singleton {
         onTriggered: {
             memoryProcess.running = false
             memoryProcess.running = true
+        }
+    }
+
+    // GPU Usage
+    Process {
+        id: gpuProcess
+        running: true
+        command: ["sh", "-c", `
+            # Try to read GPU usage from amdgpu sysfs
+            if [ -f /sys/class/drm/card0/device/gpu_busy_percent ]; then
+                cat /sys/class/drm/card0/device/gpu_busy_percent
+            else
+                # Fallback: estimate from sensors power usage (rough approximation)
+                # Max power is 170W based on your GPU
+                POWER=$(sensors amdgpu-pci-0c00 2>/dev/null | grep PPT | awk '{print int(\$2)}')
+                if [ -n "\$POWER" ]; then
+                    echo \$(( POWER * 100 / 170 ))
+                else
+                    echo 0
+                fi
+            fi
+        `]
+
+        stdout: SplitParser {
+            onRead: data => {
+                gpuUsage = parseInt(data) || 0
+                gpuHistory = addToHistory(gpuHistory, gpuUsage, 60)
+            }
+        }
+    }
+
+    Timer {
+        interval: 5000  // Update every 5 seconds
+        running: true
+        repeat: true
+        onTriggered: {
+            gpuProcess.running = false
+            gpuProcess.running = true
         }
     }
 
@@ -154,6 +197,50 @@ Singleton {
         onTriggered: {
             networkProcess.running = false
             networkProcess.running = true
+        }
+    }
+
+    // Temperature monitoring
+    Process {
+        id: tempProcess
+        running: true
+        command: ["sh", "-c", `
+            # CPU temp (k10temp Tctl)
+            CPU_TEMP=$(sensors | grep "Tctl:" | head -1 | awk '{gsub(/[^0-9.]/, "", \$2); print int(\$2+0.5)}')
+            # GPU temp (amdgpu edge)
+            GPU_TEMP=$(sensors | grep "edge:" | head -1 | awk '{gsub(/[^0-9.]/, "", \$2); print int(\$2+0.5)}')
+            # NVMe temp
+            NVME_TEMP=$(sensors | grep "Composite:" | head -1 | awk '{gsub(/[^0-9.]/, "", \$2); print int(\$2+0.5)}')
+
+            echo "CPU:\${CPU_TEMP:-0}"
+            echo "GPU:\${GPU_TEMP:-0}"
+            echo "NVME:\${NVME_TEMP:-0}"
+        `]
+
+        stdout: SplitParser {
+            onRead: data => {
+                var trimmed = data.trim()
+
+                if (trimmed.startsWith("CPU:")) {
+                    cpuTemp = parseInt(trimmed.substring(4)) || 0
+                }
+                else if (trimmed.startsWith("GPU:")) {
+                    gpuTemp = parseInt(trimmed.substring(4)) || 0
+                }
+                else if (trimmed.startsWith("NVME:")) {
+                    nvmeTemp = parseInt(trimmed.substring(5)) || 0
+                }
+            }
+        }
+    }
+
+    Timer {
+        interval: 5000  // Update every 5 seconds
+        running: true
+        repeat: true
+        onTriggered: {
+            tempProcess.running = false
+            tempProcess.running = true
         }
     }
 }
