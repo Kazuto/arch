@@ -113,7 +113,7 @@ PanelWindow {
             rightMargin: 20
         }
         width: 400
-        height: 520
+        height: 585
         color: Config.alpha(Theme.base, 0.95)
         radius: Config.overlayRadius
         border.color: Theme.surface0
