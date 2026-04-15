@@ -8,9 +8,10 @@ x-scheme-handler/mailto=userapp-Thunderbird-4X10L3.desktop
 message/rfc822=userapp-Thunderbird-4X10L3.desktop
 x-scheme-handler/mid=userapp-Thunderbird-4X10L3.desktop
 x-scheme-handler/discord=vesktop.desktop
+inode/directory=thunar.desktop
 
 [Added Associations]
-image/jpeg=viewnior.desktop;
+image/jpeg=gimp.desktop;viewnior.desktop;
 image/png=viewnior.desktop;
 x-scheme-handler/mailto=userapp-Thunderbird-4X10L3.desktop;
 x-scheme-handler/mid=userapp-Thunderbird-4X10L3.desktop;
