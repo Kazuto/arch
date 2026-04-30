@@ -19,13 +19,13 @@ IMG_EXT="${IMAGE##*.}"
 
 # Get monitor info sorted by X position (left to right)
 MONITORS=($(hyprctl monitors -j | jq -r 'sort_by(.x) | .[].name'))
-MON1="${MONITORS[0]}"  # HDMI-A-1 (1080x1920) - Left (rotated 90deg)
-MON2="${MONITORS[1]}"  # DP-1 (3440x1440) - Center
-MON3="${MONITORS[2]}"  # DP-2 (1080x1920) - Right (rotated -90deg)
+MON1="${MONITORS[0]}" # HDMI-A-1 (1440x2560) - Left (rotated 90deg)
+MON2="${MONITORS[1]}" # DP-1 (3440x1440) - Center
+MON3="${MONITORS[2]}" # DP-2 (1440x2560) - Right (rotated -90deg)
 
-# Total monitor width = 1080 + 3440 + 1080 = 5600 (after rotation)
-TOTAL_WIDTH=5600
-THRESHOLD=$((TOTAL_WIDTH - 500))  # Trigger if image ≥ 5100px wide
+# Total monitor width = 1440 + 3440 + 1440 = 6320 (after rotation)
+TOTAL_WIDTH=6320
+THRESHOLD=$((TOTAL_WIDTH - 500)) # Trigger if image ≥ 5100px wide
 
 # Get image dimensions
 IMG_WIDTH=$(identify -format "%w" "$IMAGE")
@@ -40,16 +40,16 @@ if [ "$IMG_WIDTH" -ge "$THRESHOLD" ]; then
     mkdir -p "$TEMP_DIR"
 
     # Calculate split points based on monitor ratios (after rotation)
-    # Left monitor (HDMI-A-1): 1080px = 19.3% of total (rotated portrait)
-    # Center monitor (DP-1): 3440px = 61.4% of total (landscape)
-    # Right monitor (DP-2): 1080px = 19.3% of total (rotated portrait)
-    SPLIT1_X=$((IMG_WIDTH * 1080 / TOTAL_WIDTH))
-    SPLIT2_X=$((IMG_WIDTH * 4520 / TOTAL_WIDTH))
+    # Left monitor (DP-3): 1440px = 22.8% of total (rotated portrait)
+    # Center monitor (DP-1): 3440px = 54.4% of total (landscape)
+    # Right monitor (DP-2): 1440px = 22.8% of total (rotated portrait)
+    SPLIT1_X=$((IMG_WIDTH * 1440 / TOTAL_WIDTH))
+    SPLIT2_X=$((IMG_WIDTH * 4880 / TOTAL_WIDTH))
 
-    # Split image into 3 parts and rotate side monitors (preserve format)
-    magick convert "$IMAGE" -crop "${SPLIT1_X}x${IMG_HEIGHT}+0+0" +repage -rotate 90 "$TEMP_DIR/left.${IMG_EXT}"
-    magick convert "$IMAGE" -crop "$((SPLIT2_X-SPLIT1_X))x${IMG_HEIGHT}+${SPLIT1_X}+0" +repage "$TEMP_DIR/center.${IMG_EXT}"
-    magick convert "$IMAGE" -crop "$((IMG_WIDTH-SPLIT2_X))x${IMG_HEIGHT}+${SPLIT2_X}+0" +repage -rotate -90 "$TEMP_DIR/right.${IMG_EXT}"
+    # Split image into 3 parts (no rotation - Hyprland's transform handles it)
+    magick convert "$IMAGE" -crop "${SPLIT1_X}x${IMG_HEIGHT}+0+0" +repage "$TEMP_DIR/left.${IMG_EXT}"
+    magick convert "$IMAGE" -crop "$((SPLIT2_X - SPLIT1_X))x${IMG_HEIGHT}+${SPLIT1_X}+0" +repage "$TEMP_DIR/center.${IMG_EXT}"
+    magick convert "$IMAGE" -crop "$((IMG_WIDTH - SPLIT2_X))x${IMG_HEIGHT}+${SPLIT2_X}+0" +repage "$TEMP_DIR/right.${IMG_EXT}"
 
     # Apply to monitors with transition
     awww img "$TEMP_DIR/left.${IMG_EXT}" --outputs "$MON1" --resize crop \
