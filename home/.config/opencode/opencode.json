@@ -1,0 +1,21 @@
+{
+  "$schema": "https://opencode.ai/config.json",
+  "provider": {
+    "lmstudio": {
+      "npm": "@ai-sdk/openai-compatible",
+      "name": "LM Studio (Mac Mini)",
+      "options": {
+        "baseURL": "http://10.7.2.173:1234/v1"
+      },
+      "models": {
+        "qwen3.5-0.8b": {
+          "name": "Qwen 3.5 0.8B",
+          "limit": {
+            "context": 32768,
+            "output": 8192
+          }
+        }
+      }
+    }
+  }
+}
