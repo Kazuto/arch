@@ -1,9 +1,6 @@
 #!/bin/bash
 # ZSH Tool Initializations
 
-# Zoxide (smart cd)
-command -v zoxide &>/dev/null && eval "$(zoxide init zsh --cmd cd)"
-
 # Tmuxifier
 export PATH="$HOME/.tmuxifier/bin:$PATH"
 export TMUXIFIER_LAYOUT_PATH="$HOME/.config/tmuxifier/layouts"

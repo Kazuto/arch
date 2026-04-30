@@ -9,6 +9,8 @@ function to() {
 
 # Tmuxifier shortcuts
 function tls() {
+  echo "Loading tmuxifier session: $1"
+  echo "Layout file: $TMUXIFIER_LAYOUT_PATH/$1.session.sh"
   tmuxifier load-session "$1"
 }
 

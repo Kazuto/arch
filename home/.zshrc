@@ -78,3 +78,6 @@ load-nvmrc() {
 }
 add-zsh-hook chpwd load-nvmrc
 load-nvmrc
+
+# Zoxide (smart cd) - must be at the end
+command -v zoxide &>/dev/null && eval "$(zoxide init zsh --cmd cd)"
