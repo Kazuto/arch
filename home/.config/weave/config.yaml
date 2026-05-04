@@ -12,13 +12,10 @@ branch:
     separator: "-"
     lowercase: true
     remove_umlauts: false
+
 commit:
-  ollama:
-    model: qwen3.5-0.8b
-    host: http://10.7.2.173:1234/v1
-    temperature: 0.3
-    top_p: 0.9
-    max_diff: 4000
+  reference_commits: 5 # Number of recent commits to include as style reference (0 to disable)
+  reference_branch: "" # Base branch to compare against (empty = auto-detect main/master)
   types:
     - feat
     - fix
@@ -42,14 +39,19 @@ commit:
     Types: {{.Types}}
     Scope: The module/component affected in PascalCase (e.g., CI, API, Auth, Core)
 
+    Recent commit messages for style reference:
+    {{.RecentCommits}}
+
     Rules:
     - First line: type(Scope): Capitalized short description
     - Blank line after the first line
     - IMPORTANT: Use MINIMAL bullet points. One bullet per distinct change.
+    - At least one bullet per file change
     - Single file change = 1-3 bullets MAX
     - Never repeat information from the first line
     - Never add filler bullets like "Add necessary configurations" or "Update file structure"
     - Each bullet must describe a UNIQUE, SPECIFIC change
+    - Follow the style and conventions from recent commits
 
     Changed files:
     {{.Files}}
@@ -58,6 +60,7 @@ commit:
     {{.Diff}}
 
     Generate ONLY the commit message, nothing else. Be concise and specific.
+
 pr:
   default_base: ""
   default_remote: ""
@@ -91,3 +94,24 @@ pr:
     - How to verify these changes work correctly
     {{end}}
     Generate ONLY the PR description, nothing else. Be concise and specific.
+
+# LLM provider configuration (shared between commit and PR)
+llm:
+  provider: openai # Using LM Studio with OpenAI-compatible API
+
+  # OpenAI-compatible configuration (for LM Studio)
+  openai:
+    model: qwen3.5-2b
+    host: http://10.7.2.173:1234 # Removed /v1 - it's added automatically
+    api_key: "" # LM Studio doesn't require an API key
+    temperature: 0.3
+    top_p: 0.9
+    max_diff: 4000
+
+  # Ollama configuration (not used when provider is "openai")
+  ollama:
+    model: llama3.2
+    host: http://localhost:11434
+    temperature: 0.3
+    top_p: 0.9
+    max_diff: 4000
