@@ -11,9 +11,34 @@ Rectangle {
     anchors.fill: parent
     color: "transparent"
 
-    // Bar (Primary Display)
+    // Find screens by model to avoid index issues when monitors reconnect
+    property var middleScreen: {
+        for (var i = 0; i < Quickshell.screens.length; i++) {
+            if (Quickshell.screens[i].model === "G34WQC A") return Quickshell.screens[i]
+        }
+        return Quickshell.screens[0] // fallback
+    }
+
+    property var rightScreen: {
+        for (var i = 0; i < Quickshell.screens.length; i++) {
+            var s = Quickshell.screens[i]
+            if (s.model === "GS27QCA" && s.name === "DP-2") return s
+        }
+        return Quickshell.screens.length > 1 ? Quickshell.screens[1] : null
+    }
+
+    property var leftScreen: {
+        for (var i = 0; i < Quickshell.screens.length; i++) {
+            var s = Quickshell.screens[i]
+            if (s.model === "GS27QCA" && s.name === "DP-3") return s
+        }
+        return Quickshell.screens.length > 2 ? Quickshell.screens[2] : null
+    }
+
+    // Bar (Primary Display - Middle Ultrawide)
     Windows.Bar {
         id: bar
+        screen: middleScreen
 
         leftItems: [
             Modules.Menu {},
@@ -37,10 +62,11 @@ Rectangle {
         ]
     }
 
-    // Bar (Secondary Display - Workspaces Only)
+    // Bar (Right Display - Workspaces 11-20)
     Windows.Bar {
         id: barSecondary
-        screen: Quickshell.screens[1]
+        screen: rightScreen
+        visible: rightScreen !== null
 
         leftItems: [
             Modules.Workspaces {
@@ -53,10 +79,11 @@ Rectangle {
         rightItems: []
     }
 
-    // Bar (Third Display - Left Side - Workspaces Only)
+    // Bar (Left Display - Workspaces 21-30)
     Windows.Bar {
         id: barTertiary
-        screen: Quickshell.screens[2]
+        screen: leftScreen
+        visible: leftScreen !== null
 
         leftItems: [
             Modules.Workspaces {
