@@ -10,6 +10,7 @@ return {
         "gopls",
         "html",
         "intelephense",
+        "jdtls",
         "jsonls",
         "lua_ls",
         "phpactor",
