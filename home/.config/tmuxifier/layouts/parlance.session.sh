@@ -1,7 +1,7 @@
 # Set a custom session root path. Default is `$HOME`.
 session_root "$PROJECT_ROOT/Private/parlance"
 
-if initialize_session "client"; then
+if initialize_session "parlance"; then
 
   # ── Window 1: client ──
   window_root "$PROJECT_ROOT/Private/parlance/client/"
@@ -11,16 +11,10 @@ if initialize_session "client"; then
 
   # Split left pane vertically: lazygit (top) + npm run dev (bottom)
   select_pane 1
-  split_v 25
-
-  select_pane 1
   run_cmd "lazygit"
 
-  select_pane 2
-  run_cmd "npm run dev"
-
   # Right pane: nvim
-  select_pane 3
+  select_pane 2
   run_cmd "nvim"
 
   # ── Window 2: server ──
