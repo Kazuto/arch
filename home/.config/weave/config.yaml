@@ -39,9 +39,6 @@ commit:
     Types: {{.Types}}
     Scope: The module/component affected in PascalCase (e.g., CI, API, Auth, Core)
 
-    Recent commit messages for style reference:
-    {{.RecentCommits}}
-
     Rules:
     - First line: type(Scope): Capitalized short description
     - Blank line after the first line
@@ -101,7 +98,7 @@ llm:
 
   # OpenAI-compatible configuration (for LM Studio)
   openai:
-    model: qwen3.5-2b
+    model: qwen3.5-4b-mlx
     host: http://10.7.2.173:1234 # Removed /v1 - it's added automatically
     api_key: "" # LM Studio doesn't require an API key
     temperature: 0.3
