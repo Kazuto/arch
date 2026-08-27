@@ -1,9 +1,10 @@
 import QtQuick
 import "root:/"
 import "root:/singletons"
+import "root:/components"
 
 Rectangle {
-    implicitWidth: githubText.implicitWidth + Config.moduleHorizontalPadding
+    implicitWidth: githubRow.implicitWidth + Config.moduleHorizontalPadding
     implicitHeight: Config.barHeight
     color: githubMouseArea.containsMouse ? Config.moduleHoverBackground : Config.moduleBackground
     radius: Config.moduleRadius
@@ -12,13 +13,26 @@ Rectangle {
         ColorAnimation { duration: Config.animationDuration }
     }
 
-    Text {
-        id: githubText
+    Row {
+        id: githubRow
         anchors.centerIn: parent
-        text: Icon.github + " " + GitHubData.notificationCount
-        color: GitHubData.notificationCount > 0 ? Theme.red : Theme.text
-        font.pixelSize: Config.moduleFontSize
-        font.family: Config.moduleFontFamily
+        spacing: 6
+
+        SvgIcon {
+            name: "github"
+            size: Config.moduleFontSize
+            color: GitHubData.notificationCount > 0 ? Theme.red : Theme.subtext0
+            anchors.verticalCenter: parent.verticalCenter
+        }
+
+        Text {
+            text: GitHubData.notificationCount
+            color: GitHubData.notificationCount > 0 ? Theme.red : Theme.subtext0
+            font.pixelSize: Config.moduleFontSize
+            font.family: Config.moduleFontFamily
+            anchors.verticalCenter: parent.verticalCenter
+            visible: GitHubData.notificationCount > 0
+        }
     }
 
     MouseArea {
@@ -26,6 +40,6 @@ Rectangle {
         anchors.fill: parent
         hoverEnabled: true
         cursorShape: Qt.PointingHandCursor
-        onClicked: AppState.toggleGitHubOverlay()
+        onClicked: { AppState.lastClickX = mapToItem(null, width / 2, 0).x; AppState.toggleGitHubOverlay() }
     }
 }

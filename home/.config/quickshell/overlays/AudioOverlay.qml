@@ -4,6 +4,7 @@ import Quickshell
 import Quickshell.Wayland
 import "root:/"
 import "root:/singletons"
+import "root:/components"
 
 PanelWindow {
     id: audioOverlay
@@ -39,11 +40,11 @@ PanelWindow {
             top: parent.top
             right: parent.right
             topMargin: 12
-            rightMargin: 50  // Position overlay near Audio module
+            rightMargin: Math.min(AppState.screenWidth - 400 - 10, Math.max(10, AppState.screenWidth - AppState.lastClickX - 400 / 2))  // Position overlay near Audio module
         }
         width: 400
         height: contentColumn.implicitHeight + 40
-        color: Config.alpha(Theme.base, 0.95)
+        color: Theme.mantle
         radius: Config.overlayRadius
         border.color: Theme.surface0
         border.width: 1
@@ -63,16 +64,45 @@ PanelWindow {
             }
             spacing: 20
 
+            // Header
+            Item {
+                width: parent.width
+                height: 28
+
+                Row {
+                    anchors.left: parent.left
+                    anchors.verticalCenter: parent.verticalCenter
+                    spacing: 10
+
+                    SvgIcon {
+                        name: AudioData.outputMuted ? "volume-muted" : "volume"
+                        size: 18
+                        color: Theme.mauve
+                        anchors.verticalCenter: parent.verticalCenter
+                    }
+
+                    Text {
+                        text: "Audio"
+                        color: Theme.text
+                        font.pixelSize: 16
+                        font.bold: true
+                        font.family: Config.moduleFontFamily
+                        anchors.verticalCenter: parent.verticalCenter
+                    }
+                }
+            }
+
             // Output Devices Section
             Column {
                 width: parent.width
                 spacing: 15
 
                 Text {
-                    text: "Output Devices"
-                    color: Theme.text
-                    font.pixelSize: 16
+                    text: "OUTPUT"
+                    color: Theme.overlay0
+                    font.pixelSize: 10
                     font.bold: true
+                    font.letterSpacing: 1.5
                     font.family: Config.moduleFontFamily
                 }
 
@@ -86,7 +116,7 @@ PanelWindow {
                         Rectangle {
                             width: parent.width
                             height: 60
-                            color: AudioData.defaultSink === modelData.name ? Theme.surface1 : Theme.surface0
+                            color: Theme.surface0
                             radius: Config.moduleRadius
 
                             Column {
@@ -102,11 +132,10 @@ PanelWindow {
                                     width: parent.width
                                     spacing: 10
 
-                                    Text {
-                                        text: modelData.muted ? Icon.volumeMuted : Icon.volume
+                                    SvgIcon {
+                                        name: modelData.muted ? "volume-muted" : "volume"
+                                        size: 18
                                         color: modelData.muted ? Theme.overlay0 : Theme.mauve
-                                        font.pixelSize: 18
-                                        font.family: Config.moduleFontFamily
                                     }
 
                                     Text {
@@ -149,7 +178,7 @@ PanelWindow {
                                         width: parent.availableWidth
                                         height: implicitHeight
                                         radius: 2
-                                        color: Theme.surface2
+                                         color: Theme.surface0
 
                                         Rectangle {
                                             width: parent.parent.visualPosition * parent.width
@@ -199,10 +228,11 @@ PanelWindow {
                 spacing: 15
 
                 Text {
-                    text: "Input Devices"
-                    color: Theme.text
-                    font.pixelSize: 16
+                    text: "INPUT"
+                    color: Theme.overlay0
+                    font.pixelSize: 10
                     font.bold: true
+                    font.letterSpacing: 1.5
                     font.family: Config.moduleFontFamily
                 }
 
@@ -216,7 +246,7 @@ PanelWindow {
                         Rectangle {
                             width: parent.width
                             height: 60
-                            color: AudioData.defaultSource === modelData.name ? Theme.surface1 : Theme.surface0
+                            color: Theme.surface0
                             radius: Config.moduleRadius
 
                             Column {
@@ -232,11 +262,10 @@ PanelWindow {
                                     width: parent.width
                                     spacing: 10
 
-                                    Text {
-                                        text: modelData.muted ? Icon.microphoneMuted : Icon.microphone
+                                    SvgIcon {
+                                        name: modelData.muted ? "microphone-muted" : "microphone"
+                                        size: 18
                                         color: modelData.muted ? Theme.overlay0 : Theme.mauve
-                                        font.pixelSize: 18
-                                        font.family: Config.moduleFontFamily
                                     }
 
                                     Text {
@@ -279,7 +308,7 @@ PanelWindow {
                                         width: parent.availableWidth
                                         height: implicitHeight
                                         radius: 2
-                                        color: Theme.surface2
+                                         color: Theme.surface0
 
                                         Rectangle {
                                             width: parent.parent.visualPosition * parent.width

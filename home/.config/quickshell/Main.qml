@@ -6,39 +6,24 @@ import "root:/"
 import "./modules" as Modules
 import "./windows" as Windows
 import "./overlays" as Overlays
+import "./components" as Components
 
 Rectangle {
     anchors.fill: parent
     color: "transparent"
 
-    // Find screens by model to avoid index issues when monitors reconnect
-    property var middleScreen: {
-        for (var i = 0; i < Quickshell.screens.length; i++) {
-            if (Quickshell.screens[i].model === "G34WQC A") return Quickshell.screens[i]
-        }
-        return Quickshell.screens[0] // fallback
+    Component.onCompleted: {
+        // Use the bar's screen width for overlay positioning
+        var barScreen = Quickshell.screens.find(s => s.name === "HDMI-A-1")
+            || Quickshell.screens.find(s => s.primary)
+            || Quickshell.screens[0]
+        if (barScreen) AppState.screenWidth = barScreen.width
+        console.log("QuickShell started with IPC on:", ipcSocket.path)
     }
 
-    property var rightScreen: {
-        for (var i = 0; i < Quickshell.screens.length; i++) {
-            var s = Quickshell.screens[i]
-            if (s.model === "GS27QCA" && s.name === "DP-2") return s
-        }
-        return Quickshell.screens.length > 1 ? Quickshell.screens[1] : null
-    }
-
-    property var leftScreen: {
-        for (var i = 0; i < Quickshell.screens.length; i++) {
-            var s = Quickshell.screens[i]
-            if (s.model === "GS27QCA" && s.name === "DP-3") return s
-        }
-        return Quickshell.screens.length > 2 ? Quickshell.screens[2] : null
-    }
-
-    // Bar (Primary Display - Middle Ultrawide)
+    // Bar (Primary Display)
     Windows.Bar {
         id: bar
-        screen: middleScreen
 
         leftItems: [
             Modules.Menu {},
@@ -51,26 +36,53 @@ Rectangle {
         ]
 
         rightItems: [
-            Modules.GitHub {},
-            Modules.Timer {},
-            Modules.Ollama {},
-            Modules.ScreenRecorder {},
-            Modules.SystemStats {},
-            Modules.Notifications {},
-            Modules.ControlCenter {},
-            Modules.Clock {},
+            Components.ModuleGroup {
+                items: [
+                    Modules.Notifications { color: "transparent"; radius: 0 },
+                    Components.ModuleDivider {},
+                    Modules.Timer        { color: "transparent"; radius: 0 },
+                    Components.ModuleDivider {},
+                    Modules.ScreenRecorder { color: "transparent"; radius: 0 },
+                    Components.ModuleDivider {},
+                    Modules.GitHub       { color: "transparent"; radius: 0 },
+                    Components.ModuleDivider {},
+                    Modules.Logitech     { color: "transparent"; radius: 0 },
+                    Components.ModuleDivider {},
+                    Modules.Network      { color: "transparent"; radius: 0 },
+                    Components.ModuleDivider {},
+                    Modules.Wifi         { color: "transparent"; radius: 0 },
+                    Components.ModuleDivider {},
+                    Modules.Bluetooth    { color: "transparent"; radius: 0 },
+                    Components.ModuleDivider {},
+                    Modules.Audio        { color: "transparent"; radius: 0 },
+                    Components.ModuleDivider {},
+                    Modules.SystemStats  { color: "transparent"; radius: 0 },
+                    Components.ModuleDivider {},
+                    Modules.Battery      { color: "transparent"; radius: 0 },
+                    Components.ModuleDivider {},
+                    Modules.Clock        { color: "transparent"; radius: 0 },
+                ]
+            },
         ]
     }
 
-    // Bar (Right Display - Workspaces 11-20)
+    function screenByName(name) {
+        const s = Quickshell.screens.find(s => s.name === name)
+
+        if (!s) console.warn(`No screen found for name ${name}, available:`,
+            Quickshell.screens.map(s => s.name))
+
+        return s
+    }
+
+    // Bar (Secondary Display - Workspaces Only)
     Windows.Bar {
         id: barSecondary
-        screen: rightScreen
-        visible: rightScreen !== null
+        screen:screenByName("DVI-I-2") 
 
         leftItems: [
             Modules.Workspaces {
-                startWorkspace: 11
+                startWorkspace: 6
                 defaultIcon: Icon.emptyWorkspace
             }
         ]
@@ -79,15 +91,14 @@ Rectangle {
         rightItems: []
     }
 
-    // Bar (Left Display - Workspaces 21-30)
+    // Bar (Third Display - Left Side - Workspaces Only)
     Windows.Bar {
         id: barTertiary
-        screen: leftScreen
-        visible: leftScreen !== null
+        screen: screenByName("DVI-I-1")
 
         leftItems: [
             Modules.Workspaces {
-                startWorkspace: 21
+                startWorkspace: 8
                 defaultIcon: Icon.emptyWorkspace
             }
         ]
@@ -114,17 +125,31 @@ Rectangle {
         visible: AppState.audioOverlayVisible
     }
 
+    // Wifi overlay
+    Overlays.WifiOverlay {
+        id: wifiOverlay
+        visible: AppState.wifiOverlayVisible
+    }
+
+    // VPN overlay
+    Overlays.VpnOverlay {
+        id: vpnOverlay
+        visible: AppState.vpnOverlayVisible
+    }
+
+    // Logitech overlay
+    Overlays.LogitechOverlay {
+        id: logitechOverlay
+        visible: AppState.logitechOverlayVisible
+    }
+
     // Notifications overlay
     Overlays.NotificationsOverlay {
         id: notificationsOverlay
         visible: AppState.notificationsOverlayVisible
     }
 
-    // Control Center overlay
-    Overlays.ControlCenterOverlay {
-        id: controlCenterOverlay
-        visible: AppState.controlCenterOverlayVisible
-    }
+    // Control Center overlay removed — replaced by separate Wifi/Audio/Bluetooth overlays
 
     // System Stats overlay
     Overlays.SystemStatsOverlay {
@@ -168,6 +193,18 @@ Rectangle {
         visible: AppState.screenRecorderOverlayVisible
     }
 
+    // Power overlay
+    Overlays.PowerOverlay {
+        id: powerOverlay
+        visible: AppState.powerOverlayVisible
+    }
+
+    // Battery overlay
+    Overlays.BatteryOverlay {
+        id: batteryOverlay
+        visible: AppState.batteryOverlayVisible
+    }
+
     // IPC Socket Server
     SocketServer {
         id: ipcSocket
@@ -179,7 +216,11 @@ Rectangle {
                 onRead: msg => {
                     console.log("Received IPC command:", msg)
 
-                    if (msg === "spotify-toggle") {
+                    if (msg === "menu-toggle") {
+                        AppState.toggleMenuOverlay()
+                    } else if (msg === "power-toggle") {
+                        AppState.togglePowerOverlay()
+                    } else if (msg === "spotify-toggle") {
                         AppState.toggleSpotifyOverlay()
                     } else if (msg === "spotify-show") {
                         if (!AppState.spotifyOverlayVisible) {
@@ -200,9 +241,5 @@ Rectangle {
                 }
             }
         }
-    }
-
-    Component.onCompleted: {
-        console.log("QuickShell started with IPC on:", ipcSocket.path)
     }
 }

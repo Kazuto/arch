@@ -40,7 +40,7 @@ PanelWindow {
             top: parent.top
             right: parent.right
             topMargin: 12
-            rightMargin: 20
+            rightMargin: Math.min(AppState.screenWidth - 450 - 10, Math.max(10, AppState.screenWidth - AppState.lastClickX - 450 / 2))
         }
         width: 450
         height: Math.min(700, parent.height - Config.barHeight - Config.barMarginTop - 40)
@@ -69,7 +69,12 @@ PanelWindow {
                 Text {
                     anchors.left: parent.left
                     anchors.verticalCenter: parent.verticalCenter
-                    text: Icon.github + " GitHub"
+                    Row {
+                    spacing: 8
+                    anchors.verticalCenter: parent.verticalCenter
+                    SvgIcon { name: "github"; size: 18; color: Theme.text; anchors.verticalCenter: parent.verticalCenter }
+                    Text { text: "GitHub"; color: Theme.text; font.pixelSize: 18; font.bold: true; font.family: Config.moduleFontFamily }
+                }
                     color: Theme.text
                     font.pixelSize: 18
                     font.bold: true
@@ -83,7 +88,7 @@ PanelWindow {
                     width: 32
                     height: 32
                     radius: 16
-                    icon: Icon.refresh
+                    icon: "refresh"
                     iconSize: 16
                     text: ""
                     onClicked: GitHubData.refresh()
