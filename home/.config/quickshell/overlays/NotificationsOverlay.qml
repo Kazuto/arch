@@ -39,11 +39,11 @@ PanelWindow {
             top: parent.top
             right: parent.right
             topMargin: 12
-            rightMargin: 20  // Position overlay near Notifications module (rightmost)
+            rightMargin: Math.min(AppState.screenWidth - 400 - 10, Math.max(10, AppState.screenWidth - AppState.lastClickX - 400 / 2))  // Position overlay near Notifications module (rightmost)
         }
         width: 400
         height: Math.min(700, parent.height - Config.barHeight - Config.barMarginTop - 40)
-        color: Config.alpha(Theme.base, 0.95)
+        color: Theme.mantle
         radius: Config.overlayRadius
         border.color: Theme.surface0
         border.width: 1
@@ -68,14 +68,12 @@ PanelWindow {
                 width: parent.width
                 height: 30
 
-                Text {
+                Row {
                     anchors.left: parent.left
                     anchors.verticalCenter: parent.verticalCenter
-                    text: "Notifications"
-                    color: Theme.text
-                    font.pixelSize: 16
-                    font.bold: true
-                    font.family: Config.moduleFontFamily
+                    spacing: 8
+                    SvgIcon { name: "bell"; size: 16; color: Theme.text; anchors.verticalCenter: parent.verticalCenter }
+                    Text { text: "Notifications"; color: Theme.text; font.pixelSize: 16; font.bold: true; font.family: Config.moduleFontFamily }
                 }
 
                 Row {
@@ -83,16 +81,25 @@ PanelWindow {
                     anchors.verticalCenter: parent.verticalCenter
                     spacing: 10
 
-                    // Pause button
-                    GhostButton {
-                        width: 70
-                        height: 30
-                        radius: 15
-                        text: NotificationData.paused ? "Off" : "On"
-                        icon: NotificationData.paused ? "󰂛" : "󰂚"
-                        iconColor: NotificationData.paused ? Theme.overlay0 : Theme.yellow
-                        fontSize: 12
-                        onClicked: NotificationData.togglePause()
+                    // Pause toggle
+                    Row {
+                        spacing: 8
+                        anchors.verticalCenter: parent.verticalCenter
+
+                        Text {
+                            text: "Notify"
+                            color: Theme.subtext0
+                            font.pixelSize: 12
+                            font.family: Config.moduleFontFamily
+                            anchors.verticalCenter: parent.verticalCenter
+                        }
+
+                        Toggle {
+                            anchors.verticalCenter: parent.verticalCenter
+                            checked: !NotificationData.paused
+                            onColor: Theme.yellow
+                            onToggled: NotificationData.togglePause()
+                        }
                     }
 
                     // Clear all button

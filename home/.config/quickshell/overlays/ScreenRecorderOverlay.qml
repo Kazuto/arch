@@ -21,7 +21,6 @@ PanelWindow {
     WlrLayershell.layer: slurpActive ? WlrLayer.Background : WlrLayer.Overlay
     WlrLayershell.keyboardFocus: WlrKeyboardFocus.None
 
-    property bool isRecording: false
     property string recordMode: "screen"  // screen, window, area
     property string audioMode: "both"     // both, system, mic, none
     property string quality: "high"       // high, medium, low
@@ -29,6 +28,7 @@ PanelWindow {
     property bool selectingWindow: false
     property var windows: []
     property bool slurpActive: false
+    property bool selectingMonitor: false
 
     // Get home directory on startup
     Process {
@@ -50,7 +50,7 @@ PanelWindow {
 
         onExited: (code, status) => {
             console.log("Recording stopped with code:", code)
-            isRecording = false
+            AppState.isRecording = false
         }
     }
 
@@ -70,22 +70,24 @@ PanelWindow {
     Process {
         id: windowListProcess
         running: false
-        command: ["sh", "-c", "hyprctl clients -j | jq -r '.[] | \"\\(.address)|\\(.class)|\\(.title)|\\(.at[0]),\\(.at[1]) \\(.size[0])x\\(.size[1])\"'"]
+        command: ["sh", "-c", "hyprctl clients -j | jq -c '.[] | {address: .address, class: .class, title: .title, geometry: \"\\(.at[0]),\\(.at[1]) \\(.size[0])x\\(.size[1])\"}'"]
 
         stdout: SplitParser {
             onRead: data => {
                 let line = data.trim()
                 if (line.length > 0) {
-                    let parts = line.split("|")
-                    if (parts.length === 4) {
+                    try {
+                        let win = JSON.parse(line)
                         let windowList = windows.slice()
                         windowList.push({
-                            address: parts[0],
-                            class: parts[1],
-                            title: parts[2],
-                            geometry: parts[3]
+                            address: win.address,
+                            class: win.class,
+                            title: win.title,
+                            geometry: win.geometry
                         })
                         windows = windowList
+                    } catch (e) {
+                        console.log("Failed to parse window line:", line, e)
                     }
                 }
             }
@@ -110,7 +112,7 @@ PanelWindow {
             top: parent.top
             right: parent.right
             topMargin: 12
-            rightMargin: 20
+            rightMargin: Math.min(AppState.screenWidth - 400 - 10, Math.max(10, AppState.screenWidth - AppState.lastClickX - 400 / 2))
         }
         width: 400
         height: 585
@@ -137,31 +139,73 @@ PanelWindow {
                 width: parent.width
                 spacing: 10
 
-                GhostButton {
-                    width: 40
-                    height: 40
-                    icon: ""
-                    visible: selectingWindow
-                    onClicked: {
-                        selectingWindow = false
-                        windows = []
+                Rectangle {
+                    width: 30
+                    height: 30
+                    radius: 15
+                    color: backAudioMouseArea.containsMouse ? Theme.surface1 : Theme.surface0
+                    anchors.verticalCenter: parent.verticalCenter
+                    visible: selectingWindow || selectingMonitor
+
+                    SvgIcon {
+                        anchors.centerIn: parent
+                        name: "arrow-left"
+                        size: 16
+                        color: Theme.text
+                    }
+
+                    MouseArea {
+                        id: backAudioMouseArea
+                        anchors.fill: parent
+                        hoverEnabled: true
+                        cursorShape: Qt.PointingHandCursor
+                        onClicked: {
+                            selectingWindow = false
+                            selectingMonitor = false
+                            windows = []
+                        }
                     }
                 }
 
-                Text {
-                    text: selectingWindow ? " Select Window" : " Screen Recorder"
-                    color: Theme.text
-                    font.pixelSize: 18
-                    font.bold: true
-                    font.family: Config.moduleFontFamily
-                    anchors.verticalCenter: parent.verticalCenter
-                }
-            }
+            Text {
+                text: selectingWindow ? "Select Window" : (selectingMonitor ? "Select Monitor" : "Screen Recorder")
+                color: Theme.text
+                font.pixelSize: 18
+                font.bold: true
+                font.family: Config.moduleFontFamily
+                anchors.verticalCenter: parent.verticalCenter
+            }}
 
             Rectangle {
                 width: parent.width
                 height: 1
                 color: Theme.surface0
+            }
+
+            // Monitor picker view
+            Column {
+                width: parent.width
+                spacing: 10
+                visible: selectingMonitor
+
+                Text {
+                    text: "Select a monitor to record"
+                    color: Theme.subtext0
+                    font.pixelSize: 12
+                    font.family: Config.moduleFontFamily
+                }
+
+                Repeater {
+                    model: Quickshell.screens
+
+                    GhostButton {
+                        width: parent.width
+                        height: 50
+                        text: modelData.name + " (" + modelData.width + "x" + modelData.height + ")"
+                        icon: "monitor"
+                        onClicked: startRecordingOnMonitor(modelData.name)
+                    }
+                }
             }
 
             // Window picker view
@@ -194,9 +238,6 @@ PanelWindow {
                             GhostButton {
                                 width: parent.width
                                 height: 60
-                                text: modelData.title
-                                icon: ""
-                                fontSize: 13
                                 onClicked: {
                                     console.log("Selected window:", modelData.geometry)
                                     selectingWindow = false
@@ -208,6 +249,8 @@ PanelWindow {
                                         left: parent.left
                                         leftMargin: 45
                                         verticalCenter: parent.verticalCenter
+                                        right: parent.right
+                                        rightMargin: 15
                                     }
                                     spacing: 4
 
@@ -216,7 +259,7 @@ PanelWindow {
                                         color: Theme.text
                                         font.pixelSize: 13
                                         font.family: Config.moduleFontFamily
-                                        width: 300
+                                        width: parent.width
                                         elide: Text.ElideRight
                                     }
 
@@ -237,30 +280,29 @@ PanelWindow {
             Column {
                 width: parent.width
                 spacing: 20
-                visible: !selectingWindow
+                visible: !selectingWindow && !selectingMonitor
 
             // Recording status
             Rectangle {
                 width: parent.width
                 height: 60
                 radius: 8
-                color: isRecording ? Config.alpha(Theme.red, 0.2) : Theme.surface0
-                border.color: isRecording ? Theme.red : Theme.surface1
+                color: AppState.isRecording ? Config.alpha(Theme.red, 0.2) : Theme.surface0
+                border.color: AppState.isRecording ? Theme.red : Theme.surface1
                 border.width: 1
 
                 Row {
                     anchors.centerIn: parent
                     spacing: 10
 
-                    Text {
+                    SvgIcon {
                         anchors.verticalCenter: parent.verticalCenter
-                        text: isRecording ? "" : ""
-                        color: isRecording ? Theme.red : Theme.subtext0
-                        font.pixelSize: 24
-                        font.family: Config.moduleFontFamily
+                        name: AppState.isRecording ? "record" : "record"
+                        size: 24
+                        color: AppState.isRecording ? Theme.red : Theme.subtext0
 
                         SequentialAnimation on opacity {
-                            running: isRecording
+                            running: AppState.isRecording
                             loops: Animation.Infinite
                             NumberAnimation { to: 0.3; duration: 800 }
                             NumberAnimation { to: 1.0; duration: 800 }
@@ -269,7 +311,7 @@ PanelWindow {
 
                     Text {
                         anchors.verticalCenter: parent.verticalCenter
-                        text: isRecording ? "Recording..." : "Ready to record"
+                        text: AppState.isRecording ? "Recording..." : "Ready to record"
                         color: Theme.text
                         font.pixelSize: 16
                         font.family: Config.moduleFontFamily
@@ -296,27 +338,27 @@ PanelWindow {
                     GhostButton {
                         width: (parent.width - 20) / 3
                         text: "Screen"
-                        icon: "󰍹"
+                        icon: "monitor"
                         highlighted: recordMode === "screen"
-                        enabled: !isRecording
+                        enabled: !AppState.isRecording
                         onClicked: recordMode = "screen"
                     }
 
                     GhostButton {
                         width: (parent.width - 20) / 3
                         text: "Window"
-                        icon: ""
+                        icon: "monitor"
                         highlighted: recordMode === "window"
-                        enabled: !isRecording
+                        enabled: !AppState.isRecording
                         onClicked: recordMode = "window"
                     }
 
                     GhostButton {
                         width: (parent.width - 20) / 3
                         text: "Area"
-                        icon: ""
+                        icon: "monitor"
                         highlighted: recordMode === "area"
-                        enabled: !isRecording
+                        enabled: !AppState.isRecording
                         onClicked: recordMode = "area"
                     }
                 }
@@ -341,18 +383,18 @@ PanelWindow {
                     GhostButton {
                         width: (parent.width - 20) / 2
                         text: "System + Mic"
-                        icon: "󰕾"
+                        icon: "volume"
                         highlighted: audioMode === "both"
-                        enabled: !isRecording
+                        enabled: !AppState.isRecording
                         onClicked: audioMode = "both"
                     }
 
                     GhostButton {
                         width: (parent.width - 20) / 2
                         text: "System Only"
-                        icon: "󰓃"
+                        icon: "volume"
                         highlighted: audioMode === "system"
-                        enabled: !isRecording
+                        enabled: !AppState.isRecording
                         onClicked: audioMode = "system"
                     }
                 }
@@ -364,18 +406,18 @@ PanelWindow {
                     GhostButton {
                         width: (parent.width - 20) / 2
                         text: "Mic Only"
-                        icon: "󰍬"
+                        icon: "microphone"
                         highlighted: audioMode === "mic"
-                        enabled: !isRecording
+                        enabled: !AppState.isRecording
                         onClicked: audioMode = "mic"
                     }
 
                     GhostButton {
                         width: (parent.width - 20) / 2
                         text: "No Audio"
-                        icon: "󰝟"
+                        icon: "volume-muted"
                         highlighted: audioMode === "none"
-                        enabled: !isRecording
+                        enabled: !AppState.isRecording
                         onClicked: audioMode = "none"
                     }
                 }
@@ -401,7 +443,7 @@ PanelWindow {
                         width: (parent.width - 20) / 3
                         text: "High"
                         highlighted: quality === "high"
-                        enabled: !isRecording
+                        enabled: !AppState.isRecording
                         onClicked: quality = "high"
                     }
 
@@ -409,7 +451,7 @@ PanelWindow {
                         width: (parent.width - 20) / 3
                         text: "Medium"
                         highlighted: quality === "medium"
-                        enabled: !isRecording
+                        enabled: !AppState.isRecording
                         onClicked: quality = "medium"
                     }
 
@@ -417,7 +459,7 @@ PanelWindow {
                         width: (parent.width - 20) / 3
                         text: "Low"
                         highlighted: quality === "low"
-                        enabled: !isRecording
+                        enabled: !AppState.isRecording
                         onClicked: quality = "low"
                     }
                 }
@@ -437,11 +479,11 @@ PanelWindow {
                 GhostButton {
                     width: (parent.width - 10) / 2
                     height: 50
-                    text: isRecording ? "Stop" : "Start Recording"
-                    icon: isRecording ? "" : ""
-                    iconColor: isRecording ? Theme.red : Theme.green
+                    text: AppState.isRecording ? "Stop" : "Start Recording"
+                    icon: AppState.isRecording ? "pause" : "record"
+                    iconColor: AppState.isRecording ? Theme.red : Theme.green
                     onClicked: {
-                        if (isRecording) {
+                        if (AppState.isRecording) {
                             stopRecording()
                         } else {
                             startRecording()
@@ -453,8 +495,8 @@ PanelWindow {
                     width: (parent.width - 10) / 2
                     height: 50
                     text: "Open Folder"
-                    icon: "󰉋"
-                    enabled: !isRecording
+                    icon: "storage"
+                    enabled: !AppState.isRecording
                     onClicked: {
                         openFolderProcess.command = ["xdg-open", videosPath]
                         openFolderProcess.running = false
@@ -467,13 +509,11 @@ PanelWindow {
     }
 
     function startRecording() {
-        // For area mode, get region selection first
         if (recordMode === "area") {
             selectRegionAndRecord()
             return
         }
 
-        // For window mode, show window picker
         if (recordMode === "window") {
             windows = []
             selectingWindow = true
@@ -482,41 +522,51 @@ PanelWindow {
             return
         }
 
-        // Screen recording - start immediately
-        startRecordingWithMode("screen")
+        // Screen mode - show monitor picker instead of recording immediately
+        if (recordMode === "screen") {
+            selectingMonitor = true
+            return
+        }
     }
 
-    function startRecordingWithMode(mode) {
+    function startRecordingOnMonitor(monitorName) {
+        selectingMonitor = false
+
+        startRecordingWithMode("screen", monitorName)
+    }
+
+    function startRecordingWithMode(mode, outputName) {
         if (!videosPath) {
             console.log("Videos path not ready yet")
             return
         }
 
-        // Build command for wf-recorder
         let cmd = ["wf-recorder"]
 
-        // Audio
-        if (audioMode === "both" || audioMode === "system" || audioMode === "mic") {
-            cmd.push("-a")
+        // Always specify output explicitly - no TTY available for interactive picker
+        cmd.push("-o", outputName)
+
+        if (audioMode !== "none") {
+            if (audioMode === "mic") {
+                cmd.push("-aalsa_input.usb-Yamaha_Corporation_Steinberg_UR22C-00.Direct__Direct__source")
+            } else {
+                // system or both: use monitor source for system audio
+                cmd.push("-aalsa_output.usb-Yamaha_Corporation_Steinberg_UR22C-00.Direct__Direct__sink.monitor")
+            }
         }
 
-        // Codec
         cmd.push("-c", "libx264")
-
-        // Frame rate
         cmd.push("-r", "60")
 
-        // Output file
         let timestamp = new Date().toISOString().replace(/[:.]/g, "-").slice(0, -5)
         let outputPath = videosPath + "/recording_" + timestamp + ".mp4"
         cmd.push("-f", outputPath)
 
         console.log("Starting recording:", cmd.join(" "))
 
-        // Start the process
         recordingProcess.command = cmd
         recordingProcess.running = true
-        isRecording = true
+        AppState.isRecording = true
     }
 
     function startRecordingWithGeometry(geometry) {
@@ -532,8 +582,13 @@ PanelWindow {
         cmd.push("-g", geometry)
 
         // Audio
-        if (audioMode === "both" || audioMode === "system" || audioMode === "mic") {
-            cmd.push("-a")
+        if (audioMode !== "none") {
+            if (audioMode === "mic") {
+                cmd.push("-aalsa_input.usb-Yamaha_Corporation_Steinberg_UR22C-00.Direct__Direct__source")
+            } else {
+                // system or both: use monitor source for system audio
+                cmd.push("-aalsa_output.usb-Yamaha_Corporation_Steinberg_UR22C-00.Direct__Direct__sink.monitor")
+            }
         }
 
         // Codec
@@ -552,7 +607,7 @@ PanelWindow {
         // Start the process
         recordingProcess.command = cmd
         recordingProcess.running = true
-        isRecording = true
+        AppState.isRecording = true
     }
 
     // Process for slurp region selection
@@ -620,6 +675,6 @@ PanelWindow {
         stopProcess.running = true
 
         recordingProcess.running = false
-        isRecording = false
+        AppState.isRecording = false
     }
 }

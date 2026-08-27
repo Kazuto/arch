@@ -19,6 +19,13 @@ PanelWindow {
     color: "transparent"
     visible: true
 
+    function run(cmd) {
+        Qt.createQmlObject(
+            'import Quickshell.Io; Process { command: ' + JSON.stringify(cmd) + '; running: true }',
+            menuOverlay
+        )
+    }
+
     WlrLayershell.layer: WlrLayer.Overlay
     WlrLayershell.keyboardFocus: WlrKeyboardFocus.None
 
@@ -62,12 +69,16 @@ PanelWindow {
             spacing: 20
 
             // Header
-            Text {
-                text: Icon.arch + " System"
-                color: Theme.text
-                font.pixelSize: 18
-                font.bold: true
-                font.family: Config.moduleFontFamily
+            Row {
+                spacing: 8
+                Text {
+                    text: Icon.ubuntu
+                    color: Theme.text
+                    font.pixelSize: 18
+                    font.family: Config.moduleFontFamily
+                    anchors.verticalCenter: parent.verticalCenter
+                }
+                Text { text: "System"; color: Theme.text; font.pixelSize: 18; font.bold: true; font.family: Config.moduleFontFamily }
             }
 
             Rectangle {
@@ -95,7 +106,7 @@ PanelWindow {
                     }
 
                     Text {
-                        text: SystemData.distro
+                        text: SystemData.distro + " " + SystemData.distroVersion
                         color: Theme.text
                         font.pixelSize: 12
                         font.family: Config.moduleFontFamily
@@ -189,9 +200,9 @@ PanelWindow {
                  GhostButton {
                         width: parent.width / 2
                     text: "Lock"
-                    icon: Icon.lock
+                    icon: "lock"
                     onClicked: {
-                        Process.exec("hyprlock")
+                        run(["hyprlock"])
                         AppState.toggleMenuOverlay()
                     }
                 }
@@ -199,9 +210,9 @@ PanelWindow {
                 GhostButton {
                         width: parent.width / 2
                     text: "Logout"
-                    icon: Icon.logout
+                    icon: "logout"
                     onClicked: {
-                        Process.exec("hyprctl", "dispatch", "exit")
+                        run(["killall", "Hyprland"])
                         AppState.toggleMenuOverlay()
                     }
                 } 
@@ -213,20 +224,20 @@ PanelWindow {
                   GhostButton {
                         width: parent.width / 2
                     text: "Reboot"
-                    icon: Icon.refresh
+                    icon: "refresh"
                     iconColor: Theme.yellow
                     onClicked: {
-                        Process.exec("systemctl", "reboot")
+                        run(["systemctl", "reboot"])
                     }
                 }
 
                 GhostButton {
                         width: parent.width / 2
                     text: "Shutdown"
-                    icon: Icon.power
+                    icon: "power"
                     iconColor: Theme.red
                     onClicked: {
-                        Process.exec("systemctl", "poweroff")
+                        run(["systemctl", "poweroff"])
                     }
                 } 
                 }

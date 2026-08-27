@@ -4,6 +4,7 @@ import Quickshell
 import Quickshell.Wayland
 import "root:/"
 import "root:/singletons"
+import "root:/components"
 
 PanelWindow {
     id: controlCenterOverlay
@@ -84,14 +85,11 @@ PanelWindow {
                         color: BluetoothData.powered ? Theme.sky : Theme.surface2
                         anchors.verticalCenter: parent.verticalCenter
 
-                        Text {
+                        SvgIcon {
                             anchors.centerIn: parent
-                            text: Icon.bluetooth
+                            name: "bluetooth"
+                            size: 22
                             color: BluetoothData.powered ? Theme.base : Theme.overlay0
-                            font.pixelSize: 20
-                            font.family: Config.moduleFontFamily
-                            verticalAlignment: Text.AlignVCenter
-                            horizontalAlignment: Text.AlignHCenter
                         }
                     }
 
@@ -154,6 +152,94 @@ PanelWindow {
                 }
             }
 
+
+            // Wifi quick tile
+            Rectangle {
+                width: parent.width
+                height: 70
+                color: wifiMouseArea.containsMouse ? Theme.surface1 : Theme.surface0
+                radius: Config.moduleRadius
+
+                Row {
+                    anchors {
+                        fill: parent
+                        margins: 15
+                    }
+                    spacing: 15
+
+                    Rectangle {
+                        width: 40
+                        height: 40
+                        radius: 20
+                        color: WifiData.enabled ? Theme.blue : Theme.surface2
+                        anchors.verticalCenter: parent.verticalCenter
+
+                        SvgIcon {
+                            anchors.centerIn: parent
+                            name: WifiData.enabled ? "wifi" : "wifi-off"
+                            size: 22
+                            color: WifiData.enabled ? Theme.base : Theme.overlay0
+                        }
+                    }
+
+                    Column {
+                        width: parent.width - 120
+                        anchors.verticalCenter: parent.verticalCenter
+                        spacing: 2
+
+                        Text {
+                            text: "Wi-Fi"
+                            color: Theme.text
+                            font.pixelSize: 14
+                            font.bold: true
+                            font.family: Config.moduleFontFamily
+                        }
+
+                        Text {
+                            text: WifiData.connectedSsid || (WifiData.enabled ? "Not connected" : "Off")
+                            color: Theme.subtext0
+                            font.pixelSize: 11
+                            font.family: Config.moduleFontFamily
+                            elide: Text.ElideRight
+                        }
+                    }
+
+                    Text {
+                        text: ""
+                        color: Theme.overlay0
+                        font.pixelSize: 16
+                        font.family: Config.moduleFontFamily
+                        anchors.verticalCenter: parent.verticalCenter
+
+                        MouseArea {
+                            anchors.fill: parent
+                            anchors.margins: -10
+                            hoverEnabled: true
+                            cursorShape: Qt.PointingHandCursor
+                            onClicked: {
+                                AppState.setControlCenterView("wifi")
+                                mouse.accepted = true
+                            }
+                        }
+                    }
+                }
+
+                MouseArea {
+                    id: wifiMouseArea
+                    anchors.fill: parent
+                    hoverEnabled: true
+                    cursorShape: Qt.PointingHandCursor
+                    acceptedButtons: Qt.LeftButton | Qt.RightButton
+                    onClicked: (mouse) => {
+                        if (mouse.button === Qt.RightButton) {
+                            AppState.setControlCenterView("wifi")
+                        } else {
+                            WifiData.toggleWifi()
+                        }
+                    }
+                    z: -1
+                }
+            }
             // Volume slider tile
             Rectangle {
                 width: parent.width
@@ -190,14 +276,11 @@ PanelWindow {
                             color: AudioData.outputMuted ? Theme.surface2 : Theme.mauve
                             anchors.verticalCenter: parent.verticalCenter
 
-                            Text {
+                            SvgIcon {
                                 anchors.centerIn: parent
-                                verticalAlignment: Text.AlignVCenter
-                                horizontalAlignment: Text.AlignHCenter
-                                text: AudioData.outputMuted ? Icon.volumeMuted : Icon.volume
+                                name: AudioData.outputMuted ? "volume-muted" : "volume"
+                                size: 18
                                 color: AudioData.outputMuted ? Theme.overlay0 : Theme.base
-                                font.pixelSize: 16
-                                font.family: Config.moduleFontFamily
                             }
 
                             MouseArea {
@@ -323,14 +406,11 @@ PanelWindow {
                             color: AudioData.inputMuted ? Theme.surface2 : Theme.mauve
                             anchors.verticalCenter: parent.verticalCenter
 
-                            Text {
+                            SvgIcon {
                                 anchors.centerIn: parent
-                                verticalAlignment: Text.AlignVCenter
-                                horizontalAlignment: Text.AlignHCenter
-                                text: AudioData.inputMuted ? Icon.microphoneMuted : Icon.microphone
+                                name: AudioData.inputMuted ? "microphone-muted" : "microphone"
+                                size: 18
                                 color: AudioData.inputMuted ? Theme.overlay0 : Theme.base
-                                font.pixelSize: 16
-                                font.family: Config.moduleFontFamily
                             }
 
                             MouseArea {
@@ -430,12 +510,11 @@ PanelWindow {
                         color: backBtMouseArea.containsMouse ? Theme.surface1 : Theme.surface0
                         anchors.verticalCenter: parent.verticalCenter
 
-                        Text {
+                        SvgIcon {
                             anchors.centerIn: parent
-                            text: Icon.back
+                            name: "arrow-left"
+                            size: 16
                             color: Theme.text
-                            font.pixelSize: 16
-                            font.family: Config.moduleFontFamily
                         }
 
                         MouseArea {
@@ -481,11 +560,10 @@ PanelWindow {
                             }
                             spacing: 15
 
-                            Text {
-                                text: Icon.bluetooth
+                            SvgIcon {
+                                name: "bluetooth"
+                                size: 20
                                 color: modelData.connected ? Theme.green : Theme.overlay0
-                                font.pixelSize: 20
-                                font.family: Config.moduleFontFamily
                             }
 
                             Column {
@@ -553,12 +631,11 @@ PanelWindow {
                         color: backAudioMouseArea.containsMouse ? Theme.surface1 : Theme.surface0
                         anchors.verticalCenter: parent.verticalCenter
 
-                        Text {
+                        SvgIcon {
                             anchors.centerIn: parent
-                            text: Icon.back
+                            name: "arrow-left"
+                            size: 16
                             color: Theme.text
-                            font.pixelSize: 16
-                            font.family: Config.moduleFontFamily
                         }
 
                         MouseArea {
@@ -608,12 +685,11 @@ PanelWindow {
                             width: parent.width - 30
                             spacing: 15
 
-                            Text {
+                            SvgIcon {
                                 anchors.verticalCenter: parent.verticalCenter
-                                text: modelData.muted ? Icon.volumeMuted : Icon.volume
+                                name: modelData.muted ? "volume-muted" : "volume"
+                                size: 18
                                 color: modelData.muted ? Theme.overlay0 : Theme.mauve
-                                font.pixelSize: 18
-                                font.family: Config.moduleFontFamily
                             }
 
                             Text {
@@ -666,12 +742,11 @@ PanelWindow {
                             width: parent.width - 30
                             spacing: 15
 
-                            Text {
+                            SvgIcon {
                                 anchors.verticalCenter: parent.verticalCenter
-                                text: modelData.muted ? Icon.microphoneMuted : Icon.microphone
+                                name: modelData.muted ? "microphone-muted" : "microphone"
+                                size: 18
                                 color: modelData.muted ? Theme.overlay0 : Theme.mauve
-                                font.pixelSize: 18
-                                font.family: Config.moduleFontFamily
                             }
 
                             Text {
@@ -698,6 +773,140 @@ PanelWindow {
                             hoverEnabled: true
                             cursorShape: Qt.PointingHandCursor
                             onClicked: AudioData.setDefaultSource(modelData.name)
+                        }
+                    }
+                }
+            }
+        }
+
+        // Wifi detail view
+        Flickable {
+            anchors.fill: parent
+            anchors.margins: 20
+            contentHeight: wifiDetailColumn.implicitHeight
+            clip: true
+            visible: AppState.controlCenterView === "wifi"
+
+            Column {
+                id: wifiDetailColumn
+                width: parent.width
+                spacing: 15
+
+                Row {
+                    width: parent.width
+                    height: 30
+                    spacing: 10
+
+                    Rectangle {
+                        width: 30
+                        height: 30
+                        radius: 15
+                        color: backWifiMouseArea.containsMouse ? Theme.surface1 : Theme.surface0
+                        anchors.verticalCenter: parent.verticalCenter
+
+                        SvgIcon {
+                            anchors.centerIn: parent
+                            name: "arrow-left"
+                            size: 16
+                            color: Theme.text
+                        }
+
+                        MouseArea {
+                            id: backWifiMouseArea
+                            anchors.fill: parent
+                            hoverEnabled: true
+                            cursorShape: Qt.PointingHandCursor
+                            onClicked: AppState.setControlCenterView("main")
+                        }
+                    }
+
+                    Text {
+                        anchors.verticalCenter: parent.verticalCenter
+                        text: "Wi-Fi"
+                        color: Theme.text
+                        font.pixelSize: 16
+                        font.bold: true
+                        font.family: Config.moduleFontFamily
+                    }
+
+                    Item { width: parent.width - 120 }
+                }
+
+                Rectangle {
+                    width: parent.width
+                    height: 1
+                    color: Theme.surface0
+                }
+
+                Repeater {
+                    model: WifiData.networks
+
+                    Rectangle {
+                        width: parent.width
+                        height: 50
+                        color: modelData.active ? Theme.surface1 : (wifiNetMouseArea.containsMouse ? Theme.surface1 : Theme.surface0)
+                        radius: Config.moduleRadius
+
+                        Row {
+                            anchors {
+                                left: parent.left
+                                right: parent.right
+                                verticalCenter: parent.verticalCenter
+                                margins: 15
+                            }
+                            spacing: 12
+
+                            SvgIcon {
+                                name: "wifi"
+                                size: 18
+                                color: modelData.active ? Theme.blue : Theme.overlay0
+                                anchors.verticalCenter: parent.verticalCenter
+                            }
+
+                            Column {
+                                width: parent.width - 80
+                                anchors.verticalCenter: parent.verticalCenter
+                                spacing: 2
+
+                                Text {
+                                    text: modelData.ssid
+                                    color: modelData.active ? Theme.blue : Theme.text
+                                    font.pixelSize: 13
+                                    font.bold: modelData.active
+                                    font.family: Config.moduleFontFamily
+                                    elide: Text.ElideRight
+                                    width: parent.width
+                                }
+
+                                Text {
+                                    text: modelData.active ? "Connected" : (modelData.security ? modelData.security : "Open")
+                                    color: modelData.active ? Theme.blue : Theme.overlay0
+                                    font.pixelSize: 11
+                                    font.family: Config.moduleFontFamily
+                                }
+                            }
+
+                            Text {
+                                text: modelData.signal + "%"
+                                color: Theme.subtext0
+                                font.pixelSize: 11
+                                font.family: Config.moduleFontFamily
+                                anchors.verticalCenter: parent.verticalCenter
+                            }
+                        }
+
+                        MouseArea {
+                            id: wifiNetMouseArea
+                            anchors.fill: parent
+                            hoverEnabled: true
+                            cursorShape: Qt.PointingHandCursor
+                            onClicked: {
+                                if (modelData.active) {
+                                    WifiData.disconnectNetwork()
+                                } else {
+                                    WifiData.connectNetwork(modelData.ssid)
+                                }
+                            }
                         }
                     }
                 }
