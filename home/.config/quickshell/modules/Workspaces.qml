@@ -21,25 +21,12 @@ Rectangle {
             model: defaultIcon !== "" ? [
                 {num: startWorkspace + 0, icon: defaultIcon},
                 {num: startWorkspace + 1, icon: defaultIcon},
-                {num: startWorkspace + 2, icon: defaultIcon},
-                {num: startWorkspace + 3, icon: defaultIcon},
-                {num: startWorkspace + 4, icon: defaultIcon},
-                {num: startWorkspace + 5, icon: defaultIcon},
-                {num: startWorkspace + 6, icon: defaultIcon},
-                {num: startWorkspace + 7, icon: defaultIcon},
-                {num: startWorkspace + 8, icon: defaultIcon},
-                {num: startWorkspace + 9, icon: defaultIcon}
             ] : [
-                {num: startWorkspace + 0, icon: Icon.firefox},
+                {num: startWorkspace + 0, icon: Icon.chrome},
                 {num: startWorkspace + 1, icon: Icon.ghostty},
                 {num: startWorkspace + 2, icon: Icon.database},
                 {num: startWorkspace + 3, icon: Icon.code},
-                {num: startWorkspace + 4, icon: Icon.firefox},
-                {num: startWorkspace + 5, icon: Icon.thunderbird},
-                {num: startWorkspace + 6, icon: Icon.emptyWorkspace},
-                {num: startWorkspace + 7, icon: Icon.discord},
-                {num: startWorkspace + 8, icon: Icon.steam},
-                {num: startWorkspace + 9, icon: Icon.spotify}
+                {num: startWorkspace + 4, icon: Icon.thunderbird},
             ]
 
             delegate: Item {

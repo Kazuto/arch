@@ -1,5 +1,6 @@
 import QtQuick
 import "root:/"
+import "root:/components"
 
 Rectangle {
     implicitWidth: Config.barHeight
@@ -11,13 +12,11 @@ Rectangle {
         ColorAnimation { duration: Config.animationDuration }
     }
 
-    Text {
-        id: recorderText
+    SvgIcon {
         anchors.centerIn: parent
-        text: Icon.record  // Recording circle icon
-        color: Theme.red
-        font.pixelSize: Config.moduleFontSize
-        font.family: Config.moduleFontFamily
+        name: "record"
+        size: Config.moduleFontSize
+        color: AppState.isRecording ? Theme.red : Theme.overlay1
     }
 
     MouseArea {
@@ -25,6 +24,6 @@ Rectangle {
         anchors.fill: parent
         hoverEnabled: true
         cursorShape: Qt.PointingHandCursor
-        onClicked: AppState.toggleScreenRecorderOverlay()
+        onClicked: { AppState.lastClickX = mapToItem(null, width / 2, 0).x; AppState.toggleScreenRecorderOverlay() }
     }
 }

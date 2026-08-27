@@ -33,7 +33,7 @@ PanelWindow {
             top: parent.top
             right: parent.right
             topMargin: 12
-            rightMargin: 20
+            rightMargin: Math.min(AppState.screenWidth - 350 - 10, Math.max(10, AppState.screenWidth - AppState.lastClickX - 350 / 2))
         }
         width: 350
         height: 480
@@ -56,7 +56,11 @@ PanelWindow {
 
             // Header
             Text {
-                text: Icon.clock + " Timer"
+                Row {
+                spacing: 8
+                SvgIcon { name: "timer"; size: 18; color: Theme.text; anchors.verticalCenter: parent.verticalCenter }
+                Text { text: "Timer"; color: Theme.text; font.pixelSize: 18; font.bold: true; font.family: Config.moduleFontFamily }
+            }
                 color: Theme.text
                 font.pixelSize: 18
                 font.bold: true
@@ -141,12 +145,11 @@ PanelWindow {
                                 }
                             }
 
-                            Text {
+                            SvgIcon {
                                 anchors.centerIn: parent
-                                text: TimerData.isPaused ? "▶" : "⏸"
+                                name: TimerData.isPaused ? "play" : "pause"
+                                size: 16
                                 color: Theme.text
-                                font.pixelSize: 18
-                                font.family: Config.moduleFontFamily
                                 z: 1
                             }
                         }
@@ -174,12 +177,11 @@ PanelWindow {
                                 onClicked: TimerData.reset()
                             }
 
-                            Text {
+                            SvgIcon {
                                 anchors.centerIn: parent
-                                text: "↻"
+                                name: "refresh"
+                                size: 16
                                 color: Theme.text
-                                font.pixelSize: 20
-                                font.family: Config.moduleFontFamily
                                 z: 1
                             }
                         }
@@ -213,12 +215,12 @@ PanelWindow {
                                 onClicked: TimerData.stop()
                             }
 
-                            Text {
+                            Rectangle {
                                 anchors.centerIn: parent
-                                text: "⏹"
+                                width: 12
+                                height: 12
+                                radius: 2
                                 color: Theme.red
-                                font.pixelSize: 18
-                                font.family: Config.moduleFontFamily
                                 z: 1
                             }
                         }
