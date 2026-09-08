@@ -10,12 +10,15 @@ Singleton {
     property var networks: []
     property bool scanning: false
     property var pendingCommand: []
+    property var savedSsids: []   // SSIDs with a saved connection profile
 
     function refresh() {
         statusProcess.running = false
         statusProcess.running = true
         networksProcess.running = false
         networksProcess.running = true
+        savedProcess.running = false
+        savedProcess.running = true
     }
 
     function toggleWifi() {
@@ -25,6 +28,11 @@ Singleton {
 
     function connectNetwork(ssid) {
         pendingCommand = ["nmcli", "device", "wifi", "connect", ssid]
+        commandProcess.running = true
+    }
+
+    function connectNetworkWithPassword(ssid, password) {
+        pendingCommand = ["nmcli", "device", "wifi", "connect", ssid, "password", password]
         commandProcess.running = true
     }
 
@@ -67,9 +75,9 @@ Singleton {
 
         stdout: SplitParser {
             onRead: data => {
-                if (data.startsWith("RADIO:")) {
-                    enabled = data.substring(6).trim() === "enabled"
-                } else if (data.startsWith("CONNECTED:")) {
+                if (data.startsWith("RADIO:")) { enabled = data.substring(6).trim() === "enabled"; return }
+
+                if (data.startsWith("CONNECTED:")) {
                     var parts = data.substring(10).split(":")
                     connectedSsid = parts[0] || ""
                     connectedSignal = parseInt(parts[1]) || 0
@@ -130,6 +138,27 @@ Singleton {
         running: true
         repeat: true
         onTriggered: refresh()
+    }
+
+    // Fetch saved wifi connection profiles
+    Process {
+        id: savedProcess
+        running: true
+        command: ["sh", "-c", "nmcli -t -f NAME,TYPE connection show | grep '802-11-wireless' | cut -d: -f1"]
+        stdout: SplitParser {
+            property var incoming: []
+            onRead: data => {
+                var ssid = data.trim()
+                if (ssid) incoming = incoming.concat([ssid])
+            }
+        }
+        onExited: {
+            savedSsids = savedProcess.stdout.incoming
+            savedProcess.stdout.incoming = []
+        }
+        onRunningChanged: {
+            if (running) savedProcess.stdout.incoming = []
+        }
     }
 
     Component.onCompleted: refresh()

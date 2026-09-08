@@ -1,8 +1,10 @@
 import QtQuick
 import Quickshell
 import Quickshell.Io
+import Quickshell.Services.SystemTray
 
 import "root:/"
+import "./singletons"
 import "./modules" as Modules
 import "./windows" as Windows
 import "./overlays" as Overlays
@@ -38,6 +40,8 @@ Rectangle {
         rightItems: [
             Components.ModuleGroup {
                 items: [
+                    Modules.Tray         { color: "transparent"; radius: 0 },
+                    Components.ModuleDivider { visible: SystemTray.items.values.length > 0 },
                     Modules.Notifications { color: "transparent"; radius: 0 },
                     Components.ModuleDivider {},
                     Modules.Timer        { color: "transparent"; radius: 0 },
@@ -143,10 +147,15 @@ Rectangle {
         visible: AppState.logitechOverlayVisible
     }
 
-    // Notifications overlay
+    // Notifications overlay (history panel)
     Overlays.NotificationsOverlay {
         id: notificationsOverlay
         visible: AppState.notificationsOverlayVisible
+    }
+
+    // Notification toast popups (always active, manages its own visibility)
+    Overlays.NotificationPopupsOverlay {
+        id: notificationPopupsOverlay
     }
 
     // Control Center overlay removed — replaced by separate Wifi/Audio/Bluetooth overlays
@@ -205,6 +214,40 @@ Rectangle {
         visible: AppState.batteryOverlayVisible
     }
 
+    // App Launcher overlay
+    Overlays.LauncherOverlay {
+        id: launcherOverlay
+        visible: AppState.launcherOverlayVisible
+    }
+
+    // Emoji Picker overlay
+    Overlays.EmojiPickerOverlay {
+        id: emojiPickerOverlay
+        visible: AppState.emojiPickerOverlayVisible
+    }
+
+    // Wallpaper Picker overlay
+    Overlays.WallpaperPickerOverlay {
+        id: wallpaperPickerOverlay
+        visible: AppState.wallpaperPickerOverlayVisible
+    }
+
+    // System tray context menu
+    Overlays.TrayMenuOverlay {
+        id: trayMenuOverlay
+        visible: AppState.trayMenuOverlayVisible
+    }
+
+    // System tray hover tooltip
+    Overlays.TrayTooltipOverlay {
+        id: trayTooltipOverlay
+    }
+
+    // OSD (volume / brightness)
+    Overlays.OsdOverlay {
+        id: osdOverlay
+    }
+
     // IPC Socket Server
     SocketServer {
         id: ipcSocket
@@ -218,20 +261,70 @@ Rectangle {
 
                     if (msg === "menu-toggle") {
                         AppState.toggleMenuOverlay()
-                    } else if (msg === "power-toggle") {
+
+                        return
+                    }
+
+                    if (msg === "power-toggle") {
                         AppState.togglePowerOverlay()
-                    } else if (msg === "spotify-toggle") {
+
+                        return
+                    }
+
+                    if (msg === "spotify-toggle") {
                         AppState.toggleSpotifyOverlay()
-                    } else if (msg === "spotify-show") {
+
+                        return
+                    }
+
+                    if (msg === "spotify-show") {
                         if (!AppState.spotifyOverlayVisible) {
                             AppState.closeAllOverlays()
                         }
                         AppState.spotifyOverlayVisible = true
-                    } else if (msg === "spotify-hide") {
-                        AppState.spotifyOverlayVisible = false
-                    } else {
-                        console.log("Unknown command:", msg)
+
+                        return
                     }
+
+                    if (msg === "spotify-hide") {
+                        AppState.spotifyOverlayVisible = false
+
+                        return
+                    }
+
+                    if (msg === "launcher-toggle") {
+                        AppState.toggleLauncherOverlay()
+
+                        return
+                    }
+
+                    if (msg === "emoji-toggle") {
+                        AppState.toggleEmojiPickerOverlay()
+
+                        return
+                    }
+
+                    if (msg === "wallpaper-toggle") {
+                        AppState.toggleWallpaperPickerOverlay()
+
+                        return
+                    }
+
+                    if (msg.startsWith("osd-volume:")) {
+                        // "osd-volume:<0-100>:<muted|unmuted>"
+                        var parts = msg.split(":")
+                        OsdData.showVolume(parseInt(parts[1]) || 0, parts[2] === "muted")
+
+                        return
+                    }
+
+                    if (msg.startsWith("osd-brightness:")) {
+                        // "osd-brightness:<0-100>"
+                        OsdData.showBrightness(parseInt(msg.split(":")[1]) || 0)
+
+                        return
+                    }
+                    console.log("Unknown command:", msg)
                 }
             }
 
