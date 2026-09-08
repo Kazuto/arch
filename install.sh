@@ -425,6 +425,9 @@ install_packages() {
     # Applications (AUR)
     bitwarden     # Password manager
     obsidian      # Note-taking
+    slack-desktop # Team chat (unconfined native build — snap's AppArmor
+                  # confinement blocks quickshell's tray from reading its
+                  # StatusNotifierItem D-Bus properties)
     spotify       # Music streaming
     spicetify-cli # Spotify customization tool
     vencord       # Discord customization tool

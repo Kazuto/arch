@@ -25,6 +25,20 @@ Singleton {
     property bool screenRecorderOverlayVisible: false
     property bool powerOverlayVisible: false
     property bool batteryOverlayVisible: false
+    property bool launcherOverlayVisible: false
+    property bool emojiPickerOverlayVisible: false
+    property bool wallpaperPickerOverlayVisible: false
+    property bool trayMenuOverlayVisible: false
+    // The QsMenuHandle (item.menu) of whichever tray icon was right-clicked
+    property var trayMenuTarget: null
+
+    // Tray icon hover tooltip. Not part of closeAllOverlays()'s set — this
+    // is transient hover feedback, not a modal overlay, and must keep
+    // working while other overlays are open.
+    property bool trayTooltipVisible: false
+    property string trayTooltipText: ""
+    property real trayTooltipX: 0
+
     property bool isRecording: false
 
     function closeAllOverlays() {
@@ -44,6 +58,10 @@ Singleton {
         screenRecorderOverlayVisible = false
         powerOverlayVisible = false
         batteryOverlayVisible = false
+        launcherOverlayVisible = false
+        emojiPickerOverlayVisible = false
+        wallpaperPickerOverlayVisible = false
+        trayMenuOverlayVisible = false
     }
 
     function toggleSpotifyOverlay() {
@@ -150,5 +168,47 @@ Singleton {
             closeAllOverlays()
         }
         batteryOverlayVisible = !batteryOverlayVisible
+    }
+
+    function toggleLauncherOverlay() {
+        if (!launcherOverlayVisible) {
+            closeAllOverlays()
+        }
+        launcherOverlayVisible = !launcherOverlayVisible
+    }
+
+    function toggleEmojiPickerOverlay() {
+        if (!emojiPickerOverlayVisible) {
+            closeAllOverlays()
+        }
+        emojiPickerOverlayVisible = !emojiPickerOverlayVisible
+    }
+
+    function toggleWallpaperPickerOverlay() {
+        if (!wallpaperPickerOverlayVisible) {
+            closeAllOverlays()
+        }
+        wallpaperPickerOverlayVisible = !wallpaperPickerOverlayVisible
+    }
+
+    function openTrayMenu(menu) {
+        closeAllOverlays()
+        trayMenuTarget = menu
+        trayMenuOverlayVisible = true
+    }
+
+    function closeTrayMenu() {
+        trayMenuOverlayVisible = false
+        trayMenuTarget = null
+    }
+
+    function showTrayTooltip(text, x) {
+        trayTooltipText = text
+        trayTooltipX = x
+        trayTooltipVisible = true
+    }
+
+    function hideTrayTooltip() {
+        trayTooltipVisible = false
     }
 }
