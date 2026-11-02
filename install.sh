@@ -140,6 +140,7 @@ install_packages() {
     usbutils
     viewnior
     wl-clipboard
+    cliphist
     xdg-user-dirs
     xsel
   )
