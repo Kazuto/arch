@@ -2,18 +2,18 @@
 # Fix monitor assignments after input switching
 
 # Force move workspaces to correct monitors
-# DP-1 (Middle ultrawide): Workspaces 1-10
-for i in {1..10}; do
+# DP-1 (Middle ultrawide): Workspaces 1-5
+for i in {1..5}; do
     hyprctl dispatch moveworkspacetomonitor "$i" "desc:GIGA-BYTE TECHNOLOGY CO. LTD. G34WQC A 24142B000602"
 done
 
-# DP-2 (Right vertical): Workspaces 11-20
-for i in {11..20}; do
+# DP-2 (Right vertical): Workspaces 6-7
+for i in {6..7}; do
     hyprctl dispatch moveworkspacetomonitor "$i" "desc:GIGA-BYTE TECHNOLOGY CO. LTD. GS27QCA 25355B006220"
 done
 
-# DP-3 (Left vertical): Workspaces 21-30
-for i in {21..30}; do
+# DP-3 (Left vertical): Workspaces 8-9
+for i in {8..9}; do
     hyprctl dispatch moveworkspacetomonitor "$i" "desc:GIGA-BYTE TECHNOLOGY CO. LTD. GS27QCA 25465B003652"
 done
 
