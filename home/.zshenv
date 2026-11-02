@@ -15,9 +15,6 @@ export NVIM_LARAVEL_ENV="local"
 # LM Studio
 export LMSTUDIO_BASE_URL="http://localhost:1234"
 
-# Anthropic API
-export ANTHROPIC_MODEL="claude-sonnet-4-5-20250929"
-
 # Development tools
 export PYENV_ROOT="$HOME/.pyenv"
 export TMUXIFIER_LAYOUT_PATH="${XDG_CONFIG_HOME:-$HOME/.config}/tmuxifier/layouts"
