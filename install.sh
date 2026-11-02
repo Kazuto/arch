@@ -521,6 +521,33 @@ install_packages() {
   log_success "Package installation complete"
 }
 
+clone_wallpapers() {
+  local target="$HOME/Wallpaper"
+
+  if [[ -e "$target" ]]; then
+    log_info "Wallpapers already in place"
+    return 0
+  fi
+
+  # A sibling of this repo, reached the same way, so an SSH alias keeps working
+  local origin
+  origin="$(git -C "$SCRIPT_DIR" remote get-url origin 2>/dev/null)" || origin=""
+  if [[ -z "$origin" ]]; then
+    log_info "Skipping wallpapers: no git remote to find them from"
+    return 0
+  fi
+
+  # The repo is private, so a machine without access goes without rather than
+  # stopping the install or waiting on a credentials prompt
+  log_info "Cloning wallpapers..."
+  if GIT_TERMINAL_PROMPT=0 GIT_SSH_COMMAND="ssh -o BatchMode=yes" \
+    git clone --quiet "${origin%/*}/wallpaper.git" "$target" >>"$INSTALL_LOG" 2>&1; then
+    log_success "Cloned wallpapers to $target"
+  else
+    log_info "Skipping wallpapers: couldn't clone ${origin%/*}/wallpaper.git"
+  fi
+}
+
 symlink_configs() {
   log_info "Symlinking configuration files using stow..."
 
@@ -875,6 +902,7 @@ main() {
 
   install_packages
   symlink_configs
+  clone_wallpapers
   configure_services
   configure_user_groups
   configure_environment
