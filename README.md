@@ -27,7 +27,7 @@ The script (`install.sh`) automatically installs and configures:
 
 ```bash
 # Clone to your preferred location
-git clone <your-repo-url> hyprland-arch
+git clone --recurse-submodules <your-repo-url> hyprland-arch
 cd hyprland-arch
 ```
 

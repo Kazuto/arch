@@ -527,6 +527,12 @@ symlink_configs() {
   # Change to script directory for stow
   cd "$SCRIPT_DIR"
 
+  # The Quickshell config is a submodule, and stow needs its files in place
+  git submodule update --init --recursive 2>&1 | tee -a "$INSTALL_LOG" || {
+    log_error "Failed to fetch submodules"
+    return 1
+  }
+
   # Stow user configurations (home directory)
   if [[ -d "home" ]]; then
     log_info "Stowing home directory configs..."
