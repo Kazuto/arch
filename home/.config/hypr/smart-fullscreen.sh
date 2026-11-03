@@ -7,7 +7,7 @@ BROWSER_CLASSES="google-chrome|vivaldi-stable|firefox|brave-browser"
 active_class=$(hyprctl activewindow -j | python3 -c "import sys,json; print(json.load(sys.stdin).get('class',''))" 2>/dev/null)
 
 if echo "$active_class" | grep -qiE "$BROWSER_CLASSES"; then
-    hyprctl dispatch fullscreen 1
+    hyprctl dispatch "hl.dsp.window.fullscreen({ mode = 'maximized' })"
 else
-    hyprctl dispatch fullscreen 0
+    hyprctl dispatch "hl.dsp.window.fullscreen({ mode = 'fullscreen' })"
 fi

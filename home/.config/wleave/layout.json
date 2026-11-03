@@ -9,7 +9,7 @@
     },
     {
       "label": "Logout",
-      "action": "hyprctl dispatch exit 0",
+      "action": "hyprctl dispatch 'hl.dsp.exit()'",
       "text": "Logout",
       "keybind": "e",
       "icon": "/home/kazuto/.config/wleave/icons/logout.svg"

@@ -60,7 +60,8 @@ jq -r '.[] | "\(.class)|\(.workspace.id)|\(.title)"' "$SESSION_FILE" | sort -u |
 
     # Launch app on the correct workspace
     echo "[$(date)] Restoring $class on workspace $workspace" >> "$SESSION_DIR/hyprland-session.log"
-    hyprctl dispatch exec "[workspace $workspace silent] $cmd" &
+    # jq quotes the command so it can sit inside the Lua expression
+    hyprctl dispatch "hl.dsp.exec_cmd($(jq -n --arg cmd "$cmd" '$cmd'), { workspace = '$workspace silent' })" &
 
     # Small delay to avoid overwhelming the system
     sleep 0.3
