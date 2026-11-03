@@ -6,6 +6,7 @@ font-family = "JetBrainsMono NFM"
 scrollback-limit = 1000
 
 theme = catppuccin-mocha
+config-file = ?~/.cache/quickshell/accent-ghostty
 
 window-padding-x = 10
 window-padding-y = 10,0
