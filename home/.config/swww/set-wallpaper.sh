@@ -67,3 +67,9 @@ else
         --transition-type grow --transition-duration 0.5 --transition-fps 60 --transition-pos top-right
     notify-send "Wallpaper" "Applied to all monitors\n${IMG_WIDTH}x${IMG_HEIGHT}"
 fi
+
+# Let the rest of the desktop follow the new wallpaper
+ACCENT_SCRIPT="$HOME/.config/quickshell/scripts/apply-accent.sh"
+if [ -x "$ACCENT_SCRIPT" ]; then
+    "$ACCENT_SCRIPT" "$IMAGE"
+fi
