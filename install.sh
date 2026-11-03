@@ -133,6 +133,7 @@ install_packages() {
     mpv
     ninja
     nss
+    pacman-contrib # checkupdates, for the Quickshell update panel
     qt5-graphicaleffects # SDDM theme dependencies
     qt5-quickcontrols2
     qt5-svg
