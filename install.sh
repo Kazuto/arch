@@ -170,6 +170,7 @@ install_packages() {
     tmux                    # Terminal multiplexer
     trash-cli               # Safe rm
     tree                    # Directory tree
+    tree-sitter-cli         # Builds Neovim treesitter parsers
     wget                    # Downloader
     xclip                   # Clipboard
     yazi                    # Terminal file manager
