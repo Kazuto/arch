@@ -15,9 +15,11 @@ require("env")
 
 -- === Monitors === --
 -- Use monitor descriptions (with serial) for persistent identification
--- hl.monitor({ output = "desc:GIGA-BYTE TECHNOLOGY CO. LTD. GS27QCA 25465B003652", mode = "2560x1440@180", position = "0x0", scale = 1, transform = 1 })
-hl.monitor({ output = "desc:GIGA-BYTE TECHNOLOGY CO. LTD. G34WQC A 24142B000602", mode = "3440x1440@120", position = "0x640", scale = 1 })
-hl.monitor({ output = "desc:GIGA-BYTE TECHNOLOGY CO. LTD. GS27QCA 25355B006220", mode = "2560x1440@180", position = "3440x0", scale = 1, transform = 3 })
+hl.monitor({ output = "desc:GIGA-BYTE TECHNOLOGY CO. LTD. GS27QCA 25465B003652", mode = "2560x1440@180", position = "0x0", scale = 1, transform = 1 })
+-- Behind the KVM's HDMI this one reports no serial and tops out at 100 Hz. desc: matches the
+-- start of the description, so leaving the serial out works with or without the KVM.
+hl.monitor({ output = "desc:GIGA-BYTE TECHNOLOGY CO. LTD. G34WQC A", mode = "3440x1440@100", position = "1440x640", scale = 1 })
+hl.monitor({ output = "desc:GIGA-BYTE TECHNOLOGY CO. LTD. GS27QCA 25355B006220", mode = "2560x1440@180", position = "4880x0", scale = 1, transform = 3 })
 
 -- === Status Bar, OSD, Wallpaper === --
 hl.on("hyprland.start", function()

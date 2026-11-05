@@ -2,9 +2,9 @@
 # Fix monitor assignments after input switching
 
 # Force move workspaces to correct monitors
-# DP-1 (Middle ultrawide): Workspaces 1-5
+# HDMI-A-1 (Middle ultrawide): Workspaces 1-5
 for i in {1..5}; do
-    hyprctl dispatch "hl.dsp.workspace.move({ workspace = '$i', monitor = 'desc:GIGA-BYTE TECHNOLOGY CO. LTD. G34WQC A 24142B000602' })"
+    hyprctl dispatch "hl.dsp.workspace.move({ workspace = '$i', monitor = 'desc:GIGA-BYTE TECHNOLOGY CO. LTD. G34WQC A' })"
 done
 
 # DP-2 (Right vertical): Workspaces 6-7
@@ -12,7 +12,7 @@ for i in {6..7}; do
     hyprctl dispatch "hl.dsp.workspace.move({ workspace = '$i', monitor = 'desc:GIGA-BYTE TECHNOLOGY CO. LTD. GS27QCA 25355B006220' })"
 done
 
-# DP-3 (Left vertical): Workspaces 8-9
+# DP-1 (Left vertical): Workspaces 8-9
 for i in {8..9}; do
     hyprctl dispatch "hl.dsp.workspace.move({ workspace = '$i', monitor = 'desc:GIGA-BYTE TECHNOLOGY CO. LTD. GS27QCA 25465B003652' })"
 done

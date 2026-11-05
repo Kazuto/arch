@@ -1,6 +1,6 @@
 -- === Workspace Binds === --
 -- Primary/Center - GIGA-BYTE G34WQC A
-local center = "desc:GIGA-BYTE TECHNOLOGY CO. LTD. G34WQC A 24142B000602"
+local center = "desc:GIGA-BYTE TECHNOLOGY CO. LTD. G34WQC A"
 hl.workspace_rule({ workspace = "1", monitor = center, default = true })
 hl.workspace_rule({ workspace = "2", monitor = center })
 hl.workspace_rule({ workspace = "3", monitor = center })
