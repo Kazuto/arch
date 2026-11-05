@@ -39,7 +39,6 @@ hl.on("hyprland.start", function()
 
   hl.exec_cmd("vivaldi", { workspace = "1 silent" })
   hl.exec_cmd("ghostty", { workspace = "2 silent" })
-  hl.exec_cmd("steam", { workspace = "3 silent" })
   hl.exec_cmd("vesktop", { workspace = "6 silent" })
   hl.exec_cmd("spotify", { workspace = "8 silent" })
 end)
