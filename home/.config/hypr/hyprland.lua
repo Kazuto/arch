@@ -151,7 +151,7 @@ require("windowrules")
 -- === Keybinds === --
 -- Keep each bind on one line with its command inline: Quickshell's hotkey sheet
 -- (js/Hotkeys.js) reads these lines as text.
-hl.bind("SUPER + B", hl.dsp.exec_cmd("chromium"))
+hl.bind("SUPER + B", hl.dsp.exec_cmd("vivaldi"))
 hl.bind("SUPER + T", hl.dsp.exec_cmd("slack"))
 hl.bind("SUPER + RETURN", hl.dsp.exec_cmd("ghostty"))
 hl.bind("SUPER + E", hl.dsp.exec_cmd("thunar"))

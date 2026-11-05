@@ -16,7 +16,7 @@ hl.env("XCURSOR_THEME", "Catppuccin-Mocha-Dark-Cursors")
 hl.env("XCURSOR_SIZE", "24")
 
 -- Default browser
-hl.env("BROWSER", "chromium")
+hl.env("BROWSER", "vivaldi")
 
 -- GTK portal integration
 hl.env("GTK_USE_PORTAL", "1")
