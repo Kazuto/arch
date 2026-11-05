@@ -37,11 +37,10 @@ hl.on("hyprland.start", function()
 
   hl.exec_cmd("$POLKIT_AUTH_AGENT")
 
-  hl.exec_cmd("firefox", { workspace = "1 silent" })
+  hl.exec_cmd("vivaldi", { workspace = "1 silent" })
   hl.exec_cmd("ghostty", { workspace = "2 silent" })
-  hl.exec_cmd("vesktop", { workspace = "3 silent" })
-  hl.exec_cmd("steam", { workspace = "4 silent" })
-  hl.exec_cmd("proton-mail", { workspace = "5 silent" })
+  hl.exec_cmd("steam", { workspace = "3 silent" })
+  hl.exec_cmd("vesktop", { workspace = "6 silent" })
   hl.exec_cmd("spotify", { workspace = "8 silent" })
 end)
 

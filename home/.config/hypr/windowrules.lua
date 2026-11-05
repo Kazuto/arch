@@ -183,14 +183,14 @@ hl.window_rule({
   name = "vesktop",
   match = { class = "vesktop" },
 
-  workspace = "3",
+  workspace = "6 silent",
 })
 
 hl.window_rule({
   name = "steam",
   match = { class = "steam" },
 
-  workspace = "4",
+  workspace = "3",
   float = true,
 })
 
@@ -202,10 +202,23 @@ hl.window_rule({
 })
 
 hl.window_rule({
+  name = "spotify",
+  match = { class = "Spotify" },
+
+  workspace = "8 silent",
+})
+
+hl.window_rule({
+  name = "steam-games",
+  match = { class = "^(steam_app_.*)$" },
+
+  workspace = "3",
+})
+
+hl.window_rule({
   name = "Aniimo",
   match = { class = "^(steam_app_.*)$", title = "^(Aniimo)$" },
 
-  workspace = "4",
   fullscreen_state = "2 2",
   suppress_event = "fullscreen",
 })
@@ -214,6 +227,7 @@ hl.window_rule({
   name = "prominence",
   match = { class = "Prominence™ II: Hasturian Era" },
 
+  workspace = "3",
   fullscreen_state = "2 2",
   content = "game",
   immediate = true,
