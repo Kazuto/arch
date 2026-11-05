@@ -278,11 +278,11 @@ install_packages() {
   # Essential applications (from modules/home/apps/)
   local APP_PACKAGES=(
     discord        # Chat
-    firefox        # Web browser
     obs-studio     # Streaming/recording
     retroarch      # Emulation frontend
     signal-desktop # Secure messaging
     steam          # Gaming platform (requires multilib)
+    vivaldi        # Web browser
   )
 
   # AMD GPU/CPU performance & monitoring + Gaming peripherals

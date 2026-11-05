@@ -1,8 +1,8 @@
 [Default Applications]
-x-scheme-handler/http=firefox.desktop
-x-scheme-handler/https=firefox.desktop
-text/html=firefox.desktop
-application/xhtml+xml=firefox.desktop
+x-scheme-handler/http=vivaldi-stable.desktop
+x-scheme-handler/https=vivaldi-stable.desktop
+text/html=vivaldi-stable.desktop
+application/xhtml+xml=vivaldi-stable.desktop
 x-scheme-handler/bruno=bruno.desktop
 x-scheme-handler/mailto=userapp-Thunderbird-4X10L3.desktop
 message/rfc822=userapp-Thunderbird-4X10L3.desktop
@@ -15,6 +15,7 @@ image/jpeg=gimp.desktop;viewnior.desktop;
 image/png=viewnior.desktop;
 x-scheme-handler/mailto=userapp-Thunderbird-4X10L3.desktop;
 x-scheme-handler/mid=userapp-Thunderbird-4X10L3.desktop;
-x-scheme-handler/http=firefox.desktop;
-x-scheme-handler/https=firefox.desktop;
-text/html=firefox.desktop;
+x-scheme-handler/http=vivaldi-stable.desktop;
+x-scheme-handler/https=vivaldi-stable.desktop;
+text/html=vivaldi-stable.desktop;
+inode/directory=org.gnome.Nautilus.desktop;
