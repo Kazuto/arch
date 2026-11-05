@@ -40,5 +40,9 @@ fi
 # Load zsh functions
 autoload -U add-zsh-hook
 
-# Starship prompt (must be at the end)
+# Starship prompt
+[ -f ~/.cache/quickshell/accent-starship.toml ] && export STARSHIP_CONFIG=~/.cache/quickshell/accent-starship.toml
 eval "$(starship init zsh)"
+
+# Zoxide (smart cd) - MUST be at the very end
+command -v zoxide &>/dev/null && eval "$(zoxide init zsh --cmd cd)"

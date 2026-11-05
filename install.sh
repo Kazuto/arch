@@ -133,6 +133,7 @@ install_packages() {
     mpv
     ninja
     nss
+    pacman-contrib # checkupdates, for the Quickshell update panel
     qt5-graphicaleffects # SDDM theme dependencies
     qt5-quickcontrols2
     qt5-svg
@@ -140,6 +141,7 @@ install_packages() {
     usbutils
     viewnior
     wl-clipboard
+    cliphist
     xdg-user-dirs
     xsel
   )
@@ -168,6 +170,7 @@ install_packages() {
     tmux                    # Terminal multiplexer
     trash-cli               # Safe rm
     tree                    # Directory tree
+    tree-sitter-cli         # Builds Neovim treesitter parsers
     wget                    # Downloader
     xclip                   # Clipboard
     yazi                    # Terminal file manager
@@ -276,11 +279,11 @@ install_packages() {
   # Essential applications (from modules/home/apps/)
   local APP_PACKAGES=(
     discord        # Chat
-    firefox        # Web browser
     obs-studio     # Streaming/recording
     retroarch      # Emulation frontend
     signal-desktop # Secure messaging
     steam          # Gaming platform (requires multilib)
+    vivaldi        # Web browser
   )
 
   # AMD GPU/CPU performance & monitoring + Gaming peripherals
@@ -425,6 +428,9 @@ install_packages() {
     # Applications (AUR)
     bitwarden     # Password manager
     obsidian      # Note-taking
+    slack-desktop # Team chat (unconfined native build — snap's AppArmor
+                  # confinement blocks quickshell's tray from reading its
+                  # StatusNotifierItem D-Bus properties)
     spotify       # Music streaming
     spicetify-cli # Spotify customization tool
     vencord       # Discord customization tool
@@ -517,11 +523,44 @@ install_packages() {
   log_success "Package installation complete"
 }
 
+clone_wallpapers() {
+  local target="$HOME/Wallpaper"
+
+  if [[ -e "$target" ]]; then
+    log_info "Wallpapers already in place"
+    return 0
+  fi
+
+  # A sibling of this repo, reached the same way, so an SSH alias keeps working
+  local origin
+  origin="$(git -C "$SCRIPT_DIR" remote get-url origin 2>/dev/null)" || origin=""
+  if [[ -z "$origin" ]]; then
+    log_info "Skipping wallpapers: no git remote to find them from"
+    return 0
+  fi
+
+  # The repo is private, so a machine without access goes without rather than
+  # stopping the install or waiting on a credentials prompt
+  log_info "Cloning wallpapers..."
+  if GIT_TERMINAL_PROMPT=0 GIT_SSH_COMMAND="ssh -o BatchMode=yes" \
+    git clone --quiet "${origin%/*}/wallpaper.git" "$target" >>"$INSTALL_LOG" 2>&1; then
+    log_success "Cloned wallpapers to $target"
+  else
+    log_info "Skipping wallpapers: couldn't clone ${origin%/*}/wallpaper.git"
+  fi
+}
+
 symlink_configs() {
   log_info "Symlinking configuration files using stow..."
 
   # Change to script directory for stow
   cd "$SCRIPT_DIR"
+
+  # The Quickshell config is a submodule, and stow needs its files in place
+  git submodule update --init --recursive 2>&1 | tee -a "$INSTALL_LOG" || {
+    log_error "Failed to fetch submodules"
+    return 1
+  }
 
   # Stow user configurations (home directory)
   if [[ -d "home" ]]; then
@@ -865,6 +904,7 @@ main() {
 
   install_packages
   symlink_configs
+  clone_wallpapers
   configure_services
   configure_user_groups
   configure_environment

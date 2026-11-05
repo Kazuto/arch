@@ -22,6 +22,8 @@ return {
       api.nvim_set_hl(0, "RainbowGreen", { fg = mocha.green })
       api.nvim_set_hl(0, "RainbowViolet", { fg = mocha.mauve })
       api.nvim_set_hl(0, "RainbowCyan", { fg = mocha.sky })
+
+      require("kazuto.accent").setup()
     end,
   },
   {

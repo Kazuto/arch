@@ -1,3 +1,64 @@
 [flavor]
 dark = "catppuccin-mocha"
 light = "catppuccin-mocha"
+
+# Color 89 is the wallpaper accent. apply-accent.sh redefines it in Ghostty, which
+# repaints open windows, so Yazi follows without a restart.
+[mgr]
+cwd = { fg = "89" }
+
+[tabs]
+active   = { fg = "#1e1e2e", bg = "89", bold = true }
+inactive = { fg = "89", bg = "#313244" }
+
+[mode]
+normal_main = { fg = "#1e1e2e", bg = "89", bold = true }
+normal_alt  = { fg = "89", bg = "#313244" }
+
+[status]
+perm_type = { fg = "89" }
+
+[pick]
+border = { fg = "89" }
+
+[input]
+border = { fg = "89" }
+
+[cmp]
+border = { fg = "89" }
+
+[tasks]
+border  = { fg = "89" }
+hovered = { fg = "89", bold = true }
+
+[spot]
+border = { fg = "89" }
+title  = { fg = "89" }
+
+# Yazi skipped prepend_rules here, so this is the flavor's full list
+[filetype]
+rules = [
+	# Image
+	{ mime = "image/*", fg = "#94e2d5" },
+	# Media
+	{ mime = "{audio,video}/*", fg = "#f9e2af" },
+	# Archive
+	{ mime = "application/{zip,rar,7z*,tar,gzip,xz,zstd,bzip*,lzma,compress,archive,cpio,arj,xar,ms-cab*}", fg = "#f5c2e7" },
+	# Document
+	{ mime = "application/{pdf,doc,rtf}", fg = "#a6e3a1" },
+	# Virtual file system
+	{ mime = "vfs/{absent,stale}", fg = "#9399b2" },
+	# Fallback
+	{ url = "*", fg = "#cdd6f4" },
+	{ url = "*/", fg = "89" },
+]
+
+[icon]
+prepend_dirs = [
+	{ name = ".github", text = "", fg = "89" },
+	{ name = ".npm", text = "", fg = "89" },
+]
+prepend_conds = [
+	{ if = "dir & hovered", text = "", fg = "89" },
+	{ if = "dir", text = "", fg = "89" },
+]

@@ -59,7 +59,6 @@ export NVM_DIR="$HOME/.nvm"
 [ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"  # This loads nvm bash_completion
 
 # Automatically switch node versions based on .nvmrc
-autoload -U add-zsh-hook
 load-nvmrc() {
   local nvmrc_path="$(nvm_find_nvmrc)"
 
@@ -78,6 +77,3 @@ load-nvmrc() {
 }
 add-zsh-hook chpwd load-nvmrc
 load-nvmrc
-
-# Zoxide (smart cd) - must be at the end
-command -v zoxide &>/dev/null && eval "$(zoxide init zsh --cmd cd)"

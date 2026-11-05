@@ -19,8 +19,8 @@ IMG_EXT="${IMAGE##*.}"
 
 # Get monitor info sorted by X position (left to right)
 MONITORS=($(hyprctl monitors -j | jq -r 'sort_by(.x) | .[].name'))
-MON1="${MONITORS[0]}" # HDMI-A-1 (1440x2560) - Left (rotated 90deg)
-MON2="${MONITORS[1]}" # DP-1 (3440x1440) - Center
+MON1="${MONITORS[0]}" # DP-1 (1440x2560) - Left (rotated 90deg)
+MON2="${MONITORS[1]}" # HDMI-A-1 (3440x1440) - Center
 MON3="${MONITORS[2]}" # DP-2 (1440x2560) - Right (rotated -90deg)
 
 # Total monitor width = 1440 + 3440 + 1440 = 6320 (after rotation)
@@ -40,8 +40,8 @@ if [ "$IMG_WIDTH" -ge "$THRESHOLD" ]; then
     mkdir -p "$TEMP_DIR"
 
     # Calculate split points based on monitor ratios (after rotation)
-    # Left monitor (DP-3): 1440px = 22.8% of total (rotated portrait)
-    # Center monitor (DP-1): 3440px = 54.4% of total (landscape)
+    # Left monitor (DP-1): 1440px = 22.8% of total (rotated portrait)
+    # Center monitor (HDMI-A-1): 3440px = 54.4% of total (landscape)
     # Right monitor (DP-2): 1440px = 22.8% of total (rotated portrait)
     SPLIT1_X=$((IMG_WIDTH * 1440 / TOTAL_WIDTH))
     SPLIT2_X=$((IMG_WIDTH * 4880 / TOTAL_WIDTH))
@@ -66,4 +66,10 @@ else
     awww img "$IMAGE" --resize crop \
         --transition-type grow --transition-duration 0.5 --transition-fps 60 --transition-pos top-right
     notify-send "Wallpaper" "Applied to all monitors\n${IMG_WIDTH}x${IMG_HEIGHT}"
+fi
+
+# Let the rest of the desktop follow the new wallpaper
+ACCENT_SCRIPT="$HOME/.config/quickshell/scripts/apply-accent.sh"
+if [ -x "$ACCENT_SCRIPT" ]; then
+    "$ACCENT_SCRIPT" "$IMAGE"
 fi
