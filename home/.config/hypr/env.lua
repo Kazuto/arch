@@ -23,3 +23,7 @@ hl.env("GTK_USE_PORTAL", "1")
 
 -- Polkit agent
 hl.env("POLKIT_AUTH_AGENT", "/usr/lib/polkit-gnome/polkit-gnome-authentication-agent-1")
+
+-- Proton on Wayland opens games on the screen at 0,0, which is the left one here.
+-- Uses the output name, so this needs updating if the ultrawide moves to another port.
+hl.env("WAYLANDDRV_PRIMARY_MONITOR", "HDMI-A-1")

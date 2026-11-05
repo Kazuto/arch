@@ -203,7 +203,9 @@ hl.window_rule({
 
 hl.window_rule({
   name = "Aniimo",
-  match = { class = "^(steamapp.*)$", title = "^(Aniimo)$" },
+  match = { class = "^(steam_app_.*)$", title = "^(Aniimo)$" },
+
+  workspace = "4",
 })
 
 hl.window_rule({
