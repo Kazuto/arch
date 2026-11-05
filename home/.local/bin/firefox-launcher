@@ -62,7 +62,7 @@ if [[ -n "$target_class" ]]; then
 
     # Switch to the workspace
     if [[ -n "$workspace_id" ]] && [[ "$workspace_id" != "null" ]] && [[ "$workspace_id" != "" ]]; then
-        hyprctl dispatch workspace "$workspace_id"
+        hyprctl dispatch "hl.dsp.focus({ workspace = '$workspace_id' })"
         # Small delay to let workspace switch complete
         sleep 0.1
     fi
