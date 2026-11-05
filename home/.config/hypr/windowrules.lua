@@ -206,6 +206,8 @@ hl.window_rule({
   match = { class = "^(steam_app_.*)$", title = "^(Aniimo)$" },
 
   workspace = "4",
+  fullscreen_state = "2 2",
+  suppress_event = "fullscreen",
 })
 
 hl.window_rule({
