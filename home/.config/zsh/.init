@@ -40,6 +40,9 @@ fi
 # Load zsh functions
 autoload -U add-zsh-hook
 
+# lazygit layers the wallpaper accent from apply-accent.sh over its own config
+[ -f ~/.cache/quickshell/accent-lazygit.yml ] && export LG_CONFIG_FILE="$HOME/.config/lazygit/config.yml,$HOME/.cache/quickshell/accent-lazygit.yml"
+
 # Starship prompt
 [ -f ~/.cache/quickshell/accent-starship.toml ] && export STARSHIP_CONFIG=~/.cache/quickshell/accent-starship.toml
 eval "$(starship init zsh)"
