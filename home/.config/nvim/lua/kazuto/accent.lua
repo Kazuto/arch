@@ -7,6 +7,14 @@ local path = dir .. "/accent"
 
 local groups = {
   "CursorLineNr",
+  "DashboardHeader",
+  "DashboardMruIcon",
+  "DashboardMruTitle",
+  "DashboardProjectIcon",
+  "DashboardProjectTitle",
+  "DashboardProjectTitleIcon",
+  "DashboardShortCut",
+  "DashboardShortCutIcon",
   "FloatBorder",
   "FloatTitle",
   "NvimTreeFolderIcon",
