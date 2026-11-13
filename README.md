@@ -175,6 +175,8 @@ sudo stow --adopt -t / system   # System configs
 
 /etc/keyd/default.conf → <install-dir>/system/etc/keyd/default.conf
 /etc/sddm.conf.d/theme.conf → <install-dir>/system/etc/sddm.conf.d/theme.conf
+/etc/sddm.conf.d/monitors.conf → <install-dir>/system/etc/sddm.conf.d/monitors.conf
+/usr/share/sddm/scripts/Xsetup-monitors → <install-dir>/system/usr/share/sddm/scripts/Xsetup-monitors
 /usr/share/sddm/themes/corners-catppuccin/ → <install-dir>/system/usr/share/sddm/themes/corners-catppuccin/
 ```
 
@@ -310,6 +312,10 @@ Other customization options:
 
 See the [theme README](system/usr/share/sddm/themes/corners-catppuccin/README.md) for full options.
 
+### Monitor Layout
+
+The SDDM greeter runs on X11 and doesn't read the Hyprland config, so `Xsetup-monitors` rotates and positions the monitors with `xrandr` before the login screen appears. It matches monitors by EDID serial/model name the same way `hyprland.lua` uses `desc:`, so update both together when the monitor setup changes.
+
 ## Differences from NixOS Config
 
 ### Features NOT Available
@@ -421,8 +427,10 @@ rm -rf <install-dir>
 │   ├── etc/
 │   │   ├── keyd/            # Keyboard remapping
 │   │   └── sddm.conf.d/     # SDDM configuration
-│   └── usr/share/sddm/themes/
-│       └── corners-catppuccin/  # SDDM theme (Catppuccin Mocha)
+│   └── usr/share/sddm/
+│       ├── scripts/         # Login screen monitor layout (Xsetup-monitors)
+│       └── themes/
+│           └── corners-catppuccin/  # SDDM theme (Catppuccin Mocha)
 ├── install.sh               # Main installation script
 ├── uninstall.sh             # Uninstallation script
 └── README.md                # This file

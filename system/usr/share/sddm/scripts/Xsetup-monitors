@@ -1,0 +1,45 @@
+#!/bin/sh
+# Run as root by SDDM before the login dialog appears (see /etc/sddm.conf.d/monitors.conf)
+#
+# The greeter runs on X11 and knows nothing about the monitor layout in hyprland.lua, so the
+# vertical monitors show up unrotated. Mirror that layout here. Like Hyprland's desc: rules,
+# monitors are matched by their EDID text rather than port names.
+
+LEFT="25465B003652"  # GS27QCA serial, Hyprland transform 1
+CENTER="G34WQC A"    # Ultrawide model name, it reports no serial behind the KVM
+RIGHT="25355B006220" # GS27QCA serial, Hyprland transform 3
+
+# Print the connected output whose EDID contains the given text
+output_for() {
+    hex=$(printf '%s' "$1" | od -An -tx1 | tr -d ' \n')
+    xrandr --prop | awk -v hex="$hex" '
+        /^[^ \t]/ { out = ($2 == "connected") ? $1 : ""; edid = 0 }
+        /^\tEDID:/ { edid = 1; buf = ""; next }
+        edid && /^\t\t/ {
+            gsub(/[ \t]/, "")
+            buf = buf $0
+            if (out != "" && index(buf, hex)) { print out; exit }
+            next
+        }
+        { edid = 0 }
+    '
+}
+
+left=$(output_for "$LEFT")
+center=$(output_for "$CENTER")
+right=$(output_for "$RIGHT")
+
+set --
+if [ -n "$left" ]; then
+    set -- "$@" --output "$left" --auto --rotate left --pos 0x0
+fi
+if [ -n "$center" ]; then
+    set -- "$@" --output "$center" --auto --primary --pos 1440x640
+fi
+if [ -n "$right" ]; then
+    set -- "$@" --output "$right" --auto --rotate right --pos 4880x0
+fi
+
+if [ $# -gt 0 ]; then
+    xrandr "$@"
+fi

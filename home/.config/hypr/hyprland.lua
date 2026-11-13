@@ -1,119 +1,156 @@
 hl.config({
-  debug = {
-    disable_logs = true,
-  },
+	debug = {
+		disable_logs = true,
+	},
 })
 
 -- === Environment === --
 hl.env("QT_STYLE_OVERRIDE", "Adwaita-Dark")
 hl.env("ELECTRON_ENABLE_FEATURES", "WebContentsForceDarkMode")
-hl.env("GOOGLE_CHROME_EXTRA_FLAGS", "--ozone-platform=wayland --enable-features=UseOzonePlatform,WebRTCPipeWireCapturer")
-hl.env("XDG_DATA_DIRS", os.getenv("HOME") .. "/.local/share:/home/nikmayer/.local/share/flatpak/exports/share:/var/lib/flatpak/exports/share:/usr/local/share/:/usr/share/:/var/lib/snapd/desktop")
+hl.env(
+	"GOOGLE_CHROME_EXTRA_FLAGS",
+	"--ozone-platform=wayland --enable-features=UseOzonePlatform,WebRTCPipeWireCapturer"
+)
+hl.env(
+	"XDG_DATA_DIRS",
+	os.getenv("HOME")
+		.. "/.local/share:/home/nikmayer/.local/share/flatpak/exports/share:/var/lib/flatpak/exports/share:/usr/local/share/:/usr/share/:/var/lib/snapd/desktop"
+)
 
 -- Environment variables
 require("env")
 
 -- === Monitors === --
 -- Use monitor descriptions (with serial) for persistent identification
-hl.monitor({ output = "desc:GIGA-BYTE TECHNOLOGY CO. LTD. GS27QCA 25465B003652", mode = "2560x1440@180", position = "0x0", scale = 1, transform = 1 })
+hl.monitor({
+	output = "desc:GIGA-BYTE TECHNOLOGY CO. LTD. GS27QCA 25465B003652",
+	mode = "2560x1440@180",
+	position = "0x0",
+	scale = 1,
+	transform = 1,
+})
 -- Behind the KVM's HDMI this one reports no serial and tops out at 100 Hz. desc: matches the
 -- start of the description, so leaving the serial out works with or without the KVM.
-hl.monitor({ output = "desc:GIGA-BYTE TECHNOLOGY CO. LTD. G34WQC A", mode = "3440x1440@100", position = "1440x640", scale = 1 })
-hl.monitor({ output = "desc:GIGA-BYTE TECHNOLOGY CO. LTD. GS27QCA 25355B006220", mode = "2560x1440@180", position = "4880x0", scale = 1, transform = 3 })
+hl.monitor({
+	output = "desc:GIGA-BYTE TECHNOLOGY CO. LTD. G34WQC A",
+	mode = "3440x1440@100",
+	position = "1440x640",
+	scale = 1,
+})
+hl.monitor({
+	output = "desc:GIGA-BYTE TECHNOLOGY CO. LTD. GS27QCA 25355B006220",
+	mode = "2560x1440@180",
+	position = "4880x0",
+	scale = 1,
+	transform = 3,
+})
 
 -- === Status Bar, OSD, Wallpaper === --
 hl.on("hyprland.start", function()
-  hl.exec_cmd("gsettings set org.gnome.desktop.interface color-scheme 'prefer-dark'")
-  hl.exec_cmd("quickshell")
-  hl.exec_cmd("wl-paste --watch cliphist store")
+	hl.exec_cmd("gsettings set org.gnome.desktop.interface color-scheme 'prefer-dark'")
+	hl.exec_cmd("quickshell")
+	hl.exec_cmd("wl-paste --watch cliphist store")
 
-  hl.exec_cmd("awww-daemon")
-  hl.exec_cmd([[sleep 2 && ~/.config/swww/set-wallpaper.sh "$(find $HOME/Wallpaper/ -maxdepth 1 -type f -iregex '.*\.\(avif\|jpe?g\|png\|webp\|gif\)' | shuf -n 1)"]])
+	hl.exec_cmd("awww-daemon")
+	hl.exec_cmd(
+		[[sleep 2 && ~/.config/swww/set-wallpaper.sh "$(find $HOME/Wallpaper/ -maxdepth 1 -type f -iregex '.*\.\(avif\|jpe?g\|png\|webp\|gif\)' | shuf -n 1)"]]
+	)
 
-  hl.exec_cmd("systemctl --user start xdg-desktop-portal-hyprland")
+	hl.exec_cmd("systemctl --user start xdg-desktop-portal-hyprland")
 
-  hl.exec_cmd("dbus-update-activation-environment --systemd WAYLAND_DISPLAY XDG_CURRENT_DESKTOP=Hyprland HYPRLAND_INSTANCE_SIGNATURE DBUS_SESSION_BUS_ADDRESS")
-  hl.exec_cmd("systemctl --user import-environment WAYLAND_DISPLAY XDG_CURRENT_DESKTOP HYPRLAND_INSTANCE_SIGNATURE")
+	hl.exec_cmd(
+		"dbus-update-activation-environment --systemd WAYLAND_DISPLAY XDG_CURRENT_DESKTOP=Hyprland HYPRLAND_INSTANCE_SIGNATURE DBUS_SESSION_BUS_ADDRESS"
+	)
+	hl.exec_cmd("systemctl --user import-environment WAYLAND_DISPLAY XDG_CURRENT_DESKTOP HYPRLAND_INSTANCE_SIGNATURE")
 
-  hl.exec_cmd("$POLKIT_AUTH_AGENT")
+	hl.exec_cmd("$POLKIT_AUTH_AGENT")
 
-  hl.exec_cmd("vivaldi", { workspace = "1 silent" })
-  hl.exec_cmd("ghostty", { workspace = "2 silent" })
-  hl.exec_cmd("vesktop", { workspace = "6 silent" })
-  hl.exec_cmd("spotify", { workspace = "8 silent" })
+	hl.exec_cmd("vivaldi", { workspace = "1 silent" })
+	hl.exec_cmd("ghostty", { workspace = "2 silent" })
+	hl.exec_cmd("vesktop", { workspace = "6 silent" })
+	hl.exec_cmd("spotify", { workspace = "8 silent" })
 end)
 
 -- A reload resets the border color, so the accent has to be applied again. config.reloaded
 -- also fires during startup, but too early for the color to stick, so both are needed.
 local function syncAccent()
-  hl.exec_cmd("~/.config/quickshell/scripts/apply-accent.sh --sync")
+	hl.exec_cmd("~/.config/quickshell/scripts/apply-accent.sh --sync")
 end
 hl.on("hyprland.start", syncAccent)
 hl.on("config.reloaded", syncAccent)
 
 -- === Keyboard === --
 hl.config({
-  input = {
-    follow_mouse = 1,
-    sensitivity = 0, -- -1.0 - 1.0, 0 means no modification.
-    numlock_by_default = true,
+	input = {
+		follow_mouse = 1,
+		sensitivity = 0, -- -1.0 - 1.0, 0 means no modification.
+		numlock_by_default = true,
 
-    kb_layout = "eu",
-  },
+		kb_layout = "eu",
+	},
 })
 
 -- === Layout === --
 hl.config({
-  general = {
-    layout = "dwindle",
+	general = {
+		layout = "dwindle",
 
-    gaps_in = 5,
-    gaps_out = 15,
-    border_size = 2,
+		gaps_in = 5,
+		gaps_out = 15,
+		border_size = 2,
 
-    col = {
-      active_border = { colors = { "rgb(fab387)", "rgb(1e1e2e)", "rgb(1e1e2e)", "rgb(fab387)" }, angle = 45 },
-      inactive_border = "rgba(1e1e2eff)",
-    },
-  },
+		col = {
+			active_border = { colors = { "rgb(fab387)", "rgb(1e1e2e)", "rgb(1e1e2e)", "rgb(fab387)" }, angle = 45 },
+			inactive_border = "rgba(1e1e2eff)",
+		},
+	},
 })
 
 -- === Misc === --
 hl.config({
-  misc = {
-    disable_hyprland_logo = true,
-    disable_splash_rendering = true,
-    mouse_move_enables_dpms = true,
-    enable_swallow = true,
-    swallow_regex = "^(kitty)$",
-  },
+	misc = {
+		disable_hyprland_logo = true,
+		disable_splash_rendering = true,
+		mouse_move_enables_dpms = true,
+		enable_swallow = true,
+		swallow_regex = "^(kitty)$",
+	},
+})
+
+-- === Rendering === --
+-- Since 0.57 a fullscreen app is offered HDR, and the screen switches to BT.2020 as soon as
+-- the app takes it. Off keeps the screens in SDR.
+hl.config({
+	render = {
+		cm_auto_hdr = 0,
+	},
 })
 
 -- === Decorations === --
 hl.config({
-  decoration = {
-    rounding = 20,
-    rounding_power = 10,
+	decoration = {
+		rounding = 20,
+		rounding_power = 10,
 
-    active_opacity = 1,
-    inactive_opacity = 0.85,
+		active_opacity = 1,
+		inactive_opacity = 0.85,
 
-    blur = {
-      enabled = true,
-      size = 5,
-      passes = 3,
-      new_optimizations = true,
-      vibrancy = 0.1696,
-      ignore_opacity = true,
-    },
+		blur = {
+			enabled = true,
+			size = 5,
+			passes = 3,
+			new_optimizations = true,
+			vibrancy = 0.1696,
+			ignore_opacity = true,
+		},
 
-    shadow = {
-      enabled = false,
-      range = 20,
-      render_power = 3,
-      color = "rgba(1a1a1aee)",
-    },
-  },
+		shadow = {
+			enabled = false,
+			range = 20,
+			render_power = 3,
+			color = "rgba(1a1a1aee)",
+		},
+	},
 })
 
 hl.layer_rule({ name = "gtk-layer-shell", match = { namespace = "gtk-layer-shell" }, blur = true })
@@ -121,9 +158,9 @@ hl.layer_rule({ name = "lockscreen", match = { namespace = "lockscreen" }, blur 
 
 -- === Animations === --
 hl.config({
-  animations = {
-    enabled = true,
-  },
+	animations = {
+		enabled = true,
+	},
 })
 
 hl.curve("overshot", { type = "bezier", points = { { 0.05, 0.9 }, { 0.1, 1.05 } } })
@@ -139,9 +176,9 @@ hl.animation({ leaf = "workspaces", enabled = true, speed = 6, bezier = "default
 
 -- === Layouts === --
 hl.config({
-  dwindle = {
-    preserve_split = true,
-  },
+	dwindle = {
+		preserve_split = true,
+	},
 })
 
 -- === Window rules === --
@@ -153,7 +190,7 @@ require("windowrules")
 hl.bind("SUPER + B", hl.dsp.exec_cmd("vivaldi"))
 hl.bind("SUPER + T", hl.dsp.exec_cmd("slack"))
 hl.bind("SUPER + RETURN", hl.dsp.exec_cmd("ghostty"))
-hl.bind("SUPER + E", hl.dsp.exec_cmd("thunar"))
+hl.bind("SUPER + E", hl.dsp.exec_cmd("nautilus"))
 hl.bind("SUPER + Y", hl.dsp.exec_cmd("ghostty -e yazi"))
 
 hl.bind("SUPER + C", hl.dsp.exec_cmd("hyprpicker -a -n"))
@@ -161,7 +198,12 @@ hl.bind("SUPER + C", hl.dsp.exec_cmd("hyprpicker -a -n"))
 hl.bind("SUPER + R", hl.dsp.exec_cmd("hyprctl reload; pkill quickshell; quickshell &")) -- Reload Hyprland + Quickshell
 hl.bind("SUPER + PERIOD", hl.dsp.exec_cmd('echo "emoji-toggle" | socat - UNIX-CONNECT:/tmp/quickshell.sock'))
 hl.bind("SUPER + COMMA", hl.dsp.exec_cmd('echo "wallpaper-toggle" | socat - UNIX-CONNECT:/tmp/quickshell.sock'))
-hl.bind("SUPER + SHIFT + W", hl.dsp.exec_cmd([[~/.config/swww/set-wallpaper.sh "$(find $HOME/Wallpaper/ -maxdepth 1 -type f -iregex '.*\.\(avif\|jpe?g\|png\|webp\|gif\)' | shuf -n 1)"]]))
+hl.bind(
+	"SUPER + SHIFT + W",
+	hl.dsp.exec_cmd(
+		[[~/.config/swww/set-wallpaper.sh "$(find $HOME/Wallpaper/ -maxdepth 1 -type f -iregex '.*\.\(avif\|jpe?g\|png\|webp\|gif\)' | shuf -n 1)"]]
+	)
+)
 hl.bind("SUPER + ESCAPE", hl.dsp.exec_cmd('echo "power-toggle" | socat - UNIX-CONNECT:/tmp/quickshell.sock'))
 
 hl.bind("SUPER + V", hl.dsp.window.float({ action = "toggle" }))
@@ -178,10 +220,31 @@ local screenshotFile = '"' .. screenshotDir .. "/$(date +'screenshot_%Y%m%d_%H%M
 local areaSelect = "PATH=$HOME/.config/quickshell/scripts/area-select:$PATH"
 
 -- Screenshots with grimblast - Save to file
-hl.bind("SUPER + ALT + 2", hl.dsp.exec_cmd("mkdir -p " .. screenshotDir .. " && grimblast --notify save screen " .. screenshotFile))
-hl.bind("SUPER + ALT + 3", hl.dsp.exec_cmd("mkdir -p " .. screenshotDir .. " && grimblast --notify save output " .. screenshotFile))
-hl.bind("SUPER + ALT + 4", hl.dsp.exec_cmd("mkdir -p " .. screenshotDir .. " && " .. areaSelect .. " grimblast --notify save area " .. screenshotFile))
-hl.bind("SUPER + ALT + 5", hl.dsp.exec_cmd("mkdir -p " .. screenshotDir .. " && " .. areaSelect .. " grimblast --notify --freeze save area " .. screenshotFile))
+hl.bind(
+	"SUPER + ALT + 2",
+	hl.dsp.exec_cmd("mkdir -p " .. screenshotDir .. " && grimblast --notify save screen " .. screenshotFile)
+)
+hl.bind(
+	"SUPER + ALT + 3",
+	hl.dsp.exec_cmd("mkdir -p " .. screenshotDir .. " && grimblast --notify save output " .. screenshotFile)
+)
+hl.bind(
+	"SUPER + ALT + 4",
+	hl.dsp.exec_cmd(
+		"mkdir -p " .. screenshotDir .. " && " .. areaSelect .. " grimblast --notify save area " .. screenshotFile
+	)
+)
+hl.bind(
+	"SUPER + ALT + 5",
+	hl.dsp.exec_cmd(
+		"mkdir -p "
+			.. screenshotDir
+			.. " && "
+			.. areaSelect
+			.. " grimblast --notify --freeze save area "
+			.. screenshotFile
+	)
+)
 
 -- Screenshots with grimblast - Copy to clipboard
 hl.bind("SUPER + CTRL + 2", hl.dsp.exec_cmd("grimblast --notify copy screen"))
@@ -261,17 +324,47 @@ hl.bind("SUPER + mouse_down", hl.dsp.focus({ workspace = "e+1" }))
 hl.bind("SUPER + mouse_up", hl.dsp.focus({ workspace = "e-1" }))
 
 -- === Audio === --
-hl.bind("XF86AudioRaiseVolume", hl.dsp.exec_cmd('pamixer -u -i 5 && VOL=$(pamixer --get-volume) && echo "osd-volume:$VOL:unmuted" | socat - UNIX-CONNECT:/tmp/quickshell.sock'), { repeating = true })
-hl.bind("XF86AudioLowerVolume", hl.dsp.exec_cmd('pamixer -u -d 5 && VOL=$(pamixer --get-volume) && echo "osd-volume:$VOL:unmuted" | socat - UNIX-CONNECT:/tmp/quickshell.sock'), { repeating = true })
-hl.bind("XF86AudioMute", hl.dsp.exec_cmd('pamixer -t && MUTED=$(pamixer --get-mute) && VOL=$(pamixer --get-volume) && echo "osd-volume:$VOL:$([ "$MUTED" = "true" ] && echo muted || echo unmuted)" | socat - UNIX-CONNECT:/tmp/quickshell.sock'), { locked = true })
+hl.bind(
+	"XF86AudioRaiseVolume",
+	hl.dsp.exec_cmd(
+		'pamixer -u -i 5 && VOL=$(pamixer --get-volume) && echo "osd-volume:$VOL:unmuted" | socat - UNIX-CONNECT:/tmp/quickshell.sock'
+	),
+	{ repeating = true }
+)
+hl.bind(
+	"XF86AudioLowerVolume",
+	hl.dsp.exec_cmd(
+		'pamixer -u -d 5 && VOL=$(pamixer --get-volume) && echo "osd-volume:$VOL:unmuted" | socat - UNIX-CONNECT:/tmp/quickshell.sock'
+	),
+	{ repeating = true }
+)
+hl.bind(
+	"XF86AudioMute",
+	hl.dsp.exec_cmd(
+		'pamixer -t && MUTED=$(pamixer --get-mute) && VOL=$(pamixer --get-volume) && echo "osd-volume:$VOL:$([ "$MUTED" = "true" ] && echo muted || echo unmuted)" | socat - UNIX-CONNECT:/tmp/quickshell.sock'
+	),
+	{ locked = true }
+)
 hl.bind("XF86AudioPlay", hl.dsp.exec_cmd('echo "media-play-pause" | socat - UNIX-CONNECT:/tmp/quickshell.sock'))
 hl.bind("XF86AudioPause", hl.dsp.exec_cmd('echo "media-play-pause" | socat - UNIX-CONNECT:/tmp/quickshell.sock'))
 hl.bind("XF86AudioNext", hl.dsp.exec_cmd('echo "media-next" | socat - UNIX-CONNECT:/tmp/quickshell.sock'))
 hl.bind("XF86AudioPrev", hl.dsp.exec_cmd('echo "media-previous" | socat - UNIX-CONNECT:/tmp/quickshell.sock'))
 
 -- === Brightness === --
-hl.bind("XF86MonBrightnessUp", hl.dsp.exec_cmd([[brightnessctl set +5% && echo "osd-brightness:$(brightnessctl get | awk -v max=$(brightnessctl max) 'BEGIN{} {printf "%d", ($1/max)*100}')" | socat - UNIX-CONNECT:/tmp/quickshell.sock]]), { repeating = true })
-hl.bind("XF86MonBrightnessDown", hl.dsp.exec_cmd([[brightnessctl set 5%- && echo "osd-brightness:$(brightnessctl get | awk -v max=$(brightnessctl max) 'BEGIN{} {printf "%d", ($1/max)*100}')" | socat - UNIX-CONNECT:/tmp/quickshell.sock]]), { repeating = true })
+hl.bind(
+	"XF86MonBrightnessUp",
+	hl.dsp.exec_cmd(
+		[[brightnessctl set +5% && echo "osd-brightness:$(brightnessctl get | awk -v max=$(brightnessctl max) 'BEGIN{} {printf "%d", ($1/max)*100}')" | socat - UNIX-CONNECT:/tmp/quickshell.sock]]
+	),
+	{ repeating = true }
+)
+hl.bind(
+	"XF86MonBrightnessDown",
+	hl.dsp.exec_cmd(
+		[[brightnessctl set 5%- && echo "osd-brightness:$(brightnessctl get | awk -v max=$(brightnessctl max) 'BEGIN{} {printf "%d", ($1/max)*100}')" | socat - UNIX-CONNECT:/tmp/quickshell.sock]]
+	),
+	{ repeating = true }
+)
 
 -- === Workspaces === --
 require("workspaces")
